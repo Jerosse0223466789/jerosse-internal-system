@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>倉儲平面圖 Demo with Google Sheet</title>
+  <script src="https://unpkg.com/konva@8.4.3/konva.min.js"></script>
+  <style>
+    body { margin: 0; }
+    #container { background: #f0f0f0; width: 100vw; height: 100vh; overflow: auto; }
+    #addBtn {
+      position: fixed;
+      bottom: 20px;
+      left: 20px;
+      background: #2196F3;
+      color: white;
+      padding: 16px 30px;
+      font-size: 20px;
+      border: none;
+      border-radius: 8px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    #modal {
+      position: fixed;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      background: white;
+      border: 1px solid #ccc;
+      padding: 20px;
+      display: none;
+      z-index: 20;
+      box-shadow: 2px 2px 10px rgba(0,0,0,0.4);
+    }
+  </style>
+</head>
+<body>
+  <button id="addBtn">新增方塊</button>
+  <div id="modal">
+    <div>
+      顏色：
+      <select id="colorSelect">
+        <option value="green">綠</option>
+        <option value="pink">粉</option>
+        <option value="yellow">黃</option>
+        <option value="red">紅</option>
+        <option value="purple">紫</option>
+        <option value="gray">灰</option>
+        <option value="lightblue">淡藍</option>
+        <option value="#fce5cd">皮膚色</option>
+      </select>
+    </div>
+    <div>
+      尺寸：
+      <select id="sizeSelect">
+        <option value="40x40">1×1格</option>
+        <option value="40x80">1×2格</option>
+        <option value="40x120">1×3格</option>
+        <option value="40x160">1×4格</option>
+        <option value="40x200">1×5格</option>
+        <option value="80x80">2×2格</option>
+        <option value="80x120">2×3格</option>
+        <option value="80x160">2×4格</option>
+        <option value="80x200">2×5格</option>
+      </select>
+    </div>
+    <div>
+      文字：<input id="textInput" placeholder="輸入文字" />
+    </div>
+    <button id="confirmBtn">確定</button>
+    <button id="cancelBtn">取消</button>
+  </div>
+  <div id="container"></div>
+
+<script>
+const gridSize = 40;
+const apiUrl = "https://script.google.com/macros/s/AKfycbznjQDyaRJXQ-ZbVGHKM7LLdkVDJw6bZmRQ1QmCclHc3KqcLqv2S2EL8cHik2b9ryhC/exec";
+
+const stage = new Konva.Stage({
+  container: 'container',
+  width: 2000,
+  height: 1000,
+});
+
+// grid
+const gridLayer = new Konva.Layer();
+for (let i = 0; i < stage.width() / gridSize; i++) {
+  gridLayer.add(new Konva.Line({
+    points: [i * gridSize, 0, i * gridSize, stage.height()],
+    stroke: '#ddd', strokeWidth: 1,
+  }));
+}
+for (let j = 0; j < stage.height() / gridSize; j++) {
+  gridLayer.add(new Konva.Line({
+    points: [0, j * gridSize, stage.width(), j * gridSize],
+    stroke: '#ddd', strokeWidth: 1,
+  }));
+}
+stage.add(gridLayer);
+
+// 座標標示
+const labelLayer = new Konva.Layer();
+for (let i = 0; i < stage.width() / gridSize; i++) {
+  for (let j = 0; j < stage.height() / gridSize; j++) {
+    labelLayer.add(new Konva.Text({
+      x: i * gridSize + 2,
+      y: j * gridSize + 2,
+      text: `X${i+1}Y${j+1}`,
+      fontSize: 10,
+      fill: 'gray'
+    }));
+  }
+}
+stage.add(labelLayer);
+
+// 固定黑色方塊
+const blockLayer = new Konva.Layer();
+for (let i = 0; i <= 49; i += 7) {
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:0, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:160, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+}
+for (let i = 7; i <= 49; i += 7) {
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:440, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+}
+blockLayer.add(new Konva.Rect({ x:440, y:440, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+blockLayer.add(new Konva.Rect({ x:440, y:640, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+for (let i=14; i<=49; i+=7) {
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:640, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+}
+stage.add(blockLayer);
+
+// 電梯
+const elevatorLayer = new Konva.Layer();
+elevatorLayer.add(new Konva.Rect({ x:0,y:360,width:gridSize*4,height:gridSize*2,fill:'gray',draggable:false }));
+elevatorLayer.add(new Konva.Text({ x:0,y:360+gridSize,width:gridSize*4,align:'center',text:'貨梯',fontSize:30,fill:'white' }));
+// 辦公區
+elevatorLayer.add(new Konva.Rect({ x:160,y:440,width:gridSize*3,height:gridSize,fill:'lightgreen',draggable:false }));
+elevatorLayer.add(new Konva.Text({ x:160,y:440+gridSize/2-15,width:gridSize*3,align:'center',text:'辦公區',fontSize:24,fill:'white' }));
+stage.add(elevatorLayer);
+
+// 使用者可編輯方塊
+const userLayer = new Konva.Layer();
+stage.add(userLayer);
+
+// 讀取 Google Sheet
+fetch(apiUrl)
+  .then(res => res.json())
+  .then(data => {
+    data.forEach(item => {
+      const group = new Konva.Group({
+        x: item.x,
+        y: item.y,
+        draggable: true,
+        id: item.id
+      });
+      const rect = new Konva.Rect({
+        width: item.width,
+        height: item.height,
+        fill: item.color,
+        stroke: 'black',
+        strokeWidth: 2,
+      });
+      const label = new Konva.Text({
+        width: item.width,
+        height: item.height,
+        text: item.text,
+        fontSize: 16,
+        align:'center',
+        verticalAlign:'middle',
+        fill: 'black'
+      });
+      group.add(rect);
+      group.add(label);
+
+      group.on('dragend', () => {
+        const newX = Math.round(group.x() / gridSize) * gridSize;
+        const newY = Math.round(group.y() / gridSize) * gridSize;
+        group.position({ x: newX, y: newY });
+        userLayer.batchDraw();
+        saveToSheet(group);
+      });
+
+      group.on('click', () => {
+        if(confirm("刪除?")) {
+          group.destroy();
+          userLayer.draw();
+          // 你可以選擇從表刪除或只是標示刪除
+          fetch(apiUrl, {
+            method:"POST",
+            body: JSON.stringify({id:item.id,x:"",y:"",width:"",height:"",color:"",text:""})
+          });
+        }
+      });
+
+      userLayer.add(group);
+    });
+    userLayer.draw();
+  });
+
+function saveToSheet(group) {
+  const rect = group.findOne("Rect");
+  const label = group.findOne("Text");
+  fetch(apiUrl, {
+    method: "POST",
+    body: JSON.stringify({
+      id: group.id(),
+      x: group.x(),
+      y: group.y(),
+      width: rect.width(),
+      height: rect.height(),
+      color: rect.fill(),
+      text: label.text()
+    })
+  });
+}
+
+// 新增流程
+let addMode = false;
+let selectedColor = 'green';
+let selectedText = '';
+let selectedSize = [40,40];
+
+document.getElementById('addBtn').addEventListener('click', () => {
+  document.getElementById('modal').style.display = 'block';
+});
+
+document.getElementById('cancelBtn').addEventListener('click', () => {
+  document.getElementById('modal').style.display = 'none';
+  addMode = false;
+});
+
+document.getElementById('confirmBtn').addEventListener('click', () => {
+  selectedColor = document.getElementById('colorSelect').value;
+  selectedText = document.getElementById('textInput').value;
+  selectedSize = document.getElementById('sizeSelect').value.split('x').map(Number);
+  addMode = true;
+  document.getElementById('modal').style.display = 'none';
+});
+
+stage.on('click', (e) => {
+  if(addMode && e.target === stage) {
+    const x = Math.floor(e.evt.offsetX / gridSize) * gridSize;
+    const y = Math.floor(e.evt.offsetY / gridSize) * gridSize;
+    const uniqueId = Date.now(); // timestamp 作為唯一 id
+
+    const group = new Konva.Group({
+      x:x, y:y, draggable:true, id:uniqueId
+    });
+
+    const rect = new Konva.Rect({
+      width: selectedSize[0],
+      height: selectedSize[1],
+      fill: selectedColor,
+      stroke: 'black',
+      strokeWidth: 2,
+    });
+    const label = new Konva.Text({
+      width: selectedSize[0],
+      height: selectedSize[1],
+      text: selectedText,
+      fontSize: 16,
+      align:'center',
+      verticalAlign:'middle',
+      fill: 'black'
+    });
+    group.add(rect);
+    group.add(label);
+
+    group.on('dragend', () => {
+      const newX = Math.round(group.x() / gridSize) * gridSize;
+      const newY = Math.round(group.y() / gridSize) * gridSize;
+      group.position({ x: newX, y: newY });
+      userLayer.batchDraw();
+      saveToSheet(group);
+    });
+
+    group.on('click', () => {
+      if(confirm("刪除?")) {
+        group.destroy();
+        userLayer.draw();
+        fetch(apiUrl, {
+          method:"POST",
+          body: JSON.stringify({id:uniqueId,x:"",y:"",width:"",height:"",color:"",text:""})
+        });
+      }
+    });
+
+    userLayer.add(group);
+    userLayer.draw();
+    saveToSheet(group);
+    addMode = false;
+  }
+});
+</script>
+</body>
+</html>
