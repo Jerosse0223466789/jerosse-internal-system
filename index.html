@@ -2,7 +2,7 @@
 <html>
 <head>
   <meta charset="utf-8" />
-  <title>倉儲平面圖 Demo with Google Sheet</title>
+  <title>倉庫平面圖整合版</title>
   <script src="https://unpkg.com/konva@8.4.3/konva.min.js"></script>
   <style>
     body { margin: 0; }
@@ -40,9 +40,9 @@
     <div>
       顏色：
       <select id="colorSelect">
-        <option value="green">綠</option>
-        <option value="pink">粉</option>
-        <option value="yellow">黃</option>
+        <option value="green">綠(纖體組)</option>
+        <option value="pink">粉(美肌組)</option>
+        <option value="yellow">黃(機能組)</option>
         <option value="red">紅</option>
         <option value="purple">紫</option>
         <option value="gray">灰</option>
@@ -51,35 +51,42 @@
       </select>
     </div>
     <div>
-      尺寸：
-      <select id="sizeSelect">
-        <option value="40x40">1×1格</option>
-        <option value="40x80">1×2格</option>
-        <option value="40x120">1×3格</option>
-        <option value="40x160">1×4格</option>
-        <option value="40x200">1×5格</option>
-        <option value="80x80">2×2格</option>
-        <option value="80x120">2×3格</option>
-        <option value="80x160">2×4格</option>
-        <option value="80x200">2×5格</option>
+      方塊方向：
+      <select id="blockDirection">
+        <option value="horizontal">橫式方塊</option>
+        <option value="vertical">直式方塊</option>
+        <option value="square">正方形方塊</option>
       </select>
     </div>
     <div>
+      尺寸：
+      <select id="sizeSelect">
+        </select>
+    </div>
+    <div>
       文字：<input id="textInput" placeholder="輸入文字" />
+    </div>
+    <div>
+      文字方向：
+      <select id="textDirection">
+        <option value="horizontal">橫式</option>
+        <option value="vertical">直式</option>
+      </select>
     </div>
     <button id="confirmBtn">確定</button>
     <button id="cancelBtn">取消</button>
   </div>
   <div id="container"></div>
 
+
 <script>
 const gridSize = 40;
-const apiUrl = "https://script.google.com/macros/s/AKfycbznjQDyaRJXQ-ZbVGHKM7LLdkVDJw6bZmRQ1QmCclHc3KqcLqv2S2EL8cHik2b9ryhC/exec";
+const scriptURL = "https://script.google.com/macros/s/AKfycbweLhu6q5QTAptqJnJQ4yZ1ptQ8SKkNkFkkBn_E09_M2Hg2FRGSOobs2Crprf-Z3XeK/exec";
 
 const stage = new Konva.Stage({
   container: 'container',
   width: 2000,
-  height: 1000,
+  height: 1280,
 });
 
 // grid
@@ -98,7 +105,7 @@ for (let j = 0; j < stage.height() / gridSize; j++) {
 }
 stage.add(gridLayer);
 
-// 座標標示
+// 座標
 const labelLayer = new Konva.Layer();
 for (let i = 0; i < stage.width() / gridSize; i++) {
   for (let j = 0; j < stage.height() / gridSize; j++) {
@@ -113,37 +120,209 @@ for (let i = 0; i < stage.width() / gridSize; i++) {
 }
 stage.add(labelLayer);
 
-// 固定黑色方塊
+// blockLayer
 const blockLayer = new Konva.Layer();
+
+// 黑色固定方塊
 for (let i = 0; i <= 49; i += 7) {
-  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:0, width:gridSize, height:gridSize, fill:'black',draggable:false }));
-  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:160, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:0, width:gridSize, height:gridSize, fill:'black' }));
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:4*gridSize, width:gridSize, height:gridSize, fill:'black' }));
 }
 for (let i = 7; i <= 49; i += 7) {
-  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:440, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:11*gridSize, width:gridSize, height:gridSize, fill:'black' }));
 }
-blockLayer.add(new Konva.Rect({ x:440, y:440, width:gridSize, height:gridSize, fill:'black',draggable:false }));
-blockLayer.add(new Konva.Rect({ x:440, y:640, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+blockLayer.add(new Konva.Rect({ x:11*gridSize, y:11*gridSize, width:gridSize, height:gridSize, fill:'black' }));
+blockLayer.add(new Konva.Rect({ x:11*gridSize, y:16*gridSize, width:gridSize, height:gridSize, fill:'black' }));
 for (let i=14; i<=49; i+=7) {
-  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:640, width:gridSize, height:gridSize, fill:'black',draggable:false }));
+  blockLayer.add(new Konva.Rect({ x:i*gridSize, y:16*gridSize, width:gridSize, height:gridSize, fill:'black' }));
 }
+
+// 除濕機與報廢區
+[
+  { x:26, y:16, w:2, h:1, fill:'lightblue', text:'除濕機', offsetX:20, offsetY:10 },
+  { x:49, y:14, w:1, h:2, fill:'lightblue', text:'除\n濕\n機', offsetX:14, offsetY:21 },
+  { x:43, y:16, w:3, h:3, fill:'gray', text:'報廢區', offsetX:30, offsetY:10 }
+].forEach(item=>{
+  blockLayer.add(new Konva.Rect({
+    x: item.x * gridSize,
+    y: item.y * gridSize,
+    width: item.w * gridSize,
+    height: item.h * gridSize,
+    fill: item.fill,
+    stroke:'black'
+  }));
+  const textObj = new Konva.Text({
+    x: item.x * gridSize + (item.w * gridSize) / 2,
+    y: item.y * gridSize + (item.h * gridSize) / 2,
+    text: item.text,
+    fontSize: 14,
+    fill: 'black',
+    align: 'center',
+    verticalAlign: 'middle'
+  });
+  textObj.offsetX(textObj.width() / 2);
+  textObj.offsetY(textObj.height() / 2);
+  blockLayer.add(textObj);
+});
+
+// 白底條
+[7,14,21,28,35,42,49].forEach(xi=>{
+  blockLayer.add(new Konva.Rect({
+    x: xi*gridSize, y: gridSize,
+    width: gridSize, height: 2*gridSize,
+    fill: 'white', stroke: 'black'
+  }));
+});
+[7,14,21,28,35,42,49].forEach(xi=>{
+  blockLayer.add(new Konva.Rect({
+    x: xi*gridSize, y:5*gridSize,
+    width: gridSize, height:4*gridSize,
+    fill: 'white', stroke: 'black'
+  }));
+});
+// 車道
+[
+  { x:4,  y:9,  w:46, h:2 },
+  { x:6,  y:0,  w:1,  h:9 },
+  { x:7,  y:3,  w:43, h:1 },
+  { x:14, y:14, w:23, h:1 },
+  { x:36, y:11, w:2,  h:6 },
+  { x:38, y:15, w:11, h:1 },
+  { x:7,  y:13, w:3,  h:2 }
+].forEach(c=>{
+  blockLayer.add(new Konva.Rect({
+    x: c.x * gridSize,
+    y: c.y * gridSize,
+    width: c.w * gridSize,
+    height: c.h * gridSize,
+    fill: '#ED7D31'
+  }));
+});
+const carLaneText = new Konva.Text({
+  x: 7 * gridSize + 1.5 * gridSize,
+  y: 13 * gridSize + gridSize,
+  text: '車道',
+  fontSize: 20,
+  fill: 'white',
+  align: 'center',
+  verticalAlign: 'middle'
+});
+carLaneText.offsetX(carLaneText.width() / 2);
+carLaneText.offsetY(carLaneText.height() / 2);
+blockLayer.add(carLaneText);
+blockLayer.add(new Konva.Rect({
+  x: 7 * gridSize,
+  y: 13 * gridSize,
+  width: 3 * gridSize,
+  height: 2 * gridSize,
+  stroke: 'black',
+  strokeWidth: 4
+}));
+
+// 黃色邊
+[
+  [12,9,14,9],[12,9,12,11],[14,9,14,11],
+  [14,11,14,14],[14,14,37,14],[37,14,37,17],
+  [36,17,37,17],[36,17,36,25],[35,25,36,25]
+].forEach(p=>{
+  blockLayer.add(new Konva.Line({
+    points:[p[0]*gridSize,p[1]*gridSize,p[2]*gridSize,p[3]*gridSize],
+    stroke:'#FFFF00', strokeWidth:4, lineCap:'round'
+  }));
+});
+
+// 黑色邊
+[
+  [0,0,0,11],[0,0,50,0],[50,0,50,17],[46,17,50,17],
+  [46,17,46,21],[43,19,46,19],[43,21,46,21],[43,21,43,30],
+  [35,30,43,30],[35,25,35,30],[29,25,35,25],[29,17,29,25],
+  [11,17,29,17],[11,12,11,17],[4,11,4,12],[4,12,11,12],[0,11,4,11]
+].forEach(p=>{
+  blockLayer.add(new Konva.Line({
+    points:[p[0]*gridSize,p[1]*gridSize,p[2]*gridSize,p[3]*gridSize],
+    stroke:'black', strokeWidth:4, lineCap:'round'
+  }));
+});
+
 stage.add(blockLayer);
 
-// 電梯
+// elevator & office
 const elevatorLayer = new Konva.Layer();
-elevatorLayer.add(new Konva.Rect({ x:0,y:360,width:gridSize*4,height:gridSize*2,fill:'gray',draggable:false }));
-elevatorLayer.add(new Konva.Text({ x:0,y:360+gridSize,width:gridSize*4,align:'center',text:'貨梯',fontSize:30,fill:'white' }));
-// 辦公區
-elevatorLayer.add(new Konva.Rect({ x:160,y:440,width:gridSize*3,height:gridSize,fill:'lightgreen',draggable:false }));
-elevatorLayer.add(new Konva.Text({ x:160,y:440+gridSize/2-15,width:gridSize*3,align:'center',text:'辦公區',fontSize:24,fill:'white' }));
+elevatorLayer.add(new Konva.Rect({ x:0,y:360,width:4*gridSize,height:2*gridSize,fill:'gray' }));
+const elevatorText = new Konva.Text({
+  x: 2*gridSize, y: 360+gridSize,
+  text:'貨梯', fontSize:30, fill:'white', align:'center', verticalAlign: 'middle'
+});
+elevatorText.offsetX(elevatorText.width() / 2);
+elevatorText.offsetY(elevatorText.height() / 2);
+elevatorLayer.add(elevatorText);
+
+elevatorLayer.add(new Konva.Rect({ x:160,y:440,width:3*gridSize,height:gridSize,fill:'lightgreen' }));
+const officeText = new Konva.Text({
+  x:160+1.5*gridSize, y:440+gridSize/2,
+  text:'辦公區', fontSize:20, fill:'black', align:'center', verticalAlign: 'middle'
+});
+officeText.offsetX(officeText.width() / 2);
+officeText.offsetY(officeText.height() / 2);
+elevatorLayer.add(officeText);
 stage.add(elevatorLayer);
 
-// 使用者可編輯方塊
+// userLayer
 const userLayer = new Konva.Layer();
 stage.add(userLayer);
 
-// 讀取 Google Sheet
-fetch(apiUrl)
+// 定義不同方塊方向的尺寸選項
+const sizeOptions = {
+  horizontal: [ // 寬大於高
+    { value: "80x40", text: "2×1格" },
+    { value: "120x40", text: "3×1格" },
+    { value: "160x40", text: "4×1格" },
+    { value: "200x40", text: "5×1格" },
+    { value: "120x80", text: "3×2格" },
+    { value: "160x80", text: "4×2格" },
+    { value: "200x80", text: "5×2格" }
+  ],
+  vertical: [ // 高大於寬
+    { value: "40x80", text: "1×2格" },
+    { value: "40x120", text: "1×3格" },
+    { value: "40x160", text: "1×4格" },
+    { value: "40x200", text: "1×5格" },
+    { value: "80x120", text: "2×3格" },
+    { value: "80x160", text: "2×4格" },
+    { value: "80x200", text: "2×5格" }
+  ],
+  square: [ // 等寬等高
+    { value: "40x40", text: "1×1格" },
+    { value: "80x80", text: "2×2格" }
+  ]
+};
+
+const sizeSelect = document.getElementById('sizeSelect');
+const blockDirectionSelect = document.getElementById('blockDirection');
+
+// 根據選擇的方塊方向更新尺寸選項
+function updateSizeOptions() {
+  const selectedBlockDirection = blockDirectionSelect.value;
+  const options = sizeOptions[selectedBlockDirection];
+
+  sizeSelect.innerHTML = ''; // 清空現有選項
+  options.forEach(option => {
+    const opt = document.createElement('option');
+    opt.value = option.value;
+    opt.textContent = option.text;
+    sizeSelect.appendChild(opt);
+  });
+}
+
+// 監聽方塊方向的變化
+blockDirectionSelect.addEventListener('change', updateSizeOptions);
+
+// 初始化尺寸選項
+updateSizeOptions();
+
+
+// 先載入 GS 資料
+fetch(scriptURL)
   .then(res => res.json())
   .then(data => {
     data.forEach(item => {
@@ -158,136 +337,184 @@ fetch(apiUrl)
         height: item.height,
         fill: item.color,
         stroke: 'black',
-        strokeWidth: 2,
+        strokeWidth: 2
       });
       const label = new Konva.Text({
-        width: item.width,
-        height: item.height,
+        x: item.width / 2, // 文字的 X 座標設定為方塊中心
+        y: item.height / 2, // 文字的 Y 座標設定為方塊中心
         text: item.text,
         fontSize: 16,
-        align:'center',
-        verticalAlign:'middle',
-        fill: 'black'
+        fill: 'black',
+        align: 'center', // 水平置中
+        verticalAlign: 'middle' // 垂直置中
       });
+
+      // 載入資料後，設置文字的偏移量，確保文字在中心
+      label.offsetX(label.width() / 2);
+      label.offsetY(label.height() / 2);
+
       group.add(rect);
       group.add(label);
 
       group.on('dragend', () => {
-        const newX = Math.round(group.x() / gridSize) * gridSize;
-        const newY = Math.round(group.y() / gridSize) * gridSize;
-        group.position({ x: newX, y: newY });
+        const nx = Math.round(group.x()/gridSize)*gridSize;
+        const ny = Math.round(group.y()/gridSize)*gridSize;
+        group.position({x: nx, y: ny});
         userLayer.batchDraw();
-        saveToSheet(group);
+        fetch(scriptURL, {
+          method: "POST",
+          body: JSON.stringify({
+            id: group.id(),
+            x: nx,
+            y: ny,
+            width: rect.width(),
+            height: rect.height(),
+            color: rect.fill(),
+            text: label.text()
+          })
+        });
       });
 
-      group.on('click', () => {
-        if(confirm("刪除?")) {
-          group.destroy();
-          userLayer.draw();
-          // 你可以選擇從表刪除或只是標示刪除
-          fetch(apiUrl, {
-            method:"POST",
-            body: JSON.stringify({id:item.id,x:"",y:"",width:"",height:"",color:"",text:""})
-          });
+      group.on('click', (e) => {
+        // 檢查是否點擊的是矩形或文字本身
+        if(e.target === rect || e.target === label) {
+          if(confirm("刪除?")){
+            group.destroy();
+            userLayer.draw();
+            fetch(scriptURL, {
+              method: "POST",
+              body: JSON.stringify({
+                id: group.id(),
+                x: "",
+                y: "",
+                width: "",
+                height: "",
+                color: "",
+                text: ""
+              })
+            });
+          }
         }
       });
-
       userLayer.add(group);
     });
     userLayer.draw();
   });
 
-function saveToSheet(group) {
-  const rect = group.findOne("Rect");
-  const label = group.findOne("Text");
-  fetch(apiUrl, {
-    method: "POST",
-    body: JSON.stringify({
-      id: group.id(),
-      x: group.x(),
-      y: group.y(),
-      width: rect.width(),
-      height: rect.height(),
-      color: rect.fill(),
-      text: label.text()
-    })
-  });
-}
-
-// 新增流程
-let addMode = false;
-let selectedColor = 'green';
-let selectedText = '';
-let selectedSize = [40,40];
-
-document.getElementById('addBtn').addEventListener('click', () => {
-  document.getElementById('modal').style.display = 'block';
+// 新增邏輯
+let addMode = false, selectedColor = 'green', selectedText = '', selectedSize = [40,40];
+document.getElementById('addBtn').addEventListener('click',()=>{
+  document.getElementById('modal').style.display='block';
+  updateSizeOptions(); // 每次打開 modal 都更新尺寸選項，以確保其與當前選擇的方塊方向一致
 });
-
-document.getElementById('cancelBtn').addEventListener('click', () => {
-  document.getElementById('modal').style.display = 'none';
+document.getElementById('cancelBtn').addEventListener('click',()=>{
+  document.getElementById('modal').style.display='none';
   addMode = false;
 });
-
-document.getElementById('confirmBtn').addEventListener('click', () => {
+document.getElementById('confirmBtn').addEventListener('click',()=>{
   selectedColor = document.getElementById('colorSelect').value;
-  selectedText = document.getElementById('textInput').value;
+  let rawText = document.getElementById('textInput').value;
+  const direction = document.getElementById('textDirection').value;
+  if(direction === "vertical"){
+    selectedText = rawText.split("").join("\n");
+  } else {
+    selectedText = rawText;
+  }
   selectedSize = document.getElementById('sizeSelect').value.split('x').map(Number);
   addMode = true;
-  document.getElementById('modal').style.display = 'none';
+  document.getElementById('modal').style.display='none';
 });
 
-stage.on('click', (e) => {
-  if(addMode && e.target === stage) {
+stage.on('click', e => {
+  // 只有在新增模式且點擊舞台的空白處才新增方塊
+  if(addMode && e.target === stage){
     const x = Math.floor(e.evt.offsetX / gridSize) * gridSize;
     const y = Math.floor(e.evt.offsetY / gridSize) * gridSize;
-    const uniqueId = Date.now(); // timestamp 作為唯一 id
-
-    const group = new Konva.Group({
-      x:x, y:y, draggable:true, id:uniqueId
-    });
+    const id = Date.now();
+    const group = new Konva.Group({ x, y, draggable: true, id });
 
     const rect = new Konva.Rect({
       width: selectedSize[0],
       height: selectedSize[1],
       fill: selectedColor,
       stroke: 'black',
-      strokeWidth: 2,
+      strokeWidth: 2
     });
+
     const label = new Konva.Text({
-      width: selectedSize[0],
-      height: selectedSize[1],
+      x: selectedSize[0] / 2, // 文字的 X 座標設定為方塊中心
+      y: selectedSize[1] / 2, // 文字的 Y 座標設定為方塊中心
       text: selectedText,
       fontSize: 16,
-      align:'center',
-      verticalAlign:'middle',
-      fill: 'black'
+      fill: 'black',
+      align: 'center', // 水平置中
+      verticalAlign: 'middle' // 垂直置中
     });
+
+    // 設置文字的偏移量，確保文字在中心
+    label.offsetX(label.width() / 2);
+    label.offsetY(label.height() / 2);
+
     group.add(rect);
     group.add(label);
 
     group.on('dragend', () => {
-      const newX = Math.round(group.x() / gridSize) * gridSize;
-      const newY = Math.round(group.y() / gridSize) * gridSize;
-      group.position({ x: newX, y: newY });
+      const nx = Math.round(group.x()/gridSize)*gridSize;
+      const ny = Math.round(group.y()/gridSize)*gridSize;
+      group.position({x: nx, y: ny});
       userLayer.batchDraw();
-      saveToSheet(group);
+      fetch(scriptURL, {
+        method: "POST",
+        body: JSON.stringify({
+          id: group.id(),
+          x: nx,
+          y: ny,
+          width: rect.width(),
+          height: rect.height(),
+          color: rect.fill(),
+          text: label.text()
+        })
+      });
     });
 
-    group.on('click', () => {
-      if(confirm("刪除?")) {
-        group.destroy();
-        userLayer.draw();
-        fetch(apiUrl, {
-          method:"POST",
-          body: JSON.stringify({id:uniqueId,x:"",y:"",width:"",height:"",color:"",text:""})
-        });
+    group.on('click', (e) => {
+      // 檢查是否點擊的是矩形或文字本身
+      if(e.target === rect || e.target === label) {
+        if(confirm("刪除?")){
+          group.destroy();
+          userLayer.draw();
+          fetch(scriptURL, {
+            method: "POST",
+            body: JSON.stringify({
+              id: group.id(),
+              x: "",
+              y: "",
+              width: "",
+              height: "",
+              color: "",
+              text: ""
+            })
+          });
+        }
       }
     });
 
     userLayer.add(group);
     userLayer.draw();
-    saveToSheet(group);
+
+    fetch(scriptURL, {
+      method: "POST",
+      body: JSON.stringify({
+        id: id,
+        x: x,
+        y: y,
+        width: selectedSize[0],
+        height: selectedSize[1],
+        color: selectedColor,
+        text: selectedText
+      })
+    });
+
     addMode = false;
   }
 });
