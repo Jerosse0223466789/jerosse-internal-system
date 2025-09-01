@@ -8,12 +8,11 @@ class APIManager {
         this.app = app;
         
         // Google Apps Script Web App URLs
-        // 請替換為您實際的 Google Apps Script 部署 URL
+        // 已連接您的實際系統
         this.endpoints = {
-            inventory: 'https://script.google.com/macros/s/YOUR_INVENTORY_SCRIPT_ID/exec',
-            batch: 'https://script.google.com/macros/s/YOUR_BATCH_SCRIPT_ID/exec',
-            transfer: 'https://script.google.com/macros/s/YOUR_TRANSFER_SCRIPT_ID/exec',
-            warehouse: 'https://script.google.com/macros/s/YOUR_WAREHOUSE_SCRIPT_ID/exec'
+            inventory: 'https://script.google.com/macros/s/AKfycbzUuZNKMwj1OCpBNHMWfyfbtoRgWvlRyLYySyjuikCpQC273F2NEzHoZijh8w6gwGhYPA/exec',
+            batch: 'https://script.google.com/macros/s/AKfycbz-VcU20EQIj9OZcil2wvsXj-W3VTsTCShXMGlxiQQi5xKTEynTqrRP4n6eXUDGTlxw/exec',
+            warehouse: 'https://script.google.com/macros/s/AKfycbzpHii8K7iuBXuyxJ8I7JTH__il6Jxz5-4mRhmrzSsw4guZsNoGrw_57KmCuNu12P9M/exec'
         };
 
         this.requestTimeout = 10000; // 10秒超時
@@ -45,8 +44,13 @@ class APIManager {
     async call(action, data = null, endpoint = 'inventory') {
         const url = this.endpoints[endpoint];
         
-        if (!url || url.includes('YOUR_')) {
+        if (!url) {
             throw new Error('請設定正確的 Google Apps Script URL');
+        }
+        
+        // 轉移功能已停用
+        if (endpoint === 'transfer') {
+            throw new Error('轉移功能目前已停用');
         }
 
         const payload = {

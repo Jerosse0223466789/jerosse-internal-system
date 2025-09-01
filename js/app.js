@@ -137,12 +137,15 @@ class WarehouseApp {
             });
         }
 
-        // 轉移表單
+        // 轉移表單（已停用）
         const transferForm = document.getElementById('transferPage');
         if (transferForm) {
-            document.getElementById('submitTransferBtn').addEventListener('click', () => {
-                this.submitTransfer();
-            });
+            const submitBtn = document.getElementById('submitTransferBtn');
+            if (submitBtn) {
+                submitBtn.addEventListener('click', () => {
+                    this.showMessage('轉移功能目前已停用', 'warning');
+                });
+            }
         }
 
         // 語音輸入按鈕
@@ -255,7 +258,7 @@ class WarehouseApp {
                 this.loadBatchData();
                 break;
             case 'transfer':
-                this.loadTransferData();
+                // 轉移功能已停用
                 break;
             default:
                 break;
@@ -268,7 +271,7 @@ class WarehouseApp {
             const stats = await this.apiCall('getTodayStats');
             
             document.getElementById('todayCount').textContent = stats.inventoryCount || 0;
-            document.getElementById('todayTransfer').textContent = stats.transferCount || 0;
+            document.getElementById('todayTransfer').textContent = 0; // 轉移功能已停用
             document.getElementById('todayBatch').textContent = stats.batchCount || 0;
             
             // 載入警示

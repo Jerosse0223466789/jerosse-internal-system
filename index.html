@@ -63,7 +63,7 @@
                 <li><a href="#" data-page="inventory"><span class="material-icons">inventory</span>快速盤點</a></li>
                 <li><a href="#" data-page="barcode"><span class="material-icons">qr_code_scanner</span>條碼掃描</a></li>
                 <li><a href="#" data-page="batch"><span class="material-icons">assignment</span>批號管理</a></li>
-                <li><a href="#" data-page="transfer"><span class="material-icons">compare_arrows</span>庫存轉移</a></li>
+                <!-- 庫存轉移功能已停用 -->
                 <li><a href="#" data-page="floorplan"><span class="material-icons">map</span>平面圖</a></li>
                 <li><a href="#" data-page="offline"><span class="material-icons">cloud_off</span>離線作業</a></li>
                 <li><a href="#" data-page="settings"><span class="material-icons">settings</span>設定</a></li>
@@ -269,59 +269,17 @@
                 </div>
             </div>
 
-            <!-- 庫存轉移頁面 -->
+            <!-- 庫存轉移頁面已停用 -->
             <div class="page" id="transferPage">
-                <div class="transfer-container">
-                    <div class="transfer-form">
-                        <h3>庫存轉移</h3>
-                        
-                        <div class="transfer-route">
-                            <div class="route-point">
-                                <span class="route-label">來源倉庫</span>
-                                <select id="sourceWarehouse" class="form-control">
-                                    <option value="">選擇來源倉庫</option>
-                                </select>
-                            </div>
-                            
-                            <div class="route-arrow">
-                                <span class="material-icons">arrow_forward</span>
-                            </div>
-                            
-                            <div class="route-point">
-                                <span class="route-label">目標倉庫</span>
-                                <select id="targetWarehouse" class="form-control">
-                                    <option value="">選擇目標倉庫</option>
-                                </select>
-                            </div>
-                        </div>
-                        
-                        <div class="form-group">
-                            <label>轉移品項</label>
-                            <div class="item-search">
-                                <input type="text" id="transferItemSearch" class="form-control" placeholder="搜尋或掃描品項...">
-                                <button class="scan-btn" data-target="transferItemSearch">
-                                    <span class="material-icons">qr_code_scanner</span>
-                                </button>
-                            </div>
-                        </div>
-                        
-                        <div class="selected-items" id="selectedItems">
-                            <!-- 已選擇的品項會顯示在這裡 -->
-                        </div>
-                        
-                        <div class="form-actions">
-                            <button class="btn btn-primary btn-block" id="submitTransferBtn">
-                                <span class="material-icons">send</span>
-                                執行轉移
+                <div class="container">
+                    <div class="card">
+                        <h3><span class="material-icons">info</span>功能暫停</h3>
+                        <div style="padding: 20px; text-align: center;">
+                            <p>庫存轉移功能目前暫停使用</p>
+                            <p>如需轉移操作，請聯絡管理員</p>
+                            <button class="btn btn-primary" onclick="window.warehouseApp.navigateTo('dashboard')">
+                                返回首頁
                             </button>
-                        </div>
-                    </div>
-                    
-                    <!-- 轉移記錄 -->
-                    <div class="transfer-history">
-                        <h4>最近轉移記錄</h4>
-                        <div class="history-list" id="transferHistory">
-                            <!-- 轉移記錄會動態加載 -->
                         </div>
                     </div>
                 </div>
@@ -393,10 +351,7 @@
                 <span class="material-icons">qr_code_scanner</span>
                 <span>掃描</span>
             </button>
-            <button class="nav-item" data-page="transfer">
-                <span class="material-icons">compare_arrows</span>
-                <span>轉移</span>
-            </button>
+            <!-- 庫存轉移功能已停用 -->
             <button class="nav-item" data-page="settings">
                 <span class="material-icons">settings</span>
                 <span>設定</span>
