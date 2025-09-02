@@ -571,6 +571,237 @@
             transition: width 0.3s ease;
         }
 
+        /* === 雲端同步樣式 === */
+        .sync-status-card, 
+        .api-config-card, 
+        .sync-options-card, 
+        .sync-actions-card, 
+        .sync-logs-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.08);
+        }
+
+        .sync-status-header {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+
+        .status-indicator {
+            font-size: 2em;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .status-info h3 {
+            margin: 0;
+            color: var(--primary-color);
+        }
+
+        .status-info p {
+            margin: 5px 0 0 0;
+            color: var(--text-secondary);
+        }
+
+        .sync-stats {
+            display: flex;
+            gap: 20px;
+            margin-top: 15px;
+        }
+
+        .sync-stat {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 1;
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .sync-stat .stat-number {
+            font-size: 1.5em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .sync-stat .stat-label {
+            font-size: 0.85em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        .config-row {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 15px;
+            flex-wrap: wrap;
+        }
+
+        .config-row label {
+            min-width: 150px;
+            font-weight: 500;
+        }
+
+        .config-input, .config-select {
+            flex: 1;
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 6px;
+            font-size: 0.9em;
+            min-width: 200px;
+        }
+
+        .config-input:focus, .config-select:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .sync-checkboxes {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+        }
+
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            cursor: pointer;
+            padding: 10px;
+            border-radius: 6px;
+            transition: background 0.2s ease;
+        }
+
+        .checkbox-label:hover {
+            background: #f8f9fa;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            accent-color: var(--primary-color);
+        }
+
+        .action-group {
+            margin-bottom: 20px;
+            padding: 15px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #fafafa, #ffffff);
+        }
+
+        .action-group:last-child {
+            margin-bottom: 0;
+        }
+
+        .action-group h4 {
+            margin: 0 0 5px 0;
+            color: var(--primary-color);
+        }
+
+        .action-group p {
+            margin: 0 0 15px 0;
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .btn-large {
+            width: 100%;
+            padding: 15px 20px;
+            font-size: 1em;
+            font-weight: 600;
+        }
+
+        .sync-logs {
+            max-height: 300px;
+            overflow-y: auto;
+            margin-bottom: 15px;
+        }
+
+        .log-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 10px;
+            border-bottom: 1px solid #f0f0f0;
+            font-size: 0.9em;
+        }
+
+        .log-item:last-child {
+            border-bottom: none;
+        }
+
+        .log-time {
+            color: var(--text-secondary);
+            min-width: 120px;
+        }
+
+        .log-action {
+            flex: 1;
+            margin: 0 10px;
+        }
+
+        .log-status {
+            font-size: 1.2em;
+        }
+
+        .log-status.success { color: #4CAF50; }
+        .log-status.error { color: #F44336; }
+        .log-status.pending { color: #FF9800; }
+
+        .sync-nav-actions {
+            display: flex;
+            gap: 15px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        /* 手機版雲端同步優化 */
+        @media (max-width: 480px) {
+            .sync-stats {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .config-row {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            .config-row label {
+                min-width: auto;
+            }
+            
+            .config-input, .config-select {
+                min-width: auto;
+            }
+            
+            .sync-nav-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .sync-nav-actions .btn {
+                width: 100%;
+            }
+        }
+
         /* 底部導航 */
         .bottom-nav {
             position: fixed;
@@ -1795,6 +2026,12 @@
                     <div class="feature-subtitle">雲端備份、離線支援</div>
                 </div>
 
+                <div class="feature-card" onclick="openCloudSync()">
+                    <div class="feature-icon">☁️</div>
+                    <div class="feature-title">雲端同步</div>
+                    <div class="feature-subtitle">Google Sheets 資料同步</div>
+                </div>
+                
                 <div class="feature-card" onclick="switchTab('profile')">
                     <div class="feature-icon">⚙️</div>
                     <div class="feature-title">系統設定</div>
@@ -2079,6 +2316,131 @@
                 </button>
                 <button class="btn btn-success" onclick="exportCurrentReport()">
                     📄 匯出目前報表
+                </button>
+            </div>
+        </div>
+
+        <!-- 雲端同步內容 -->
+        <div id="cloud-sync-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>☁️ 雲端同步</h2>
+                <p>與 Google Sheets 資料同步</p>
+            </div>
+            
+            <!-- 同步狀態 -->
+            <div class="sync-status-card">
+                <div class="sync-status-header">
+                    <div class="status-indicator" id="sync-status-indicator">🔄</div>
+                    <div class="status-info">
+                        <h3 id="sync-status-title">準備同步</h3>
+                        <p id="sync-status-desc">點擊下方按鈕開始同步</p>
+                    </div>
+                </div>
+                <div class="sync-stats">
+                    <div class="sync-stat">
+                        <span class="stat-number" id="local-records-count">0</span>
+                        <span class="stat-label">本地紀錄</span>
+                    </div>
+                    <div class="sync-stat">
+                        <span class="stat-number" id="last-sync-time">未同步</span>
+                        <span class="stat-label">上次同步</span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- API 設定 -->
+            <div class="api-config-card">
+                <h3>📡 API 設定</h3>
+                <div class="config-row">
+                    <label for="gas-url">Google Apps Script URL:</label>
+                    <input type="url" id="gas-url" placeholder="https://script.google.com/macros/s/..." class="config-input">
+                    <button class="btn btn-secondary" onclick="testConnection()">🔗 測試連線</button>
+                </div>
+                <div class="config-row">
+                    <label for="sync-permission">同步權限:</label>
+                    <select id="sync-permission" class="config-select">
+                        <option value="read">只讀取 (Read Only)</option>
+                        <option value="write" selected>讀寫 (Read & Write)</option>
+                        <option value="admin">管理員 (Admin)</option>
+                    </select>
+                </div>
+                <button class="btn btn-primary" onclick="saveAPIConfig()">💾 儲存設定</button>
+            </div>
+            
+            <!-- 同步選項 -->
+            <div class="sync-options-card">
+                <h3>🔄 同步選項</h3>
+                <div class="sync-checkboxes">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="sync-inventory" checked>
+                        <span class="checkmark"></span>
+                        📋 盤點紀錄 (<span id="inventory-count">0</span> 筆)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="sync-staff" checked>
+                        <span class="checkmark"></span>
+                        👥 人員資料 (<span id="staff-count">6</span> 人)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="sync-areas" checked>
+                        <span class="checkmark"></span>
+                        🏭 區域設定 (<span id="areas-count">6</span> 區)
+                    </label>
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="sync-categories" checked>
+                        <span class="checkmark"></span>
+                        📦 產品分類 (<span id="categories-count">4</span> 類)
+                    </label>
+                </div>
+            </div>
+            
+            <!-- 同步動作 -->
+            <div class="sync-actions-card">
+                <div class="action-group">
+                    <h4>📤 上傳到雲端</h4>
+                    <p>將本地資料同步到 Google Sheets</p>
+                    <button class="btn btn-success btn-large" onclick="uploadToCloud()">
+                        📤 開始上傳同步
+                    </button>
+                </div>
+                
+                <div class="action-group">
+                    <h4>📥 從雲端下載</h4>
+                    <p>從 Google Sheets 下載最新資料</p>
+                    <button class="btn btn-info btn-large" onclick="downloadFromCloud()">
+                        📥 開始下載同步
+                    </button>
+                </div>
+                
+                <div class="action-group">
+                    <h4>🔄 雙向同步</h4>
+                    <p>智能合併本地與雲端資料</p>
+                    <button class="btn btn-warning btn-large" onclick="bidirectionalSync()">
+                        🔄 智能同步
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 同步紀錄 -->
+            <div class="sync-logs-card">
+                <h3>📝 同步紀錄</h3>
+                <div class="sync-logs" id="sync-logs">
+                    <div class="log-item">
+                        <span class="log-time">等待同步...</span>
+                        <span class="log-action">尚未開始同步作業</span>
+                        <span class="log-status pending">⏳</span>
+                    </div>
+                </div>
+                <button class="btn btn-secondary" onclick="clearSyncLogs()">🗑️ 清除紀錄</button>
+            </div>
+            
+            <!-- 返回按鈕 -->
+            <div class="sync-nav-actions">
+                <button class="btn btn-secondary" onclick="switchTab('dashboard')">
+                    ← 返回首頁
+                </button>
+                <button class="btn btn-primary" onclick="switchTab('records')">
+                    📋 查看盤點紀錄
                 </button>
             </div>
         </div>
@@ -2679,7 +3041,8 @@
                 'reports': 'reports-content',
                 'profile': 'profile-content',
                 'records': 'records-content',
-                'advanced-reports': 'advanced-reports-content'
+                'advanced-reports': 'advanced-reports-content',
+                'cloud-sync': 'cloud-sync-content'
             };
             
             const contentId = contentMap[tab];
@@ -2709,7 +3072,8 @@
                 'reports': '數據報表',
                 'profile': '個人資料',
                 'records': '盤點紀錄',
-                'advanced-reports': '進階報表'
+                'advanced-reports': '進階報表',
+                'cloud-sync': '雲端同步'
             };
             return names[tab] || tab;
         }
@@ -3623,6 +3987,342 @@
                 'category-breakdown': '品項分類統計'
             };
             return names[reportType] || '報表';
+        }
+
+        // === 雲端同步功能 === //
+        let gasApiUrl = '';
+        let syncPermission = 'write';
+
+        function openCloudSync() {
+            switchTab('cloud-sync');
+            initializeCloudSync();
+        }
+
+        function initializeCloudSync() {
+            // 載入已儲存的設定
+            loadSyncSettings();
+            
+            // 更新統計數字
+            updateSyncStats();
+            
+            // 載入同步紀錄
+            loadSyncLogs();
+        }
+
+        function loadSyncSettings() {
+            // 從 localStorage 載入設定
+            gasApiUrl = localStorage.getItem('gas-api-url') || '';
+            syncPermission = localStorage.getItem('sync-permission') || 'write';
+            
+            // 更新 UI
+            document.getElementById('gas-url').value = gasApiUrl;
+            document.getElementById('sync-permission').value = syncPermission;
+            
+            // 更新狀態顯示
+            if (gasApiUrl) {
+                updateSyncStatus('ready', '已設定 API', '可以開始同步作業');
+            } else {
+                updateSyncStatus('config', '需要設定', '請先設定 Google Apps Script URL');
+            }
+        }
+
+        function updateSyncStats() {
+            // 統計本地資料
+            const records = getStoredInventoryRecords();
+            const lastSyncTime = localStorage.getItem('last-sync-time') || '未同步';
+            
+            document.getElementById('local-records-count').textContent = records.length;
+            document.getElementById('last-sync-time').textContent = lastSyncTime;
+            document.getElementById('inventory-count').textContent = records.length;
+        }
+
+        function updateSyncStatus(status, title, description) {
+            const indicator = document.getElementById('sync-status-indicator');
+            const titleEl = document.getElementById('sync-status-title');
+            const descEl = document.getElementById('sync-status-desc');
+            
+            const statusConfig = {
+                'ready': { icon: '✅', color: '#4CAF50' },
+                'syncing': { icon: '🔄', color: '#2196F3' },
+                'success': { icon: '✅', color: '#4CAF50' },
+                'error': { icon: '❌', color: '#F44336' },
+                'config': { icon: '⚙️', color: '#FF9800' }
+            };
+            
+            const config = statusConfig[status] || statusConfig['ready'];
+            
+            indicator.textContent = config.icon;
+            indicator.style.color = config.color;
+            titleEl.textContent = title;
+            descEl.textContent = description;
+        }
+
+        function saveAPIConfig() {
+            const url = document.getElementById('gas-url').value.trim();
+            const permission = document.getElementById('sync-permission').value;
+            
+            if (!url) {
+                showNotification('請輸入 Google Apps Script URL', 'error');
+                return;
+            }
+            
+            if (!url.includes('script.google.com')) {
+                showNotification('URL 格式不正確，應包含 script.google.com', 'error');
+                return;
+            }
+            
+            // 儲存設定
+            gasApiUrl = url;
+            syncPermission = permission;
+            localStorage.setItem('gas-api-url', gasApiUrl);
+            localStorage.setItem('sync-permission', syncPermission);
+            
+            updateSyncStatus('ready', '設定已保存', '可以開始同步作業');
+            showNotification('API 設定已保存', 'success');
+            
+            addSyncLog('設定保存', '✅');
+        }
+
+        async function testConnection() {
+            const url = document.getElementById('gas-url').value.trim();
+            
+            if (!url) {
+                showNotification('請先輸入 API URL', 'error');
+                return;
+            }
+            
+            updateSyncStatus('syncing', '測試連線中...', '正在檢查 API 連線');
+            addSyncLog('開始測試連線', '⏳');
+            
+            try {
+                const response = await fetch(url, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'testConnection',
+                        data: {
+                            timestamp: new Date().toISOString(),
+                            source: 'mobile-app'
+                        }
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        updateSyncStatus('success', '連線成功', 'API 連線正常，可以進行同步');
+                        showNotification('API 連線測試成功', 'success');
+                        addSyncLog('連線測試成功', '✅');
+                    } else {
+                        throw new Error(result.error || '連線測試失敗');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+            } catch (error) {
+                console.error('連線測試失敗:', error);
+                updateSyncStatus('error', '連線失敗', error.message);
+                showNotification(`連線測試失敗: ${error.message}`, 'error');
+                addSyncLog('連線測試失敗', '❌');
+            }
+        }
+
+        async function uploadToCloud() {
+            if (!gasApiUrl) {
+                showNotification('請先設定 API URL', 'error');
+                return;
+            }
+            
+            updateSyncStatus('syncing', '上傳中...', '正在將本地資料上傳到雲端');
+            addSyncLog('開始上傳同步', '⏳');
+            
+            try {
+                // 收集要同步的資料
+                const syncData = {};
+                
+                if (document.getElementById('sync-inventory').checked) {
+                    syncData.inventoryRecords = getStoredInventoryRecords();
+                }
+                
+                if (document.getElementById('sync-staff').checked) {
+                    syncData.staffList = Object.values(staffList);
+                }
+                
+                if (document.getElementById('sync-areas').checked) {
+                    syncData.areaSettings = areaItemsDatabase;
+                }
+                
+                if (document.getElementById('sync-categories').checked) {
+                    syncData.productCategories = productCategories;
+                }
+                
+                // 發送到 GAS
+                const response = await fetch(gasApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'uploadFullData',
+                        data: syncData,
+                        permission: syncPermission,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        const syncTime = new Date().toLocaleString('zh-TW');
+                        localStorage.setItem('last-sync-time', syncTime);
+                        
+                        updateSyncStatus('success', '上傳成功', `資料已成功同步到雲端 (${syncTime})`);
+                        showNotification('資料上傳成功', 'success');
+                        addSyncLog(`上傳完成 - ${Object.keys(syncData).length} 類資料`, '✅');
+                        
+                        updateSyncStats();
+                    } else {
+                        throw new Error(result.error || '上傳失敗');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                console.error('上傳失敗:', error);
+                updateSyncStatus('error', '上傳失敗', error.message);
+                showNotification(`上傳失敗: ${error.message}`, 'error');
+                addSyncLog('上傳失敗', '❌');
+            }
+        }
+
+        async function downloadFromCloud() {
+            if (!gasApiUrl) {
+                showNotification('請先設定 API URL', 'error');
+                return;
+            }
+            
+            updateSyncStatus('syncing', '下載中...', '正在從雲端下載最新資料');
+            addSyncLog('開始下載同步', '⏳');
+            
+            try {
+                const response = await fetch(gasApiUrl, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify({
+                        action: 'getFullSystemData',
+                        data: {},
+                        permission: syncPermission,
+                        timestamp: new Date().toISOString()
+                    })
+                });
+                
+                if (response.ok) {
+                    const result = await response.json();
+                    if (result.success) {
+                        // 合併下載的資料
+                        let mergedCount = 0;
+                        
+                        if (result.data.inventoryRecords && document.getElementById('sync-inventory').checked) {
+                            // 合併盤點紀錄（避免重複）
+                            const existingRecords = getStoredInventoryRecords();
+                            const newRecords = result.data.inventoryRecords.records || [];
+                            
+                            // 簡單的去重邏輯（基於時間戳）
+                            const allRecords = [...existingRecords];
+                            newRecords.forEach(newRecord => {
+                                const exists = existingRecords.some(existing => 
+                                    existing.timestamp === newRecord.timestamp && 
+                                    existing.staff === newRecord.staff
+                                );
+                                if (!exists) {
+                                    allRecords.push(newRecord);
+                                    mergedCount++;
+                                }
+                            });
+                            
+                            localStorage.setItem('inventory-records', JSON.stringify(allRecords));
+                        }
+                        
+                        const syncTime = new Date().toLocaleString('zh-TW');
+                        localStorage.setItem('last-sync-time', syncTime);
+                        
+                        updateSyncStatus('success', '下載成功', `已從雲端同步 ${mergedCount} 筆新資料`);
+                        showNotification(`下載成功，合併 ${mergedCount} 筆新資料`, 'success');
+                        addSyncLog(`下載完成 - 新增 ${mergedCount} 筆`, '✅');
+                        
+                        updateSyncStats();
+                    } else {
+                        throw new Error(result.error || '下載失敗');
+                    }
+                } else {
+                    throw new Error(`HTTP ${response.status}: ${response.statusText}`);
+                }
+                
+            } catch (error) {
+                console.error('下載失敗:', error);
+                updateSyncStatus('error', '下載失敗', error.message);
+                showNotification(`下載失敗: ${error.message}`, 'error');
+                addSyncLog('下載失敗', '❌');
+            }
+        }
+
+        async function bidirectionalSync() {
+            showNotification('正在執行智能雙向同步...', 'info');
+            
+            // 先下載雲端資料
+            await downloadFromCloud();
+            
+            // 等待一秒後上傳本地資料
+            setTimeout(async () => {
+                await uploadToCloud();
+                showNotification('雙向同步完成', 'success');
+            }, 1000);
+        }
+
+        function addSyncLog(action, status) {
+            const logs = document.getElementById('sync-logs');
+            const time = new Date().toLocaleTimeString('zh-TW');
+            
+            const statusClass = {
+                '✅': 'success',
+                '❌': 'error', 
+                '⏳': 'pending'
+            }[status] || 'pending';
+            
+            const logItem = document.createElement('div');
+            logItem.className = 'log-item';
+            logItem.innerHTML = `
+                <span class="log-time">${time}</span>
+                <span class="log-action">${action}</span>
+                <span class="log-status ${statusClass}">${status}</span>
+            `;
+            
+            // 插入到最前面
+            logs.insertBefore(logItem, logs.firstChild);
+            
+            // 保持最多 20 筆紀錄
+            while (logs.children.length > 20) {
+                logs.removeChild(logs.lastChild);
+            }
+        }
+
+        function loadSyncLogs() {
+            // 清空預設的等待訊息
+            const logs = document.getElementById('sync-logs');
+            logs.innerHTML = '';
+            
+            addSyncLog('系統已初始化', '✅');
+        }
+
+        function clearSyncLogs() {
+            const logs = document.getElementById('sync-logs');
+            logs.innerHTML = '';
+            addSyncLog('紀錄已清除', '✅');
         }
 
         // 初始化新版應用程式
