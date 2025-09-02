@@ -652,6 +652,311 @@
             border-radius: 4px;
             transition: width 0.3s ease;
         }
+
+        /* === 新盤點流程樣式 === */
+        .workflow-card {
+            background: white;
+            border-radius: 12px;
+            padding: 24px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            border: 1px solid var(--border-color);
+        }
+
+        .step-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+            gap: 12px;
+        }
+
+        .step-number {
+            background: var(--primary-color);
+            color: white;
+            width: 32px;
+            height: 32px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 1.1em;
+        }
+
+        .staff-grid, .area-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 20px 0;
+        }
+
+        .staff-card, .area-card {
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 10px;
+            padding: 20px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .staff-card:hover, .area-card:hover {
+            background: #e3f2fd;
+            border-color: var(--primary-color);
+            transform: translateY(-2px);
+        }
+
+        .staff-card.selected, .area-card.selected {
+            background: var(--primary-color);
+            color: white;
+            border-color: var(--primary-color);
+        }
+
+        .area-card.completed {
+            background: #e8f5e8;
+            border-color: #4caf50;
+            cursor: default;
+            opacity: 0.7;
+        }
+
+        .area-card.completed:hover {
+            transform: none;
+        }
+
+        .staff-avatar {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .staff-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .staff-dept {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .area-status {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+
+        .area-name {
+            font-weight: bold;
+            font-size: 1.1em;
+            margin-bottom: 5px;
+        }
+
+        .area-info {
+            font-size: 0.9em;
+            opacity: 0.7;
+        }
+
+        .completed-badge {
+            background: #4caf50;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.8em;
+            margin-top: 8px;
+            display: inline-block;
+        }
+
+        .selected-info {
+            background: #f0f8ff;
+            border: 1px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+
+        .progress-info {
+            background: #f9f9f9;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 20px;
+            font-size: 0.95em;
+        }
+
+        .current-session-info {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .session-header {
+            margin-bottom: 15px;
+            font-size: 0.95em;
+        }
+
+        .progress-bar-container {
+            position: relative;
+        }
+
+        .progress-text {
+            font-size: 0.9em;
+            margin-top: 8px;
+            display: block;
+        }
+
+        .items-checklist {
+            max-height: 400px;
+            overflow-y: auto;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+        }
+
+        .item-check-card {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 15px;
+            border-bottom: 1px solid var(--border-color);
+            transition: all 0.3s ease;
+        }
+
+        .item-check-card:last-child {
+            border-bottom: none;
+        }
+
+        .item-check-card.pending {
+            background: #fff;
+        }
+
+        .item-check-card.completed {
+            background: #e8f5e8;
+            border-left: 4px solid #4caf50;
+        }
+
+        .item-check-card.discrepancy {
+            background: #fff3cd;
+            border-left: 4px solid #ffc107;
+        }
+
+        .item-check-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            flex: 1;
+        }
+
+        .item-status-icon {
+            font-size: 1.2em;
+            width: 24px;
+            text-align: center;
+        }
+
+        .item-info strong {
+            display: block;
+            margin-bottom: 4px;
+        }
+
+        .item-quantities {
+            text-align: right;
+            font-size: 0.9em;
+        }
+
+        .item-quantities span {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        .item-quantities .diff {
+            color: #ff6b35;
+            font-weight: bold;
+        }
+
+        .area-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+
+        .completion-card {
+            background: white;
+            border-radius: 10px;
+            padding: 24px;
+            text-align: center;
+            border: 1px solid var(--border-color);
+        }
+
+        .summary-stats {
+            display: flex;
+            justify-content: space-around;
+            margin: 20px 0;
+            gap: 20px;
+        }
+
+        .stat-item {
+            text-align: center;
+        }
+
+        .stat-number {
+            display: block;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .stat-label {
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .completion-time {
+            margin-top: 15px;
+            padding-top: 15px;
+            border-top: 1px solid var(--border-color);
+            font-size: 0.9em;
+            color: var(--text-secondary);
+        }
+
+        .completion-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        .global-progress {
+            background: linear-gradient(135deg, #74b9ff 0%, #0984e3 100%);
+            color: white;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+
+        .progress-summary h4 {
+            margin-bottom: 15px;
+            color: white;
+        }
+
+        .summary-stats span {
+            margin-right: 20px;
+            font-size: 0.95em;
+        }
+
+        .global-progress-bar {
+            background: rgba(255,255,255,0.3);
+            border-radius: 10px;
+            height: 8px;
+            margin-top: 15px;
+            overflow: hidden;
+        }
+
+        .global-progress-bar .progress-fill {
+            background: white;
+            height: 100%;
+            transition: width 0.5s ease;
+        }
     </style>
 </head>
 
@@ -753,165 +1058,140 @@
         <div id="inventory-content" class="tab-content">
             <!-- 盤點標題區 -->
             <div class="inventory-header">
-                <h2>📦 庫存盤點</h2>
-                <p>智能盤點作業系統</p>
+                <h2>📦 智能盤點系統</h2>
+                <p>結構化區域盤點流程</p>
             </div>
 
-            <!-- 盤點作業狀態 -->
-            <div class="session-info">
-                <div class="session-status">
-                    <span>盤點作業狀態</span>
-                    <span class="status-badge" id="session-status">待開始</span>
-                </div>
-                <div id="session-details" style="display: none;">
-                    <div style="font-size: 0.9em; color: var(--text-secondary);">
-                        <div>作業ID: <span id="session-id">-</span></div>
-                        <div>開始時間: <span id="session-start">-</span></div>
-                        <div>操作人員: <span id="session-operator">-</span></div>
+            <!-- 整體進度顯示 -->
+            <div class="global-progress" id="global-progress-area" style="display: none;">
+                <div class="progress-summary">
+                    <h4>📊 整體盤點進度</h4>
+                    <div class="summary-stats">
+                        <span><strong>盤點人員：</strong><span id="global-staff-name">-</span></span>
+                        <span><strong>已完成：</strong><span id="global-completed-areas">0</span> / <span id="global-total-areas">3</span> 區域</span>
+                    </div>
+                    <div class="global-progress-bar">
+                        <div class="progress-fill" id="global-progress-fill" style="width: 0%"></div>
                     </div>
                 </div>
             </div>
 
-            <!-- 開始盤點區 -->
-            <div id="start-session-area">
-                <div class="form-group">
-                    <label class="form-label">選擇盤點區域</label>
-                    <select class="form-control" id="inventory-location">
-                        <option value="">選擇區域</option>
-                        <option value="1F-A">一樓A區</option>
-                        <option value="1F-B">一樓B區</option>
-                        <option value="2F-A">二樓A區</option>
-                        <option value="2F-B">二樓B區</option>
-                        <option value="COLD">冷藏區</option>
-                        <option value="TEMP">暫存區</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">盤點類型</label>
-                    <select class="form-control" id="inventory-type">
-                        <option value="routine">例行盤點</option>
-                        <option value="spot">抽查盤點</option>
-                        <option value="full">全面盤點</option>
-                        <option value="quick">快速盤點</option>
-                    </select>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">操作人員</label>
-                    <select class="form-control" id="inventory-operator">
-                        <option value="">選擇操作人員</option>
-                        <option value="管理員">管理員</option>
-                        <option value="操作員A">操作員A</option>
-                        <option value="操作員B">操作員B</option>
-                        <option value="品管員">品管員</option>
-                    </select>
-                </div>
-
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="startInventorySession()">
-                        🚀 開始盤點作業
-                    </button>
-                </div>
-            </div>
-
-            <!-- 盤點操作區 -->
-            <div id="inventory-operation-area" style="display: none;">
-                <!-- 掃描區域 -->
-                <div class="scan-area" onclick="startInventoryScanning()">
-                    <div class="scan-icon">📱</div>
-                    <div style="font-size: 1.1em; font-weight: 500; margin-bottom: 5px;">點擊掃描條碼</div>
-                    <div style="font-size: 0.9em; color: var(--text-secondary);">或手動輸入商品資料</div>
-                </div>
-                
-                <!-- 掃描控制按鈕 -->
-                <div class="btn-group">
-                    <button class="btn btn-secondary" onclick="closeScannerManually()" style="background: var(--error-color); color: white;">
-                        ❌ 關閉掃描器
-                    </button>
-                </div>
-
-                <!-- 商品資料輸入 -->
-                <div class="form-group">
-                    <label class="form-label">商品條碼</label>
-                    <input type="text" class="form-control" id="item-barcode" placeholder="掃描或輸入條碼">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">商品名稱</label>
-                    <input type="text" class="form-control" id="item-name" placeholder="商品名稱">
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">商品分類</label>
-                    <select class="form-control" id="item-category">
-                        <option value="">選擇分類</option>
-                        <option value="食品類">食品類</option>
-                        <option value="藥品類">藥品類</option>
-                        <option value="美妝類">美妝類</option>
-                        <option value="保健品">保健品</option>
-                        <option value="其他類">其他類</option>
-                    </select>
-                </div>
-
-                <!-- 數量調整器 -->
-                <div class="quantity-adjuster">
-                    <button class="quantity-btn" onclick="adjustQuantity(-1)">−</button>
-                    <div class="quantity-display" id="item-quantity">0</div>
-                    <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
-                </div>
-
-                <!-- 快速數量輸入 -->
-                <div class="quick-input-grid">
-                    <div class="quick-btn" onclick="setQuantity(1)">1</div>
-                    <div class="quick-btn" onclick="setQuantity(5)">5</div>
-                    <div class="quick-btn" onclick="setQuantity(10)">10</div>
-                    <div class="quick-btn" onclick="setQuantity(20)">20</div>
-                    <div class="quick-btn" onclick="setQuantity(50)">50</div>
-                    <div class="quick-btn" onclick="setQuantity(100)">100</div>
-                </div>
-
-                <div class="form-group">
-                    <label class="form-label">備註</label>
-                    <input type="text" class="form-control" id="item-notes" placeholder="選填備註資訊">
-                </div>
-
-                <!-- 操作按鈕 -->
-                <div class="btn-group">
-                    <button class="btn btn-success" onclick="addInventoryItem()">
-                        ✅ 新增項目
-                    </button>
-                    <button class="btn btn-secondary" onclick="clearItemForm()">
-                        🔄 清除
-                    </button>
-                </div>
-
-                <!-- 盤點項目列表 -->
-                <div class="inventory-items">
-                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
-                        <h3 style="margin: 0;">已盤點項目</h3>
-                        <span id="item-count" style="color: var(--primary-color); font-weight: bold;">0 項</span>
+            <!-- 步驟1: 人員選擇 -->
+            <div id="staff-selection-area">
+                <div class="workflow-card">
+                    <div class="step-header">
+                        <span class="step-number">1</span>
+                        <h3>👤 選擇盤點人員</h3>
                     </div>
                     
-                    <div class="progress-bar">
-                        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                    <div class="staff-grid" id="staff-grid">
+                        <!-- 動態生成人員選項 -->
                     </div>
                     
-                    <div id="inventory-items-list">
-                        <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
-                            尚未新增任何項目
+                    <div class="selected-info" id="selected-staff-info" style="display: none;">
+                        <strong>已選擇：</strong><span id="selected-staff-name"></span> - <span id="selected-staff-dept"></span>
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="confirmStaffSelection()" id="confirm-staff-btn" style="display: none;">
+                        ✅ 確認人員選擇
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 步驟2: 區域選擇 -->
+            <div id="area-selection-area" style="display: none;">
+                <div class="workflow-card">
+                    <div class="step-header">
+                        <span class="step-number">2</span>
+                        <h3>📍 選擇盤點區域</h3>
+                    </div>
+                    
+                    <div class="progress-info">
+                        <strong>盤點人員：</strong><span id="display-staff-name"></span><br>
+                        <strong>已完成區域：</strong><span id="completed-areas-count">0</span> / <span id="total-areas-count">3</span>
+                    </div>
+                    
+                    <div class="area-grid" id="area-grid">
+                        <!-- 動態生成區域選項 -->
+                    </div>
+                    
+                    <div class="selected-info" id="selected-area-info" style="display: none;">
+                        <strong>選中區域：</strong><span id="selected-area-name"></span><br>
+                        <strong>預計品項：</strong><span id="selected-area-items-count"></span> 項
+                    </div>
+                    
+                    <button class="btn btn-primary" onclick="confirmAreaSelection()" id="confirm-area-btn" style="display: none;">
+                        🚀 開始盤點此區域
+                    </button>
+                </div>
+            </div>
+
+            <!-- 步驟3: 品項盤點 -->
+            <div id="items-inventory-area" style="display: none;">
+                <div class="workflow-card">
+                    <div class="step-header">
+                        <span class="step-number">3</span>
+                        <h3>📦 區域品項盤點</h3>
+                    </div>
+                    
+                    <div class="current-session-info">
+                        <div class="session-header">
+                            <strong>🏢 當前區域：</strong><span id="current-area-name"></span><br>
+                            <strong>👤 盤點人員：</strong><span id="current-staff-name"></span>
+                        </div>
+                        <div class="progress-bar-container">
+                            <div class="progress-bar">
+                                <div class="progress-fill" id="area-progress-fill" style="width: 0%"></div>
+                            </div>
+                            <span class="progress-text">
+                                <span id="completed-items-count">0</span> / <span id="total-items-count">0</span> 項目完成
+                            </span>
                         </div>
                     </div>
+                    
+                    <!-- 掃描區域 -->
+                    <div class="scan-area" onclick="startAreaItemScanning()">
+                        <div class="scan-icon">📱</div>
+                        <div style="font-size: 1.1em; font-weight: 500; margin-bottom: 5px;">掃描品項條碼</div>
+                        <div style="font-size: 0.9em; color: var(--text-secondary);">請掃描下方品項清單中的條碼</div>
+                    </div>
+                    
+                    <!-- 品項清單 -->
+                    <div class="items-checklist" id="area-items-checklist">
+                        <!-- 動態生成品項清單 -->
+                    </div>
+                    
+                    <div class="area-actions">
+                        <button class="btn btn-success" onclick="completeAreaInventory()" id="complete-area-btn" style="display: none;">
+                            ✅ 完成此區域盤點
+                        </button>
+                        <button class="btn btn-secondary" onclick="backToAreaSelection()">
+                            ← 返回區域選擇
+                        </button>
+                    </div>
                 </div>
-
-                <!-- 完成盤點 -->
-                <div class="btn-group">
-                    <button class="btn btn-primary" onclick="completeInventorySession()">
-                        🏁 完成盤點作業
-                    </button>
-                    <button class="btn" onclick="cancelInventorySession()" style="background: var(--error-color); color: white;">
-                        ❌ 取消作業
-                    </button>
+            </div>
+            
+            <!-- 步驟4: 完成總結 -->
+            <div id="completion-summary-area" style="display: none;">
+                <div class="workflow-card">
+                    <div class="step-header">
+                        <span class="step-number">4</span>
+                        <h3>📊 盤點完成總結</h3>
+                    </div>
+                    
+                    <div class="completion-summary" id="completion-summary">
+                        <!-- 動態生成完成總結 -->
+                    </div>
+                    
+                    <div class="completion-actions">
+                        <button class="btn btn-primary" onclick="startNewAreaInventory()">
+                            🔄 繼續盤點其他區域
+                        </button>
+                        <button class="btn btn-success" onclick="finishAllInventory()">
+                            🏁 完成全部盤點
+                        </button>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1115,6 +1395,230 @@
         let inventoryItems = [];
         let currentQuantity = 0;
 
+        // 新盤點流程狀態
+        let selectedStaff = null;
+        let selectedArea = null;
+        let areaItemsList = [];
+        let completedAreas = [];
+        let currentAreaProgress = 0;
+
+        // 區域品項資料庫
+        const areaItemsDatabase = {
+            'A1倉庫': [
+                { id: 'A1-001', name: '維他命C', category: '保健品', expectedQty: 100, barcode: '4710123456789' },
+                { id: 'A1-002', name: '葉黃素', category: '保健品', expectedQty: 50, barcode: '4710123456790' },
+                { id: 'A1-003', name: '魚油', category: '保健品', expectedQty: 75, barcode: '4710123456791' },
+                { id: 'A1-004', name: '膠原蛋白', category: '美妝類', expectedQty: 30, barcode: '4710123456792' }
+            ],
+            'B2倉庫': [
+                { id: 'B2-001', name: '面膜', category: '美妝類', expectedQty: 200, barcode: '4710123456793' },
+                { id: 'B2-002', name: '精華液', category: '美妝類', expectedQty: 80, barcode: '4710123456794' },
+                { id: 'B2-003', name: '乳液', category: '美妝類', expectedQty: 120, barcode: '4710123456795' }
+            ],
+            'C3倉庫': [
+                { id: 'C3-001', name: '蛋白粉', category: '食品類', expectedQty: 40, barcode: '4710123456796' },
+                { id: 'C3-002', name: '能量棒', category: '食品類', expectedQty: 150, barcode: '4710123456797' },
+                { id: 'C3-003', name: '代餐包', category: '食品類', expectedQty: 60, barcode: '4710123456798' }
+            ]
+        };
+
+        // 盤點人員清單
+        const staffList = [
+            { id: 'staff-001', name: '張小明', department: '倉儲部' },
+            { id: 'staff-002', name: '李小華', department: '倉儲部' },
+            { id: 'staff-003', name: '王小美', department: '品控部' },
+            { id: 'staff-004', name: '陳小強', department: '倉儲部' }
+        ];
+
+        // === 新盤點流程相關函數 ===
+        
+        // 初始化人員選擇界面
+        function initializeStaffSelection() {
+            const staffGrid = document.getElementById('staff-grid');
+            staffGrid.innerHTML = '';
+            
+            staffList.forEach(staff => {
+                const staffCard = document.createElement('div');
+                staffCard.className = 'staff-card';
+                staffCard.onclick = () => selectStaff(staff);
+                staffCard.innerHTML = `
+                    <div class="staff-avatar">👤</div>
+                    <div class="staff-name">${staff.name}</div>
+                    <div class="staff-dept">${staff.department}</div>
+                `;
+                staffGrid.appendChild(staffCard);
+            });
+        }
+        
+        // 選擇盤點人員
+        function selectStaff(staff) {
+            selectedStaff = staff;
+            
+            // 更新選中狀態
+            document.querySelectorAll('.staff-card').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // 顯示選中信息
+            document.getElementById('selected-staff-name').textContent = staff.name;
+            document.getElementById('selected-staff-dept').textContent = staff.department;
+            document.getElementById('selected-staff-info').style.display = 'block';
+            document.getElementById('confirm-staff-btn').style.display = 'block';
+            
+            console.log('👤 已選擇盤點人員:', staff);
+        }
+        
+        // 確認人員選擇
+        function confirmStaffSelection() {
+            if (!selectedStaff) {
+                showNotification('請先選擇盤點人員', 'error');
+                return;
+            }
+            
+            // 顯示全域進度區域
+            document.getElementById('global-progress-area').style.display = 'block';
+            document.getElementById('global-staff-name').textContent = selectedStaff.name;
+            
+            // 隱藏人員選擇，顯示區域選擇
+            document.getElementById('staff-selection-area').style.display = 'none';
+            document.getElementById('area-selection-area').style.display = 'block';
+            
+            // 初始化區域選擇
+            initializeAreaSelection();
+            
+            showNotification(`歡迎 ${selectedStaff.name}，請選擇盤點區域`, 'success');
+        }
+        
+        // 初始化區域選擇界面
+        function initializeAreaSelection() {
+            document.getElementById('display-staff-name').textContent = selectedStaff.name;
+            document.getElementById('completed-areas-count').textContent = completedAreas.length;
+            document.getElementById('total-areas-count').textContent = Object.keys(areaItemsDatabase).length;
+            
+            const areaGrid = document.getElementById('area-grid');
+            areaGrid.innerHTML = '';
+            
+            Object.keys(areaItemsDatabase).forEach(areaName => {
+                const isCompleted = completedAreas.includes(areaName);
+                const itemsCount = areaItemsDatabase[areaName].length;
+                
+                const areaCard = document.createElement('div');
+                areaCard.className = `area-card ${isCompleted ? 'completed' : ''}`;
+                
+                if (!isCompleted) {
+                    areaCard.onclick = () => selectArea(areaName, itemsCount);
+                }
+                
+                areaCard.innerHTML = `
+                    <div class="area-status">${isCompleted ? '✅' : '📦'}</div>
+                    <div class="area-name">${areaName}</div>
+                    <div class="area-info">${itemsCount} 個品項</div>
+                    ${isCompleted ? '<div class="completed-badge">已完成</div>' : ''}
+                `;
+                areaGrid.appendChild(areaCard);
+            });
+        }
+        
+        // 選擇盤點區域
+        function selectArea(areaName, itemsCount) {
+            selectedArea = areaName;
+            areaItemsList = [...areaItemsDatabase[areaName]]; // 複製品項清單
+            
+            // 更新選中狀態
+            document.querySelectorAll('.area-card:not(.completed)').forEach(card => {
+                card.classList.remove('selected');
+            });
+            event.currentTarget.classList.add('selected');
+            
+            // 顯示選中信息
+            document.getElementById('selected-area-name').textContent = areaName;
+            document.getElementById('selected-area-items-count').textContent = itemsCount;
+            document.getElementById('selected-area-info').style.display = 'block';
+            document.getElementById('confirm-area-btn').style.display = 'block';
+            
+            console.log('📍 已選擇盤點區域:', areaName, '品項數:', itemsCount);
+        }
+        
+        // 確認區域選擇，開始品項盤點
+        function confirmAreaSelection() {
+            if (!selectedArea) {
+                showNotification('請先選擇盤點區域', 'error');
+                return;
+            }
+            
+            // 隱藏區域選擇，顯示品項盤點
+            document.getElementById('area-selection-area').style.display = 'none';
+            document.getElementById('items-inventory-area').style.display = 'block';
+            
+            // 初始化品項盤點界面
+            initializeItemsInventory();
+            
+            showNotification(`開始盤點 ${selectedArea}，共 ${areaItemsList.length} 個品項`, 'info');
+        }
+        
+        // 初始化品項盤點界面
+        function initializeItemsInventory() {
+            document.getElementById('current-area-name').textContent = selectedArea;
+            document.getElementById('current-staff-name').textContent = selectedStaff.name;
+            document.getElementById('total-items-count').textContent = areaItemsList.length;
+            
+            // 重置所有品項狀態為未完成
+            areaItemsList.forEach(item => {
+                item.scannedQty = 0;
+                item.status = 'pending'; // pending, completed, discrepancy
+            });
+            
+            updateItemsChecklist();
+            updateAreaProgress();
+        }
+        
+        // 更新品項檢查清單
+        function updateItemsChecklist() {
+            const checklist = document.getElementById('area-items-checklist');
+            checklist.innerHTML = '';
+            
+            areaItemsList.forEach((item, index) => {
+                const itemCard = document.createElement('div');
+                itemCard.className = `item-check-card ${item.status}`;
+                itemCard.innerHTML = `
+                    <div class="item-check-header">
+                        <span class="item-status-icon">
+                            ${item.status === 'completed' ? '✅' : 
+                              item.status === 'discrepancy' ? '⚠️' : '⏳'}
+                        </span>
+                        <div class="item-info">
+                            <strong>${item.name}</strong><br>
+                            <small>條碼: ${item.barcode} | 類別: ${item.category}</small>
+                        </div>
+                    </div>
+                    <div class="item-quantities">
+                        <span>期望: ${item.expectedQty}</span>
+                        <span>實際: ${item.scannedQty || 0}</span>
+                        ${item.status === 'discrepancy' ? '<span class="diff">差異!</span>' : ''}
+                    </div>
+                `;
+                checklist.appendChild(itemCard);
+            });
+        }
+        
+        // 更新區域進度
+        function updateAreaProgress() {
+            const completedItems = areaItemsList.filter(item => item.status === 'completed').length;
+            const totalItems = areaItemsList.length;
+            const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+            
+            document.getElementById('completed-items-count').textContent = completedItems;
+            document.getElementById('area-progress-fill').style.width = `${progress}%`;
+            
+            // 如果所有品項都已完成，顯示完成按鈕
+            if (completedItems === totalItems && totalItems > 0) {
+                document.getElementById('complete-area-btn').style.display = 'block';
+            } else {
+                document.getElementById('complete-area-btn').style.display = 'none';
+            }
+        }
+
         // 全域函數
         function switchTab(tab) {
             // 移除所有 active 類別
@@ -1151,6 +1655,12 @@
             
             // 根據選擇的標籤載入對應內容
             console.log(`切換到 ${tab} 頁面`);
+            
+            if (tab === 'inventory') {
+                console.log('🏭 新盤點系統載入');
+                initializeInventoryWorkflow();
+            }
+            
             showNotification(`已切換到${getTabName(tab)}`, 'info');
         }
 
@@ -1439,13 +1949,222 @@
             document.getElementById('item-quantity').textContent = currentQuantity;
         }
 
-        // 清除項目表單
+        // === 新流程的掃描和完成函數 ===
+        
+        // 啟動區域品項掃描
+        async function startAreaItemScanning() {
+            if (!app) {
+                showNotification('掃描功能尚未初始化', 'warning');
+                return;
+            }
+
+            try {
+                showNotification('啟動品項條碼掃描...', 'info');
+                await app.startScanning({ 
+                    mode: 'area-inventory',
+                    callback: handleAreaItemScanResult 
+                });
+            } catch (error) {
+                console.error('啟動掃描失敗:', error);
+                showNotification('掃描功能暫時無法使用', 'error');
+            }
+        }
+        
+        // 處理區域品項掃描結果
+        function handleAreaItemScanResult(scanData) {
+            console.log('🔍 區域品項掃描結果:', scanData);
+            
+            if (!selectedArea || !areaItemsList.length) {
+                showNotification('請先選擇盤點區域', 'error');
+                return;
+            }
+            
+            // 查找匹配的品項
+            const foundItem = areaItemsList.find(item => item.barcode === scanData.code);
+            
+            if (foundItem) {
+                // 更新品項狀態
+                foundItem.scannedQty = (foundItem.scannedQty || 0) + 1;
+                
+                // 判斷狀態
+                if (foundItem.scannedQty === foundItem.expectedQty) {
+                    foundItem.status = 'completed';
+                    showNotification(`✅ ${foundItem.name} 盤點完成 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'success');
+                } else if (foundItem.scannedQty > foundItem.expectedQty) {
+                    foundItem.status = 'discrepancy';
+                    showNotification(`⚠️ ${foundItem.name} 數量超出預期 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'warning');
+                } else {
+                    foundItem.status = 'pending';
+                    showNotification(`📦 ${foundItem.name} 已記錄 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'info');
+                }
+                
+                // 更新界面
+                updateItemsChecklist();
+                updateAreaProgress();
+                
+                // 重置掃描器狀態，允許連續掃描
+                if (window.barcodeScanner) {
+                    window.barcodeScanner.resetScanState();
+                }
+                
+            } else {
+                showNotification(`❌ 條碼 ${scanData.code} 不在 ${selectedArea} 的品項清單中`, 'error');
+            }
+        }
+        
+        // 完成區域盤點
+        function completeAreaInventory() {
+            if (!selectedArea) return;
+            
+            const completedItems = areaItemsList.filter(item => item.status === 'completed').length;
+            const discrepancyItems = areaItemsList.filter(item => item.status === 'discrepancy').length;
+            const totalItems = areaItemsList.length;
+            
+            // 添加到已完成區域
+            if (!completedAreas.includes(selectedArea)) {
+                completedAreas.push(selectedArea);
+            }
+            
+            // 保存區域結果到本地儲存
+            const areaResult = {
+                area: selectedArea,
+                staff: selectedStaff.name,
+                completedAt: new Date().toISOString(),
+                items: [...areaItemsList],
+                summary: {
+                    total: totalItems,
+                    completed: completedItems,
+                    discrepancy: discrepancyItems
+                }
+            };
+            
+            const savedResults = JSON.parse(localStorage.getItem('area-inventory-results') || '[]');
+            savedResults.push(areaResult);
+            localStorage.setItem('area-inventory-results', JSON.stringify(savedResults));
+            
+            // 更新全域進度
+            updateGlobalProgress();
+            
+            // 顯示完成總結
+            showAreaCompletionSummary(areaResult);
+            
+            showNotification(`🎉 ${selectedArea} 盤點完成！`, 'success');
+        }
+        
+        // 顯示區域完成總結
+        function showAreaCompletionSummary(areaResult) {
+            // 隱藏品項盤點，顯示完成總結
+            document.getElementById('items-inventory-area').style.display = 'none';
+            document.getElementById('completion-summary-area').style.display = 'block';
+            
+            const summary = document.getElementById('completion-summary');
+            summary.innerHTML = `
+                <div class="completion-card">
+                    <h4>🎯 ${areaResult.area} 盤點結果</h4>
+                    <div class="summary-stats">
+                        <div class="stat-item">
+                            <span class="stat-number">${areaResult.summary.total}</span>
+                            <span class="stat-label">總品項</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${areaResult.summary.completed}</span>
+                            <span class="stat-label">已完成</span>
+                        </div>
+                        <div class="stat-item">
+                            <span class="stat-number">${areaResult.summary.discrepancy}</span>
+                            <span class="stat-label">有差異</span>
+                        </div>
+                    </div>
+                    <div class="completion-time">
+                        完成時間: ${new Date(areaResult.completedAt).toLocaleString()}
+                    </div>
+                </div>
+            `;
+        }
+        
+        // 開始新的區域盤點
+        function startNewAreaInventory() {
+            // 重置選擇狀態
+            selectedArea = null;
+            areaItemsList = [];
+            
+            // 隱藏完成總結，顯示區域選擇
+            document.getElementById('completion-summary-area').style.display = 'none';
+            document.getElementById('area-selection-area').style.display = 'block';
+            
+            // 重新初始化區域選擇
+            initializeAreaSelection();
+            
+            showNotification('請選擇下一個盤點區域', 'info');
+        }
+        
+        // 完成全部盤點
+        function finishAllInventory() {
+            showNotification('🏆 全部區域盤點完成！感謝您的辛勤工作！', 'success');
+            
+            // 重置所有狀態
+            selectedStaff = null;
+            selectedArea = null;
+            areaItemsList = [];
+            completedAreas = [];
+            currentAreaProgress = 0;
+            
+            // 回到人員選擇界面
+            document.getElementById('completion-summary-area').style.display = 'none';
+            document.getElementById('global-progress-area').style.display = 'none';
+            document.getElementById('staff-selection-area').style.display = 'block';
+            
+            // 重新初始化人員選擇
+            initializeStaffSelection();
+        }
+        
+        // 返回區域選擇
+        function backToAreaSelection() {
+            document.getElementById('items-inventory-area').style.display = 'none';
+            document.getElementById('area-selection-area').style.display = 'block';
+            
+            // 重置當前區域狀態
+            selectedArea = null;
+            areaItemsList = [];
+        }
+        
+        // 更新全域進度
+        function updateGlobalProgress() {
+            const totalAreas = Object.keys(areaItemsDatabase).length;
+            const completedCount = completedAreas.length;
+            const progress = totalAreas > 0 ? (completedCount / totalAreas) * 100 : 0;
+            
+            document.getElementById('global-completed-areas').textContent = completedCount;
+            document.getElementById('global-progress-fill').style.width = `${progress}%`;
+        }
+
+        // 初始化整個盤點工作流程
+        function initializeInventoryWorkflow() {
+            console.log('🔄 初始化新盤點工作流程');
+            
+            // 重置所有狀態
+            selectedStaff = null;
+            selectedArea = null;
+            areaItemsList = [];
+            currentAreaProgress = 0;
+            
+            // 隱藏所有區域，只顯示人員選擇
+            document.getElementById('global-progress-area').style.display = 'none';
+            document.getElementById('area-selection-area').style.display = 'none';
+            document.getElementById('items-inventory-area').style.display = 'none';
+            document.getElementById('completion-summary-area').style.display = 'none';
+            document.getElementById('staff-selection-area').style.display = 'block';
+            
+            // 初始化人員選擇界面
+            initializeStaffSelection();
+            
+            console.log('✅ 盤點工作流程初始化完成');
+        }
+
+        // 清除項目表單 (保留舊版兼容)
         function clearItemForm() {
-            document.getElementById('item-barcode').value = '';
-            document.getElementById('item-name').value = '';
-            document.getElementById('item-category').value = '';
-            document.getElementById('item-notes').value = '';
-            setQuantity(0);
+            // 在新流程中，這個函數主要用於兼容性
+            console.log('⚠️ clearItemForm 已廢棄，新流程不需要手動清除表單');
         }
 
         // 新增盤點項目
