@@ -1,0 +1,63 @@
+{
+  "name": "智能倉儲管理系統",
+  "short_name": "智能倉儲",
+  "description": "現代化行動端倉儲管理工具，支援庫存盤點、條碼掃描、數據分析等功能",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#F5F5F5",
+  "theme_color": "#2196F3",
+  "orientation": "portrait",
+  "scope": "/",
+  "icons": [
+    {
+      "src": "icon-192.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "any maskable"
+    },
+    {
+      "src": "icon-512.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "any maskable"
+    }
+  ],
+  "categories": ["business", "productivity", "utilities"],
+  "lang": "zh-TW",
+  "dir": "ltr",
+  "screenshots": [
+    {
+      "src": "screenshot-mobile.png",
+      "sizes": "720x1280",
+      "type": "image/png",
+      "form_factor": "narrow"
+    }
+  ],
+  "shortcuts": [
+    {
+      "name": "快速掃描",
+      "short_name": "掃描",
+      "description": "快速啟動條碼掃描功能",
+      "url": "/scan",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    },
+    {
+      "name": "庫存盤點",
+      "short_name": "盤點",
+      "description": "快速啟動庫存盤點功能",
+      "url": "/inventory",
+      "icons": [
+        {
+          "src": "icon-192.png",
+          "sizes": "192x192"
+        }
+      ]
+    }
+  ],
+  "prefer_related_applications": false
+}
