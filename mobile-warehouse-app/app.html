@@ -1743,26 +1743,7 @@
     <div class="main-content">
         <!-- 首頁內容 -->
         <div id="dashboard-content" class="tab-content active">
-            <!-- 今日統計 -->
-            <div class="stats-section">
-                <div class="stats-title">
-                    📊 今日統計
-                </div>
-                <div class="stats-grid">
-                    <div class="stat-item">
-                        <span class="stat-number" id="today-inventory">0</span>
-                        <div class="stat-label">盤點項目</div>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="today-scans">0</span>
-                        <div class="stat-label">掃描次數</div>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number" id="pending-sync">0</span>
-                        <div class="stat-label">待同步</div>
-                    </div>
-                </div>
-            </div>
+
 
             <!-- 快速動作 -->
             <div class="quick-actions">
@@ -2258,14 +2239,8 @@
             }
 
             updateStats() {
-                // 更新統計數據
-                const todayInventory = this.getTodayInventoryCount();
-                const todayScans = this.getTodayScansCount();
-                const pendingSync = this.syncQueue.length;
-
-                document.getElementById('today-inventory').textContent = todayInventory;
-                document.getElementById('today-scans').textContent = todayScans;
-                document.getElementById('pending-sync').textContent = pendingSync;
+                // 統計區域已移除，保留函數避免錯誤
+                console.log('📊 統計功能已從首頁移除');
             }
 
             getTodayInventoryCount() {
@@ -3712,19 +3687,10 @@
             });
         }
 
-        // 更新儀表板統計
+        // 更新儀表板統計 (已移除統計區域)
         function updateDashboardStats(stats) {
-            if (stats.inventory) {
-                document.getElementById('today-inventory').textContent = stats.inventory.totalItems || 0;
-            }
-            
-            if (stats.scanner) {
-                document.getElementById('today-scans').textContent = stats.scanner.todayScans || 0;
-            }
-            
-            if (stats.sync) {
-                document.getElementById('pending-sync').textContent = stats.sync.total || 0;
-            }
+            // 統計區域已移除，保留函數避免錯誤
+            console.log('📊 儀表板統計功能已移除');
         }
 
         // 處理產品掃描結果
@@ -4324,32 +4290,23 @@
 
         // 更新首頁統計
         function updateDashboardStats() {
-            // 獲取今日盤點數量 - 修復計數邏輯
-            const today = new Date().toDateString();
-            let todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0');
-            
-            console.log('📊 更新統計 - 當前作業項目數:', inventoryItems.length);
-            console.log('📊 更新統計 - 今日累計項目數:', todayInventoryCount);
-            
-            // 更新顯示 (顯示今日累計數量)
-            document.getElementById('today-inventory').textContent = todayInventoryCount;
+            // 統計區域已移除，保留函數避免錯誤
+            console.log('📊 統計功能已從首頁移除');
         }
 
-        // 完成盤點時保存統計
+        // 完成盤點時保存統計 (統計顯示已移除)
         function saveInventoryStats(completedItemsCount) {
             const today = new Date().toDateString();
             let todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0');
             
-            // 累加今日完成的項目數
+            // 累加今日完成的項目數 (仍保存到localStorage以備未來使用)
             todayInventoryCount += completedItemsCount;
             
             // 儲存統計
             localStorage.setItem(`inventory-count-${today}`, todayInventoryCount.toString());
             
             console.log('💾 保存統計 - 本次完成:', completedItemsCount, '今日累計:', todayInventoryCount);
-            
-            // 更新顯示
-            document.getElementById('today-inventory').textContent = todayInventoryCount;
+            // 統計顯示已移除，但數據仍會保存
         }
 
         // 舊版兼容性 - 保持原有的函數接口
