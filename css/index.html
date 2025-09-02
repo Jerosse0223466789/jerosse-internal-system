@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>倉庫助手 - 行動版</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2196F3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="倉庫助手">
+    
+    <!-- Icons -->
+    <link rel="icon" href="icons/icon-192.png">
+    <link rel="apple-touch-icon" href="icons/icon-192.png">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="css/app.css">
+    
+    <!-- External Libraries -->
+    <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+</head>
+<body>
+    <!-- 載入畫面 -->
+    <div id="loadingScreen" class="loading-screen">
+        <div class="loading-content">
+            <img src="icons/icon-192.png" alt="Logo" class="loading-logo">
+            <h2>倉庫助手</h2>
+            <div class="loading-spinner"></div>
+            <p>正在載入...</p>
+        </div>
+    </div>
+
+    <!-- 主要應用程式 -->
+    <div id="app" class="app hidden">
+        
+        <!-- 頂部導航列 -->
+        <header class="header">
+            <div class="header-content">
+                <button class="menu-btn" id="menuBtn">
+                    <span class="material-icons">menu</span>
+                </button>
+                <h1 class="header-title" id="headerTitle">倉庫助手</h1>
+                <button class="sync-btn" id="syncBtn">
+                    <span class="material-icons">sync</span>
+                </button>
+            </div>
+        </header>
+
+        <!-- 側邊選單 -->
+        <nav class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <img src="icons/icon-192.png" alt="Logo" class="sidebar-logo">
+                <h3>倉庫助手</h3>
+            </div>
+            <ul class="sidebar-menu">
+                <li><a href="#" data-page="dashboard"><span class="material-icons">dashboard</span>儀表板</a></li>
+                <li><a href="#" data-page="inventory"><span class="material-icons">inventory</span>快速盤點</a></li>
+                <li><a href="#" data-page="barcode"><span class="material-icons">qr_code_scanner</span>條碼掃描</a></li>
+                <li><a href="#" data-page="batch"><span class="material-icons">assignment</span>批號管理</a></li>
+                <!-- 庫存轉移功能已停用 -->
+                <li><a href="#" data-page="floorplan"><span class="material-icons">map</span>平面圖</a></li>
+                <li><a href="#" data-page="offline"><span class="material-icons">cloud_off</span>離線作業</a></li>
+                <li><a href="#" data-page="settings"><span class="material-icons">settings</span>設定</a></li>
+            </ul>
+        </nav>
+
+        <!-- 主要內容區域 -->
+        <main class="main-content">
+            
+            <!-- 儀表板頁面 -->
+            <div class="page active" id="dashboardPage">
+                <div class="dashboard-cards">
+                    
+                    <!-- 快捷功能卡片 -->
+                    <div class="card quick-actions">
+                        <h3><span class="material-icons">flash_on</span>快捷功能</h3>
+                        <div class="action-grid">
+                            <button class="action-btn" data-action="quick-scan">
+                                <span class="material-icons">qr_code_scanner</span>
+                                <span>快速掃描</span>
+                            </button>
+                            <button class="action-btn" data-action="voice-input">
+                                <span class="material-icons">mic</span>
+                                <span>語音輸入</span>
+                            </button>
+                            <button class="action-btn" data-action="quick-count">
+                                <span class="material-icons">fact_check</span>
+                                <span>快速盤點</span>
+                            </button>
+                            <button class="action-btn" data-action="location-find">
+                                <span class="material-icons">place</span>
+                                <span>位置查找</span>
+                            </button>
+                        </div>
+                    </div>
+
+                    <!-- 今日統計 -->
+                    <div class="card stats-card">
+                        <h3><span class="material-icons">today</span>今日統計</h3>
+                        <div class="stats-grid">
+                            <div class="stat-item">
+                                <span class="stat-number" id="todayCount">0</span>
+                                <span class="stat-label">盤點項目</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="todayTransfer">0</span>
+                                <span class="stat-label">轉移操作</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number" id="todayBatch">0</span>
+                                <span class="stat-label">批號登記</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- 快速警示 -->
+                    <div class="card alert-card">
+                        <h3><span class="material-icons">warning</span>重要提醒</h3>
+                        <div class="alert-list" id="alertList">
+                            <p class="no-alerts">目前沒有警示</p>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+            <!-- 條碼掃描頁面 -->
+            <div class="page" id="barcodePage">
+                <div class="scanner-container">
+                    <div class="scanner-header">
+                        <h3>條碼掃描器</h3>
+                        <button class="camera-switch" id="cameraSwitchBtn">
+                            <span class="material-icons">cameraswitch</span>
+                        </button>
+                    </div>
+                    
+                    <div class="scanner-view">
+                        <div id="qr-reader" class="qr-reader"></div>
+                        <div class="scanner-overlay">
+                            <div class="scan-frame"></div>
+                        </div>
+                    </div>
+                    
+                    <div class="scanner-controls">
+                        <button class="btn btn-primary" id="startScanBtn">開始掃描</button>
+                        <button class="btn btn-secondary hidden" id="stopScanBtn">停止掃描</button>
+                        <button class="btn btn-secondary" id="manualInputBtn">手動輸入</button>
+                    </div>
+                    
+                    <div class="scan-result hidden" id="scanResult">
+                        <h4>掃描結果</h4>
+                        <div class="result-content" id="resultContent"></div>
+                        <div class="result-actions">
+                            <button class="btn btn-primary" id="processResultBtn">處理結果</button>
+                            <button class="btn btn-secondary" id="scanAgainBtn">重新掃描</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速盤點頁面 -->
+            <div class="page" id="inventoryPage">
+                <div class="inventory-container">
+                    <div class="form-section">
+                        <h3>快速盤點</h3>
+                        
+                        <div class="form-group">
+                            <label>區域</label>
+                            <select id="areaSelect" class="form-control">
+                                <option value="">選擇區域</option>
+                                <option value="1F">1F</option>
+                                <option value="2F">2F</option>
+                                <option value="3F">3F</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>分類</label>
+                            <select id="categorySelect" class="form-control">
+                                <option value="">選擇分類</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>品項</label>
+                            <div class="input-with-scan">
+                                <select id="itemSelect" class="form-control">
+                                    <option value="">選擇品項</option>
+                                </select>
+                                <button class="scan-btn" data-target="itemSelect">
+                                    <span class="material-icons">qr_code_scanner</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>數量</label>
+                            <div class="quantity-input">
+                                <button class="qty-btn" data-action="decrease">-</button>
+                                <input type="number" id="quantityInput" class="form-control qty-input" value="0" min="0">
+                                <button class="qty-btn" data-action="increase">+</button>
+                                <button class="voice-btn" data-target="quantityInput">
+                                    <span class="material-icons">mic</span>
+                                </button>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label>盤點人員</label>
+                            <select id="personSelect" class="form-control">
+                                <option value="">選擇人員</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button class="btn btn-primary btn-block" id="submitInventoryBtn">
+                                <span class="material-icons">save</span>
+                                提交盤點
+                            </button>
+                            <button class="btn btn-secondary btn-block" id="saveOfflineBtn">
+                                <span class="material-icons">cloud_off</span>
+                                離線儲存
+                            </button>
+                        </div>
+                    </div>
+                    
+                    <!-- 盤點記錄 -->
+                    <div class="records-section">
+                        <h4>今日盤點記錄</h4>
+                        <div class="records-list" id="inventoryRecords">
+                            <!-- 記錄會動態加載 -->
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 批號管理頁面 -->
+            <div class="page" id="batchPage">
+                <div class="batch-container">
+                    <div class="search-section">
+                        <div class="search-bar">
+                            <input type="text" id="batchSearch" class="form-control" placeholder="搜尋品項或批號...">
+                            <button class="search-btn">
+                                <span class="material-icons">search</span>
+                            </button>
+                        </div>
+                        
+                        <div class="filter-chips">
+                            <button class="filter-chip active" data-filter="all">全部</button>
+                            <button class="filter-chip" data-filter="expiring">即將到期</button>
+                            <button class="filter-chip" data-filter="expired">已過期</button>
+                            <button class="filter-chip" data-filter="low-stock">庫存不足</button>
+                        </div>
+                    </div>
+                    
+                    <div class="batch-list" id="batchList">
+                        <!-- 批號列表會動態加載 -->
+                    </div>
+                    
+                    <button class="fab" id="addBatchBtn">
+                        <span class="material-icons">add</span>
+                    </button>
+                </div>
+            </div>
+
+            <!-- 庫存轉移頁面已停用 -->
+            <div class="page" id="transferPage">
+                <div class="container">
+                    <div class="card">
+                        <h3><span class="material-icons">info</span>功能暫停</h3>
+                        <div style="padding: 20px; text-align: center;">
+                            <p>庫存轉移功能目前暫停使用</p>
+                            <p>如需轉移操作，請聯絡管理員</p>
+                            <button class="btn btn-primary" onclick="window.warehouseApp.navigateTo('dashboard')">
+                                返回首頁
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 設定頁面 -->
+            <div class="page" id="settingsPage">
+                <div class="settings-container">
+                    <div class="settings-section">
+                        <h3>應用程式設定</h3>
+                        
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <span>自動同步</span>
+                                <input type="checkbox" id="autoSync" class="setting-switch">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <span>語音提示</span>
+                                <input type="checkbox" id="voiceNotification" class="setting-switch">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <label class="setting-label">
+                                <span>振動回饋</span>
+                                <input type="checkbox" id="vibration" class="setting-switch">
+                                <span class="switch-slider"></span>
+                            </label>
+                        </div>
+                        
+                        <div class="setting-item">
+                            <span class="setting-label">離線資料</span>
+                            <div class="setting-actions">
+                                <button class="btn btn-secondary" id="clearOfflineData">清除離線資料</button>
+                                <button class="btn btn-secondary" id="exportOfflineData">匯出離線資料</button>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="settings-section">
+                        <h3>關於</h3>
+                        <div class="app-info">
+                            <p><strong>版本：</strong>1.0.0</p>
+                            <p><strong>最後更新：</strong><span id="lastUpdate">2024-12-26</span></p>
+                            <p><strong>離線資料：</strong><span id="offlineCount">0</span> 筆</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+        </main>
+
+        <!-- 底部導航列 -->
+        <nav class="bottom-nav">
+            <button class="nav-item active" data-page="dashboard">
+                <span class="material-icons">dashboard</span>
+                <span>首頁</span>
+            </button>
+            <button class="nav-item" data-page="inventory">
+                <span class="material-icons">inventory</span>
+                <span>盤點</span>
+            </button>
+            <button class="nav-item" data-page="barcode">
+                <span class="material-icons">qr_code_scanner</span>
+                <span>掃描</span>
+            </button>
+            <!-- 庫存轉移功能已停用 -->
+            <button class="nav-item" data-page="settings">
+                <span class="material-icons">settings</span>
+                <span>設定</span>
+            </button>
+        </nav>
+
+    </div>
+
+    <!-- 模態對話框 -->
+    <div class="modal" id="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title" id="modalTitle">標題</h4>
+                <button class="modal-close" id="modalClose">
+                    <span class="material-icons">close</span>
+                </button>
+            </div>
+            <div class="modal-body" id="modalBody">
+                <!-- 模態內容 -->
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <!-- 模態按鈕 -->
+            </div>
+        </div>
+    </div>
+
+    <!-- 語音輸入指示器 -->
+    <div class="voice-indicator hidden" id="voiceIndicator">
+        <div class="voice-animation">
+            <div class="voice-wave"></div>
+            <div class="voice-wave"></div>
+            <div class="voice-wave"></div>
+        </div>
+        <p>正在聆聽...</p>
+        <button class="btn btn-secondary" id="stopVoiceBtn">停止</button>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="js/app.js"></script>
+    <script src="js/scanner.js"></script>
+    <script src="js/voice.js"></script>
+    <script src="js/api.js"></script>
+    
+    <!-- Service Worker Registration -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            navigator.serviceWorker.register('service-worker.js')
+                .then(reg => console.log('SW registered', reg))
+                .catch(err => console.log('SW registration failed', err));
+        }
+    </script>
+</body>
+</html>

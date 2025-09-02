@@ -1,0 +1,13 @@
+{
+  "name": "倉庫助手",
+  "short_name": "倉庫助手",
+  "description": "行動端倉庫管理助手",
+  "version": "1.0.0",
+  "start_url": "./",
+  "display": "standalone",
+  "background_color": "#ffffff",
+  "theme_color": "#2196F3",
+  "orientation": "portrait",
+  "lang": "zh-TW"
+}
+
