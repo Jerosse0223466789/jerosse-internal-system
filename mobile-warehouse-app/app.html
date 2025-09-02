@@ -1014,6 +1014,52 @@
             padding: 10px;
         }
 
+        /* === 手機版數量輸入優化 === */
+        .quantity-input-container {
+            width: 100%;
+        }
+
+        .quantity-input-mobile {
+            width: 100%;
+            text-align: center;
+            font-size: 1.2em;
+            font-weight: bold;
+            border: 2px solid var(--primary-color);
+            border-radius: 8px;
+            padding: 15px 10px;
+            background: #f8f9fa;
+            outline: none;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-input-mobile:focus {
+            border-color: var(--primary-color);
+            background: white;
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .quantity-input-mobile::placeholder {
+            color: #999;
+            font-weight: normal;
+        }
+
+        /* 確保在小螢幕上的響應式 */
+        @media (max-width: 480px) {
+            .quantity-input-mobile {
+                font-size: 1.1em;
+                padding: 12px 8px;
+            }
+            
+            .manual-input-section {
+                padding: 15px;
+                margin: 15px 0;
+            }
+            
+            .form-row {
+                margin-bottom: 12px;
+            }
+        }
+
         .quantity-btn {
             background: var(--primary-color);
             color: white;
@@ -1261,10 +1307,20 @@
                         
                         <div class="form-row">
                             <div class="form-group">
+                                <label class="form-label">選擇分類</label>
+                                <select class="form-control" id="product-category-select" onchange="onCategoryChange()">
+                                    <option value="">請選擇分類</option>
+                                    <!-- 動態填入商品分類 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
                                 <label class="form-label">選擇品項</label>
-                                <select class="form-control" id="area-item-select">
-                                    <option value="">請選擇品項</option>
-                                    <!-- 動態填入當前區域的品項 -->
+                                <select class="form-control" id="product-item-select" disabled>
+                                    <option value="">請先選擇分類</option>
+                                    <!-- 動態填入該分類的品項 -->
                                 </select>
                             </div>
                         </div>
@@ -1272,10 +1328,10 @@
                         <div class="form-row">
                             <div class="form-group">
                                 <label class="form-label">實際數量</label>
-                                <div class="quantity-input-group">
-                                    <button type="button" class="quantity-btn" onclick="adjustAreaQuantity(-1)">−</button>
-                                    <input type="number" class="quantity-input" id="area-quantity" value="0" min="0">
-                                    <button type="button" class="quantity-btn" onclick="adjustAreaQuantity(1)">+</button>
+                                <div class="quantity-input-container">
+                                    <input type="number" class="quantity-input-mobile" id="area-quantity" 
+                                           value="0" min="0" inputmode="numeric" pattern="[0-9]*" 
+                                           placeholder="請輸入數量">
                                 </div>
                             </div>
                         </div>
@@ -1539,28 +1595,37 @@
         // 新盤點流程狀態
         let selectedStaff = null;
         let selectedArea = null;
-        let areaItemsList = [];
+        let areaItemsList = [];  // 當前區域的分類列表
+        let inventoriedItems = [];  // 已盤點的項目列表
         let completedAreas = [];
         let currentAreaProgress = 0;
 
-        // 區域品項資料庫
-        const areaItemsDatabase = {
-            'A1倉庫': [
-                { id: 'A1-001', name: '維他命C', category: '保健品', expectedQty: 100, barcode: '4710123456789' },
-                { id: 'A1-002', name: '葉黃素', category: '保健品', expectedQty: 50, barcode: '4710123456790' },
-                { id: 'A1-003', name: '魚油', category: '保健品', expectedQty: 75, barcode: '4710123456791' },
-                { id: 'A1-004', name: '膠原蛋白', category: '美妝類', expectedQty: 30, barcode: '4710123456792' }
+        // 商品分類資料庫
+        const productCategories = {
+            '纖體組': [
+                '纖纖飲', '纖飄錠', '爆纖錠', '爆纖錠體驗包(100入)', '纖酵宿', 
+                '纖酵宿體驗包(200入)', '肽纖飲-可可', '厚焙奶茶', '紫纖飲'
             ],
-            'B2倉庫': [
-                { id: 'B2-001', name: '面膜', category: '美妝類', expectedQty: 200, barcode: '4710123456793' },
-                { id: 'B2-002', name: '精華液', category: '美妝類', expectedQty: 80, barcode: '4710123456794' },
-                { id: 'B2-003', name: '乳液', category: '美妝類', expectedQty: 120, barcode: '4710123456795' }
+            '美肌組': [
+                '水光錠', '面膜精裝盒', '雪聚露', '婕肌零', '婕肌零體驗包(1500入)',
+                '身體油', '護手霜', '洗髮露', '養髮液', '洗髮露試用包(900入)', '玻尿酸'
             ],
-            'C3倉庫': [
-                { id: 'C3-001', name: '蛋白粉', category: '食品類', expectedQty: 40, barcode: '4710123456796' },
-                { id: 'C3-002', name: '能量棒', category: '食品類', expectedQty: 150, barcode: '4710123456797' },
-                { id: 'C3-003', name: '代餐包', category: '食品類', expectedQty: 60, barcode: '4710123456798' }
+            '機能組': [
+                '益生菌', '葉黃素EX飲', '葉黃素果凍', '固樂纖', '極速錠(150入)', '正冠茶'
+            ],
+            '輔銷品': [
+                '全產品DM(300入)', '纖體班DM(500入)', '郭雪芙紙袋(250入)', '婕樂纖捲尺',
+                '絲巾環保袋(48入)', 'Q版麻布提袋(50入)', '事業手冊(50入)', '郭雪芙DM',
+                '婕樂纖紙袋', '牛年福袋', '筆記本', '化妝包', '(白)體脂機', '(粉)體脂機', '(藍)體脂機'
             ]
+        };
+
+        // 區域品項資料庫 - 簡化版，不含期望數量
+        const areaItemsDatabase = {
+            'A1倉庫': Object.keys(productCategories),  // 只儲存分類列表
+            'B2倉庫': Object.keys(productCategories),
+            'C3倉庫': Object.keys(productCategories),
+            'D4倉庫': Object.keys(productCategories)
         };
 
         // 盤點人員清單
@@ -1642,19 +1707,19 @@
             
             Object.keys(areaItemsDatabase).forEach(areaName => {
                 const isCompleted = completedAreas.includes(areaName);
-                const itemsCount = areaItemsDatabase[areaName].length;
+                const categoriesCount = areaItemsDatabase[areaName].length;
                 
                 const areaCard = document.createElement('div');
                 areaCard.className = `area-card ${isCompleted ? 'completed' : ''}`;
                 
                 if (!isCompleted) {
-                    areaCard.onclick = () => selectArea(areaName, itemsCount);
+                    areaCard.onclick = () => selectArea(areaName, categoriesCount);
                 }
                 
                 areaCard.innerHTML = `
                     <div class="area-status">${isCompleted ? '✅' : '📦'}</div>
                     <div class="area-name">${areaName}</div>
-                    <div class="area-info">${itemsCount} 個品項</div>
+                    <div class="area-info">${categoriesCount} 個分類</div>
                     ${isCompleted ? '<div class="completed-badge">已完成</div>' : ''}
                 `;
                 areaGrid.appendChild(areaCard);
@@ -1662,9 +1727,12 @@
         }
         
         // 選擇盤點區域
-        function selectArea(areaName, itemsCount) {
+        function selectArea(areaName, categoriesCount) {
             selectedArea = areaName;
-            areaItemsList = [...areaItemsDatabase[areaName]]; // 複製品項清單
+            areaItemsList = [...areaItemsDatabase[areaName]]; // 複製分類清單
+            
+            // 初始化已盤點項目列表
+            inventoriedItems = [];
             
             // 更新選中狀態
             document.querySelectorAll('.area-card:not(.completed)').forEach(card => {
@@ -1674,11 +1742,11 @@
             
             // 顯示選中信息
             document.getElementById('selected-area-name').textContent = areaName;
-            document.getElementById('selected-area-items-count').textContent = itemsCount;
+            document.getElementById('selected-area-items-count').textContent = categoriesCount;
             document.getElementById('selected-area-info').style.display = 'block';
             document.getElementById('confirm-area-btn').style.display = 'block';
             
-            console.log('📍 已選擇盤點區域:', areaName, '品項數:', itemsCount);
+            console.log('📍 已選擇盤點區域:', areaName, '分類數:', categoriesCount);
         }
         
         // 確認區域選擇，開始品項盤點
@@ -1695,23 +1763,20 @@
             // 初始化品項盤點界面
             initializeItemsInventory();
             
-            showNotification(`開始盤點 ${selectedArea}，共 ${areaItemsList.length} 個品項`, 'info');
+            showNotification(`開始盤點 ${selectedArea}，包含 ${areaItemsList.length} 個分類`, 'info');
         }
         
         // 初始化品項盤點界面
         function initializeItemsInventory() {
             document.getElementById('current-area-name').textContent = selectedArea;
             document.getElementById('current-staff-name').textContent = selectedStaff.name;
-            document.getElementById('total-items-count').textContent = areaItemsList.length;
+            document.getElementById('total-items-count').textContent = '0';  // 初始為0，隨著盤點增加
             
-            // 重置所有品項狀態為未完成
-            areaItemsList.forEach(item => {
-                item.scannedQty = 0;
-                item.status = 'pending'; // pending, completed, discrepancy
-            });
+            // 重置已盤點項目列表
+            inventoriedItems = [];
             
-            // 填入品項下拉式選單
-            populateAreaItemSelect();
+            // 填入分類下拉式選單
+            populateCategorySelect();
             
             // 清除手動輸入表單
             clearAreaForm();
@@ -1720,17 +1785,44 @@
             updateAreaProgress();
         }
 
-        // 填入區域品項下拉式選單
-        function populateAreaItemSelect() {
-            const select = document.getElementById('area-item-select');
-            select.innerHTML = '<option value="">請選擇品項</option>';
+        // 填入商品分類下拉式選單
+        function populateCategorySelect() {
+            const categorySelect = document.getElementById('product-category-select');
+            categorySelect.innerHTML = '<option value="">請選擇分類</option>';
             
-            areaItemsList.forEach((item, index) => {
+            Object.keys(productCategories).forEach(category => {
                 const option = document.createElement('option');
-                option.value = index;
-                option.textContent = `${item.name} (期望:${item.expectedQty})`;
-                select.appendChild(option);
+                option.value = category;
+                option.textContent = category;
+                categorySelect.appendChild(option);
             });
+        }
+
+        // 分類選擇變更處理
+        function onCategoryChange() {
+            const categorySelect = document.getElementById('product-category-select');
+            const itemSelect = document.getElementById('product-item-select');
+            const selectedCategory = categorySelect.value;
+            
+            // 清空品項選擇
+            itemSelect.innerHTML = '<option value="">請選擇品項</option>';
+            
+            if (selectedCategory && productCategories[selectedCategory]) {
+                // 啟用品項選擇
+                itemSelect.disabled = false;
+                
+                // 填入該分類的品項
+                productCategories[selectedCategory].forEach(item => {
+                    const option = document.createElement('option');
+                    option.value = item;
+                    option.textContent = item;
+                    itemSelect.appendChild(option);
+                });
+            } else {
+                // 停用品項選擇
+                itemSelect.disabled = true;
+                itemSelect.innerHTML = '<option value="">請先選擇分類</option>';
+            }
         }
 
         // 調整區域盤點數量
@@ -1743,12 +1835,18 @@
 
         // 提交區域品項盤點
         function submitAreaItem() {
-            const itemIndex = document.getElementById('area-item-select').value;
+            const selectedCategory = document.getElementById('product-category-select').value;
+            const selectedItem = document.getElementById('product-item-select').value;
             const quantity = parseInt(document.getElementById('area-quantity').value) || 0;
             const notes = document.getElementById('area-notes').value.trim();
             
-            if (itemIndex === '') {
-                showNotification('請選擇要盤點的品項', 'error');
+            if (!selectedCategory) {
+                showNotification('請選擇商品分類', 'error');
+                return;
+            }
+            
+            if (!selectedItem) {
+                showNotification('請選擇具體品項', 'error');
                 return;
             }
             
@@ -1757,22 +1855,20 @@
                 return;
             }
             
-            const item = areaItemsList[itemIndex];
+            // 建立盤點項目資料
+            const inventoryItem = {
+                id: `${selectedArea}-${Date.now()}-${Math.random().toString(36).substr(2, 9)}`,
+                area: selectedArea,
+                category: selectedCategory,
+                itemName: selectedItem,
+                quantity: quantity,
+                notes: notes,
+                timestamp: new Date().toISOString(),
+                staff: selectedStaff.name
+            };
             
-            // 更新品項資料
-            item.scannedQty = quantity;
-            item.notes = notes;
-            
-            // 判斷狀態
-            if (item.scannedQty === item.expectedQty) {
-                item.status = 'completed';
-                showNotification(`✅ ${item.name} 盤點完成 (${item.scannedQty}/${item.expectedQty})`, 'success');
-            } else if (item.scannedQty !== item.expectedQty) {
-                item.status = 'discrepancy';
-                const diff = item.scannedQty - item.expectedQty;
-                const diffText = diff > 0 ? `+${diff}` : `${diff}`;
-                showNotification(`⚠️ ${item.name} 數量有差異 (${diffText})`, 'warning');
-            }
+            // 添加到已盤點列表
+            inventoriedItems.push(inventoryItem);
             
             // 更新界面
             updateItemsChecklist();
@@ -1781,39 +1877,50 @@
             // 清除表單準備下一項
             clearAreaForm();
             
-            console.log(`📦 已盤點品項:`, item);
+            showNotification(`✅ 已記錄 ${selectedCategory} - ${selectedItem} × ${quantity}`, 'success');
+            console.log(`📦 已盤點品項:`, inventoryItem);
         }
 
         // 清除區域表單
         function clearAreaForm() {
-            document.getElementById('area-item-select').value = '';
+            document.getElementById('product-category-select').value = '';
+            document.getElementById('product-item-select').value = '';
+            document.getElementById('product-item-select').disabled = true;
+            document.getElementById('product-item-select').innerHTML = '<option value="">請先選擇分類</option>';
             document.getElementById('area-quantity').value = '0';
             document.getElementById('area-notes').value = '';
         }
         
-        // 更新品項檢查清單
+        // 更新品項檢查清單 - 只顯示已盤點項目
         function updateItemsChecklist() {
             const checklist = document.getElementById('area-items-checklist');
             checklist.innerHTML = '';
             
-            areaItemsList.forEach((item, index) => {
+            if (inventoriedItems.length === 0) {
+                checklist.innerHTML = `
+                    <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                        尚未盤點任何項目
+                    </div>
+                `;
+                return;
+            }
+            
+            inventoriedItems.forEach((item, index) => {
                 const itemCard = document.createElement('div');
-                itemCard.className = `item-check-card ${item.status}`;
+                itemCard.className = 'item-check-card completed';
                 itemCard.innerHTML = `
                     <div class="item-check-header">
-                        <span class="item-status-icon">
-                            ${item.status === 'completed' ? '✅' : 
-                              item.status === 'discrepancy' ? '⚠️' : '⏳'}
-                        </span>
+                        <span class="item-status-icon">✅</span>
                         <div class="item-info">
-                            <strong>${item.name}</strong><br>
-                            <small>條碼: ${item.barcode} | 類別: ${item.category}</small>
+                            <strong>${item.itemName}</strong><br>
+                            <small>分類: ${item.category} | 時間: ${new Date(item.timestamp).toLocaleTimeString()}</small>
+                            ${item.notes ? `<br><small>備註: ${item.notes}</small>` : ''}
                         </div>
                     </div>
                     <div class="item-quantities">
-                        <span>期望: ${item.expectedQty}</span>
-                        <span>實際: ${item.scannedQty || 0}</span>
-                        ${item.status === 'discrepancy' ? '<span class="diff">差異!</span>' : ''}
+                        <span style="font-size: 1.2em; font-weight: bold; color: var(--primary-color);">
+                            數量: ${item.quantity}
+                        </span>
                     </div>
                 `;
                 checklist.appendChild(itemCard);
@@ -1822,15 +1929,16 @@
         
         // 更新區域進度
         function updateAreaProgress() {
-            const completedItems = areaItemsList.filter(item => item.status === 'completed').length;
-            const totalItems = areaItemsList.length;
-            const progress = totalItems > 0 ? (completedItems / totalItems) * 100 : 0;
+            const totalItems = inventoriedItems.length;
             
-            document.getElementById('completed-items-count').textContent = completedItems;
-            document.getElementById('area-progress-fill').style.width = `${progress}%`;
+            document.getElementById('completed-items-count').textContent = totalItems;
+            document.getElementById('total-items-count').textContent = totalItems;
             
-            // 如果所有品項都已完成，顯示完成按鈕
-            if (completedItems === totalItems && totalItems > 0) {
+            // 設定進度條為100%（因為顯示的都是已完成項目）
+            document.getElementById('area-progress-fill').style.width = '100%';
+            
+            // 如果有盤點項目，顯示完成按鈕
+            if (totalItems > 0) {
                 document.getElementById('complete-area-btn').style.display = 'block';
             } else {
                 document.getElementById('complete-area-btn').style.display = 'none';
@@ -2157,9 +2265,12 @@
         function completeAreaInventory() {
             if (!selectedArea) return;
             
-            const completedItems = areaItemsList.filter(item => item.status === 'completed').length;
-            const discrepancyItems = areaItemsList.filter(item => item.status === 'discrepancy').length;
-            const totalItems = areaItemsList.length;
+            const totalItems = inventoriedItems.length;
+            
+            if (totalItems === 0) {
+                showNotification('請至少盤點一個項目才能完成', 'warning');
+                return;
+            }
             
             // 添加到已完成區域
             if (!completedAreas.includes(selectedArea)) {
@@ -2171,11 +2282,11 @@
                 area: selectedArea,
                 staff: selectedStaff.name,
                 completedAt: new Date().toISOString(),
-                items: [...areaItemsList],
+                items: [...inventoriedItems],
                 summary: {
                     total: totalItems,
-                    completed: completedItems,
-                    discrepancy: discrepancyItems
+                    completed: totalItems,
+                    categories: [...new Set(inventoriedItems.map(item => item.category))].length
                 }
             };
             
@@ -2189,7 +2300,7 @@
             // 顯示完成總結
             showAreaCompletionSummary(areaResult);
             
-            showNotification(`🎉 ${selectedArea} 盤點完成！`, 'success');
+            showNotification(`🎉 ${selectedArea} 盤點完成！共記錄 ${totalItems} 個項目`, 'success');
         }
         
         // 顯示區域完成總結
@@ -2205,15 +2316,15 @@
                     <div class="summary-stats">
                         <div class="stat-item">
                             <span class="stat-number">${areaResult.summary.total}</span>
-                            <span class="stat-label">總品項</span>
+                            <span class="stat-label">盤點項目</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">${areaResult.summary.completed}</span>
-                            <span class="stat-label">已完成</span>
+                            <span class="stat-number">${areaResult.summary.categories}</span>
+                            <span class="stat-label">涉及分類</span>
                         </div>
                         <div class="stat-item">
-                            <span class="stat-number">${areaResult.summary.discrepancy}</span>
-                            <span class="stat-label">有差異</span>
+                            <span class="stat-number">${areaResult.staff}</span>
+                            <span class="stat-label">盤點人員</span>
                         </div>
                     </div>
                     <div class="completion-time">
@@ -2228,6 +2339,7 @@
             // 重置選擇狀態
             selectedArea = null;
             areaItemsList = [];
+            inventoriedItems = [];
             
             // 隱藏完成總結，顯示區域選擇
             document.getElementById('completion-summary-area').style.display = 'none';
@@ -2247,6 +2359,7 @@
             selectedStaff = null;
             selectedArea = null;
             areaItemsList = [];
+            inventoriedItems = [];
             completedAreas = [];
             currentAreaProgress = 0;
             
@@ -2270,6 +2383,7 @@
             selectedStaff = null;
             selectedArea = null;
             areaItemsList = [];
+            inventoriedItems = [];
             completedAreas = [];
             
             // 重新初始化人員選擇
@@ -2286,6 +2400,7 @@
             // 重置當前區域狀態
             selectedArea = null;
             areaItemsList = [];
+            inventoriedItems = [];
             
             showNotification('已返回區域選擇', 'info');
         }
@@ -2308,6 +2423,7 @@
             selectedStaff = null;
             selectedArea = null;
             areaItemsList = [];
+            inventoriedItems = [];
             currentAreaProgress = 0;
             
             // 隱藏所有區域，只顯示人員選擇
