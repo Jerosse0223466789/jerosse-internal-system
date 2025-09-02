@@ -251,6 +251,138 @@
             background: linear-gradient(135deg, var(--secondary-color), #FFA000);
         }
 
+        .action-btn.third {
+            background: linear-gradient(135deg, #A5D6A7, #4CAF50);
+        }
+
+        /* === 盤點紀錄樣式 === */
+        .records-filter {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            align-items: center;
+        }
+
+        .filter-row:last-child {
+            margin-bottom: 0;
+        }
+
+        .filter-select {
+            flex: 1;
+            padding: 8px 12px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+            font-size: 0.9em;
+        }
+
+        .records-list {
+            max-height: 60vh;
+            overflow-y: auto;
+        }
+
+        .record-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            transition: all 0.3s ease;
+        }
+
+        .record-card:hover {
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+            transform: translateY(-1px);
+        }
+
+        .record-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 10px;
+        }
+
+        .record-info {
+            flex: 1;
+        }
+
+        .record-title {
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .record-subtitle {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .record-time {
+            background: #e3f2fd;
+            color: #1976d2;
+            padding: 4px 8px;
+            border-radius: 12px;
+            font-size: 0.8em;
+            white-space: nowrap;
+        }
+
+        .record-stats {
+            display: flex;
+            gap: 15px;
+            margin: 10px 0;
+            flex-wrap: wrap;
+        }
+
+        .record-stat {
+            background: #f5f5f5;
+            padding: 5px 10px;
+            border-radius: 4px;
+            font-size: 0.85em;
+        }
+
+        .record-stat strong {
+            color: var(--primary-color);
+        }
+
+        .record-items {
+            margin-top: 10px;
+        }
+
+        .record-items-header {
+            font-weight: bold;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .record-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 3px 0;
+            font-size: 0.9em;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .record-item:last-child {
+            border-bottom: none;
+        }
+
+        .empty-records {
+            text-align: center;
+            padding: 40px 20px;
+            color: var(--text-secondary);
+        }
+
+        .placeholder-icon {
+            font-size: 3em;
+            margin-bottom: 15px;
+        }
+
         /* 底部導航 */
         .bottom-nav {
             position: fixed;
@@ -1204,6 +1336,7 @@
         @media (max-width: 768px) {
             .container {
                 padding: 10px;
+                padding-bottom: 80px; /* 為底部導航預留空間 */
             }
             
             .workflow-card {
@@ -1255,6 +1388,81 @@
             .area-actions .btn {
                 width: 100%;
                 padding: 12px;
+            }
+            
+            /* 修復底部按鈕被截掉問題 */
+            .step-actions, .area-actions, .completion-actions {
+                margin-bottom: 20px !important;
+                padding-bottom: 10px;
+            }
+            
+            .workflow-card:last-child {
+                margin-bottom: 30px;
+            }
+            
+            /* 確保按鈕區域不被底部導航遮擋 */
+            .tab-content {
+                padding-bottom: 20px;
+            }
+            
+            /* 手機版盤點紀錄優化 */
+            .records-filter {
+                padding: 10px;
+                margin-bottom: 15px;
+            }
+            
+            .filter-row {
+                flex-direction: column;
+                gap: 8px;
+                margin-bottom: 8px;
+            }
+            
+            .filter-select {
+                font-size: 0.9em;
+                padding: 10px;
+            }
+            
+            .record-card {
+                padding: 12px;
+                margin-bottom: 12px;
+            }
+            
+            .record-header {
+                flex-direction: column;
+                align-items: stretch;
+                gap: 8px;
+            }
+            
+            .record-time {
+                align-self: flex-start;
+                margin-top: 5px;
+            }
+            
+            .record-stats {
+                flex-direction: column;
+                gap: 8px;
+                margin: 8px 0;
+            }
+            
+            .record-stat {
+                padding: 8px 12px;
+                text-align: center;
+            }
+            
+            .record-items {
+                margin-top: 8px;
+            }
+            
+            .record-item {
+                flex-direction: column;
+                align-items: flex-start;
+                padding: 8px 0;
+                gap: 4px;
+            }
+            
+            .record-item strong {
+                color: var(--primary-color);
+                font-size: 1.1em;
             }
         }
     </style>
@@ -1310,6 +1518,9 @@
                     </button>
                     <button class="action-btn secondary" onclick="quickInventory()">
                         📝 快速盤點
+                    </button>
+                    <button class="action-btn third" onclick="viewInventoryRecords()">
+                        📋 盤點紀錄
                     </button>
                 </div>
             </div>
@@ -1585,6 +1796,56 @@
                 <div style="font-size: 3em; margin-bottom: 20px;">⚙️</div>
                 <h3>設定功能開發中</h3>
                 <p>此功能將在下一階段實裝</p>
+            </div>
+        </div>
+
+        <!-- 盤點紀錄內容 -->
+        <div id="records-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>📋 盤點紀錄</h2>
+                <p>查看歷史盤點資料</p>
+            </div>
+            
+            <!-- 篩選條件 -->
+            <div class="records-filter">
+                <div class="filter-row">
+                    <select id="record-date-filter" class="filter-select">
+                        <option value="all">全部時間</option>
+                        <option value="today">今天</option>
+                        <option value="week">本週</option>
+                        <option value="month">本月</option>
+                    </select>
+                    <select id="record-staff-filter" class="filter-select">
+                        <option value="all">全部人員</option>
+                    </select>
+                </div>
+                <div class="filter-row">
+                    <select id="record-area-filter" class="filter-select">
+                        <option value="all">全部區域</option>
+                        <option value="A1倉庫">A1倉庫</option>
+                        <option value="B2倉庫">B2倉庫</option>
+                        <option value="C3倉庫">C3倉庫</option>
+                        <option value="D4倉庫">D4倉庫</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="filterRecords()">
+                        🔍 篩選
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 紀錄清單 -->
+            <div class="records-list" id="records-list">
+                <!-- 動態生成盤點紀錄 -->
+            </div>
+            
+            <!-- 空狀態 -->
+            <div class="empty-records" id="empty-records" style="display: none;">
+                <div class="placeholder-icon">📋</div>
+                <h3>沒有找到盤點紀錄</h3>
+                <p>開始盤點作業後，紀錄會顯示在這裡</p>
+                <button class="btn btn-primary" onclick="quickInventory()">
+                    📝 開始盤點
+                </button>
             </div>
         </div>
     </div>
@@ -2121,7 +2382,8 @@
                 'inventory': 'inventory-content', 
                 'scan': 'scan-content',
                 'reports': 'reports-content',
-                'profile': 'profile-content'
+                'profile': 'profile-content',
+                'records': 'records-content'
             };
             
             const contentId = contentMap[tab];
@@ -2149,7 +2411,8 @@
                 'inventory': '庫存管理',
                 'scan': '掃描功能',
                 'reports': '數據報表',
-                'profile': '個人資料'
+                'profile': '個人資料',
+                'records': '盤點紀錄'
             };
             return names[tab] || tab;
         }
@@ -2204,6 +2467,174 @@
             setTimeout(() => {
                 showNotification('請選擇盤點人員開始盤點', 'success');
             }, 500);
+        }
+
+        // === 盤點紀錄功能 === //
+        function viewInventoryRecords() {
+            console.log('查看盤點紀錄');
+            switchTab('records');
+            loadInventoryRecords();
+        }
+
+        function loadInventoryRecords() {
+            // 載入儲存的盤點紀錄
+            const records = getStoredInventoryRecords();
+            populateStaffFilter(records);
+            displayInventoryRecords(records);
+        }
+
+        function getStoredInventoryRecords() {
+            // 從localStorage載入盤點紀錄
+            try {
+                const stored = localStorage.getItem('inventory-records');
+                return stored ? JSON.parse(stored) : [];
+            } catch (error) {
+                console.error('載入盤點紀錄失敗:', error);
+                return [];
+            }
+        }
+
+        function saveInventoryRecord(record) {
+            // 儲存盤點紀錄到localStorage
+            try {
+                const records = getStoredInventoryRecords();
+                records.push({
+                    ...record,
+                    id: Date.now(),
+                    timestamp: new Date().toISOString()
+                });
+                localStorage.setItem('inventory-records', JSON.stringify(records));
+                console.log('盤點紀錄已儲存:', record);
+            } catch (error) {
+                console.error('儲存盤點紀錄失敗:', error);
+            }
+        }
+
+        function populateStaffFilter(records) {
+            // 填充人員篩選選項
+            const staffFilter = document.getElementById('record-staff-filter');
+            const staffOptions = ['<option value="all">全部人員</option>'];
+            
+            const uniqueStaff = [...new Set(records.map(r => r.staff))];
+            uniqueStaff.forEach(staff => {
+                if (staff) {
+                    staffOptions.push(`<option value="${staff}">${staff}</option>`);
+                }
+            });
+            
+            staffFilter.innerHTML = staffOptions.join('');
+        }
+
+        function displayInventoryRecords(records) {
+            const recordsList = document.getElementById('records-list');
+            const emptyRecords = document.getElementById('empty-records');
+            
+            if (!records || records.length === 0) {
+                recordsList.style.display = 'none';
+                emptyRecords.style.display = 'block';
+                return;
+            }
+            
+            recordsList.style.display = 'block';
+            emptyRecords.style.display = 'none';
+            
+            // 按時間倒序排列
+            const sortedRecords = records.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
+            
+            const recordsHTML = sortedRecords.map(record => createRecordCardHTML(record)).join('');
+            recordsList.innerHTML = recordsHTML;
+        }
+
+        function createRecordCardHTML(record) {
+            const date = new Date(record.timestamp);
+            const timeStr = date.toLocaleString('zh-TW', {
+                month: '2-digit',
+                day: '2-digit',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            
+            const itemsHTML = record.items ? record.items.map(item => 
+                `<div class="record-item">
+                    <span>${item.category} - ${item.item}</span>
+                    <strong>${item.quantity}</strong>
+                </div>`
+            ).join('') : '';
+            
+            return `
+                <div class="record-card">
+                    <div class="record-header">
+                        <div class="record-info">
+                            <div class="record-title">${record.area || '未知區域'}</div>
+                            <div class="record-subtitle">盤點人員: ${record.staff || '未知'}</div>
+                        </div>
+                        <div class="record-time">${timeStr}</div>
+                    </div>
+                    
+                    <div class="record-stats">
+                        <div class="record-stat">
+                            品項: <strong>${record.items ? record.items.length : 0}</strong>
+                        </div>
+                        <div class="record-stat">
+                            分類: <strong>${record.categories || 0}</strong>
+                        </div>
+                        <div class="record-stat">
+                            總數量: <strong>${record.items ? record.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0}</strong>
+                        </div>
+                    </div>
+                    
+                    ${itemsHTML ? `
+                        <div class="record-items">
+                            <div class="record-items-header">📋 盤點明細:</div>
+                            ${itemsHTML}
+                        </div>
+                    ` : ''}
+                </div>
+            `;
+        }
+
+        function filterRecords() {
+            const dateFilter = document.getElementById('record-date-filter').value;
+            const staffFilter = document.getElementById('record-staff-filter').value;
+            const areaFilter = document.getElementById('record-area-filter').value;
+            
+            let records = getStoredInventoryRecords();
+            
+            // 日期篩選
+            if (dateFilter !== 'all') {
+                const now = new Date();
+                const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const startOfWeek = new Date(startOfToday);
+                startOfWeek.setDate(startOfToday.getDate() - startOfToday.getDay());
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                
+                records = records.filter(record => {
+                    const recordDate = new Date(record.timestamp);
+                    switch(dateFilter) {
+                        case 'today':
+                            return recordDate >= startOfToday;
+                        case 'week':
+                            return recordDate >= startOfWeek;
+                        case 'month':
+                            return recordDate >= startOfMonth;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            // 人員篩選
+            if (staffFilter !== 'all') {
+                records = records.filter(record => record.staff === staffFilter);
+            }
+            
+            // 區域篩選
+            if (areaFilter !== 'all') {
+                records = records.filter(record => record.area === areaFilter);
+            }
+            
+            displayInventoryRecords(records);
+            showNotification(`找到 ${records.length} 筆符合條件的紀錄`, 'info');
         }
 
         // 初始化新版應用程式
@@ -2446,6 +2877,15 @@
             const savedResults = JSON.parse(localStorage.getItem('area-inventory-results') || '[]');
             savedResults.push(areaResult);
             localStorage.setItem('area-inventory-results', JSON.stringify(savedResults));
+            
+            // 同時保存到盤點紀錄系統
+            saveInventoryRecord({
+                area: selectedArea,
+                staff: selectedStaff.name,
+                items: inventoriedItems,
+                categories: [...new Set(inventoriedItems.map(item => item.category))].length,
+                totalQuantity: inventoriedItems.reduce((sum, item) => sum + (item.quantity || 0), 0)
+            });
             
             // 更新全域進度
             updateGlobalProgress();
