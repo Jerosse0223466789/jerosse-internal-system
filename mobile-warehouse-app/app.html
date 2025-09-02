@@ -405,28 +405,37 @@
         /* === 進階報表樣式 === */
         .reports-options {
             background: #f8f9fa;
-            padding: 15px;
+            padding: 20px;
             border-radius: 8px;
-            margin-bottom: 20px;
+            margin-bottom: 25px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
         }
 
         .option-row {
             display: flex;
-            gap: 10px;
+            gap: 12px;
             align-items: center;
+            flex-wrap: wrap;
         }
 
         .reports-dashboard {
             min-height: 400px;
+            margin-bottom: 100px; /* 為底部按鈕預留空間 */
         }
 
         .report-card {
             background: white;
             border: 1px solid #e0e0e0;
-            border-radius: 8px;
-            padding: 20px;
-            margin-bottom: 20px;
-            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            border-radius: 12px;
+            padding: 25px;
+            margin-bottom: 25px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+            transition: transform 0.2s ease, box-shadow 0.2s ease;
+        }
+
+        .report-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.12);
         }
 
         .report-card h3 {
@@ -438,17 +447,35 @@
 
         .stats-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 15px;
-            margin: 15px 0;
+            grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
         }
 
         .stat-box {
             background: linear-gradient(135deg, #f8f9fa, #e9ecef);
-            padding: 15px;
-            border-radius: 8px;
+            padding: 20px;
+            border-radius: 12px;
             text-align: center;
             border-left: 4px solid var(--primary-color);
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-box:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 6px 16px rgba(33, 150, 243, 0.2);
+        }
+
+        .stat-box::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 3px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
         }
 
         .stat-number {
@@ -483,33 +510,50 @@
         .data-table {
             width: 100%;
             border-collapse: collapse;
-            margin: 15px 0;
+            margin: 20px 0;
+            overflow: hidden;
+            border-radius: 8px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
         }
 
         .data-table th,
         .data-table td {
-            padding: 12px;
+            padding: 15px 12px;
             text-align: left;
-            border-bottom: 1px solid #e0e0e0;
+            border-bottom: 1px solid #f0f0f0;
         }
 
         .data-table th {
-            background: var(--primary-color);
+            background: linear-gradient(135deg, var(--primary-color), #1976D2);
             color: white;
-            font-weight: bold;
+            font-weight: 600;
+            text-transform: uppercase;
+            font-size: 0.85em;
+            letter-spacing: 0.5px;
+        }
+
+        .data-table tr:nth-child(even) {
+            background: #f8f9fa;
         }
 
         .data-table tr:hover {
-            background: #f8f9fa;
+            background: linear-gradient(135deg, #e3f2fd, #e1f5fe);
+            transform: scale(1.01);
+            transition: all 0.2s ease;
         }
 
         .report-actions {
             display: flex;
-            gap: 10px;
+            gap: 15px;
             justify-content: center;
             margin-top: 30px;
-            padding: 20px 0;
+            margin-bottom: 100px; /* 為底部導航預留空間 */
+            padding: 25px 20px;
             border-top: 1px solid #e0e0e0;
+            background: linear-gradient(135deg, #f8f9fa, #ffffff);
+            border-radius: 12px;
+            position: relative;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.05);
         }
 
         .progress-bar {
@@ -1608,6 +1652,75 @@
                 color: var(--primary-color);
                 font-size: 1.1em;
             }
+            
+            /* 手機版進階報表優化 */
+            .reports-options {
+                padding: 15px;
+                margin-bottom: 20px;
+            }
+            
+            .option-row {
+                flex-direction: column;
+                gap: 10px;
+                align-items: stretch;
+            }
+            
+            .filter-select {
+                font-size: 0.9em;
+                padding: 12px;
+                width: 100%;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+                gap: 15px;
+                margin: 15px 0;
+            }
+            
+            .stat-box {
+                padding: 15px;
+            }
+            
+            .stat-number {
+                font-size: 1.8em;
+            }
+            
+            .report-card {
+                padding: 20px 15px;
+                margin-bottom: 20px;
+            }
+            
+            .data-table {
+                font-size: 0.85em;
+                margin: 15px 0;
+            }
+            
+            .data-table th,
+            .data-table td {
+                padding: 10px 8px;
+            }
+            
+            .data-table th {
+                font-size: 0.8em;
+            }
+            
+            .report-actions {
+                flex-direction: column;
+                gap: 12px;
+                margin-bottom: 120px;
+                padding: 20px 15px;
+            }
+            
+            .report-actions .btn {
+                width: 100%;
+                padding: 14px;
+                font-size: 0.95em;
+            }
+            
+            .chart-container {
+                padding: 15px;
+                min-height: 200px;
+            }
         }
     </style>
 </head>
@@ -1723,7 +1836,7 @@
                     <h4>📊 整體盤點進度</h4>
                     <div class="summary-stats">
                         <span><strong>盤點人員：</strong><span id="global-staff-name">-</span></span>
-                        <span><strong>已完成：</strong><span id="global-completed-areas">0</span> / <span id="global-total-areas">3</span> 區域</span>
+                        <span><strong>已完成：</strong><span id="global-completed-areas">0</span> / <span id="global-total-areas">6</span> 區域</span>
                     </div>
                     <div class="global-progress-bar">
                         <div class="progress-fill" id="global-progress-fill" style="width: 0%"></div>
@@ -1763,7 +1876,7 @@
                     
                     <div class="progress-info">
                         <strong>盤點人員：</strong><span id="display-staff-name"></span><br>
-                        <strong>已完成區域：</strong><span id="completed-areas-count">0</span> / <span id="total-areas-count">3</span>
+                        <strong>已完成區域：</strong><span id="completed-areas-count">0</span> / <span id="total-areas-count">6</span>
                     </div>
                     
                     <div class="area-grid" id="area-grid">
@@ -2012,10 +2125,12 @@
                 <div class="filter-row">
                     <select id="record-area-filter" class="filter-select">
                         <option value="all">全部區域</option>
-                        <option value="A1倉庫">A1倉庫</option>
-                        <option value="B2倉庫">B2倉庫</option>
-                        <option value="C3倉庫">C3倉庫</option>
-                        <option value="D4倉庫">D4倉庫</option>
+                        <option value="散貨區貨架">散貨區貨架</option>
+                        <option value="大貨區貨架">大貨區貨架</option>
+                        <option value="補貨區">補貨區</option>
+                        <option value="3F儲位">3F儲位</option>
+                        <option value="2F儲位">2F儲位</option>
+                        <option value="白天鵝儲位">白天鵝儲位</option>
                     </select>
                     <button class="btn btn-primary" onclick="filterRecords()">
                         🔍 篩選
@@ -2080,6 +2195,8 @@
 
     <!-- 載入模組 -->
     <script src="config.js"></script>
+    <!-- SheetJS庫 - 用於真正的Excel匯出 -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="modules/data-sync.js"></script>
     <script src="modules/inventory.js"></script>
     <script src="modules/scanner.js"></script>
@@ -2237,10 +2354,12 @@
 
         // 區域品項資料庫 - 簡化版，不含期望數量
         const areaItemsDatabase = {
-            'A1倉庫': Object.keys(productCategories),  // 只儲存分類列表
-            'B2倉庫': Object.keys(productCategories),
-            'C3倉庫': Object.keys(productCategories),
-            'D4倉庫': Object.keys(productCategories)
+            '散貨區貨架': Object.keys(productCategories),  // 只儲存分類列表
+            '大貨區貨架': Object.keys(productCategories),
+            '補貨區': Object.keys(productCategories),
+            '3F儲位': Object.keys(productCategories),
+            '2F儲位': Object.keys(productCategories),
+            '白天鵝儲位': Object.keys(productCategories)
         };
 
         // 盤點人員清單
@@ -2836,14 +2955,106 @@
                 return;
             }
 
-            // 創建Excel資料格式
-            const excelData = prepareExcelData(records);
-            const csvContent = convertToCSV(excelData);
-            
-            // 下載Excel檔案 (實際上是CSV格式，但Excel可以開啟)
-            downloadFile(csvContent, `盤點紀錄_${getCurrentDateString()}.csv`, 'text/csv;charset=utf-8;');
-            
-            showNotification(`已匯出 ${records.length} 筆紀錄到Excel`, 'success');
+            try {
+                // 創建真正的Excel工作簿
+                const workbook = XLSX.utils.book_new();
+                
+                // 準備Excel資料
+                const excelData = prepareExcelDataForReal(records);
+                
+                // 創建工作表
+                const worksheet = XLSX.utils.aoa_to_sheet(excelData);
+                
+                // 設定欄寬
+                const columnWidths = [
+                    {wch: 8},   // 序號
+                    {wch: 12},  // 日期
+                    {wch: 10},  // 時間
+                    {wch: 12},  // 區域
+                    {wch: 10},  // 盤點人員
+                    {wch: 10},  // 分類
+                    {wch: 20},  // 品項
+                    {wch: 8},   // 數量
+                    {wch: 15}   // 備註
+                ];
+                worksheet['!cols'] = columnWidths;
+                
+                // 設定標題行樣式
+                const range = XLSX.utils.decode_range(worksheet['!ref']);
+                for (let col = range.s.c; col <= range.e.c; col++) {
+                    const headerCell = XLSX.utils.encode_cell({r: 4, c: col}); // 第5行是標題
+                    if (worksheet[headerCell]) {
+                        worksheet[headerCell].s = {
+                            font: { bold: true, color: { rgb: "FFFFFF" } },
+                            fill: { fgColor: { rgb: "2196F3" } },
+                            alignment: { horizontal: "center" }
+                        };
+                    }
+                }
+                
+                // 添加工作表到工作簿
+                XLSX.utils.book_append_sheet(workbook, worksheet, "盤點紀錄");
+                
+                // 匯出Excel檔案
+                const filename = `盤點紀錄_${getCurrentDateString()}.xlsx`;
+                XLSX.writeFile(workbook, filename);
+                
+                showNotification(`已匯出 ${records.length} 筆紀錄到Excel`, 'success');
+                
+            } catch (error) {
+                console.error('Excel匯出失敗:', error);
+                showNotification('Excel匯出失敗，請嘗試CSV格式', 'error');
+                
+                // 備用方案：使用CSV格式
+                exportToCSV();
+            }
+        }
+
+        function prepareExcelDataForReal(records) {
+            // Excel格式的資料結構
+            const data = [
+                ['盤點紀錄匯出報表'],
+                [`匯出時間: ${new Date().toLocaleString('zh-TW')}`],
+                [`總筆數: ${records.length}`],
+                [],
+                ['序號', '日期', '時間', '區域', '盤點人員', '分類', '品項', '數量', '備註']
+            ];
+
+            records.forEach((record, index) => {
+                const date = new Date(record.timestamp);
+                const dateStr = date.toLocaleDateString('zh-TW');
+                const timeStr = date.toLocaleTimeString('zh-TW');
+
+                if (record.items && record.items.length > 0) {
+                    record.items.forEach(item => {
+                        data.push([
+                            index + 1,
+                            dateStr,
+                            timeStr,
+                            record.area || '',
+                            record.staff || '',
+                            item.category || '',
+                            item.itemName || item.item || '',
+                            item.quantity || 0,
+                            item.notes || ''
+                        ]);
+                    });
+                } else {
+                    data.push([
+                        index + 1,
+                        dateStr,
+                        timeStr,
+                        record.area || '',
+                        record.staff || '',
+                        '',
+                        '',
+                        0,
+                        ''
+                    ]);
+                }
+            });
+
+            return data;
         }
 
         function exportToCSV() {
