@@ -683,14 +683,34 @@
             font-size: 1.1em;
         }
 
-        .staff-grid, .area-grid {
+        .staff-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(140px, 1fr));
+            gap: 10px;
+            margin: 20px 0;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        .area-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 15px;
             margin: 20px 0;
         }
 
-        .staff-card, .area-card {
+        .staff-card {
+            background: #f8f9fa;
+            border: 2px solid transparent;
+            border-radius: 8px;
+            padding: 12px 8px;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-height: 100px;
+        }
+
+        .area-card {
             background: #f8f9fa;
             border: 2px solid transparent;
             border-radius: 10px;
@@ -724,19 +744,21 @@
         }
 
         .staff-avatar {
-            font-size: 2.5em;
-            margin-bottom: 10px;
+            font-size: 1.8em;
+            margin-bottom: 6px;
         }
 
         .staff-name {
             font-weight: bold;
-            font-size: 1.1em;
-            margin-bottom: 5px;
+            font-size: 0.9em;
+            margin-bottom: 3px;
+            line-height: 1.2;
         }
 
         .staff-dept {
-            font-size: 0.9em;
+            font-size: 0.75em;
             opacity: 0.7;
+            line-height: 1.1;
         }
 
         .area-status {
@@ -957,6 +979,85 @@
             height: 100%;
             transition: width 0.5s ease;
         }
+
+        /* === 手動輸入區域樣式 === */
+        .manual-input-section {
+            background: #f8f9fa;
+            border-radius: 10px;
+            padding: 20px;
+            margin: 20px 0;
+            border: 1px solid var(--border-color);
+        }
+
+        .manual-input-section h4 {
+            margin-bottom: 20px;
+            color: var(--primary-color);
+        }
+
+        .form-row {
+            margin-bottom: 15px;
+        }
+
+        .quantity-input-group {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .quantity-input {
+            flex: 1;
+            text-align: center;
+            font-size: 1.1em;
+            font-weight: bold;
+            border: 2px solid var(--border-color);
+            border-radius: 6px;
+            padding: 10px;
+        }
+
+        .quantity-btn {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            width: 40px;
+            height: 40px;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.05);
+        }
+
+        .quantity-btn:active {
+            transform: scale(0.95);
+        }
+
+        .manual-input-actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            justify-content: center;
+        }
+
+        .manual-input-actions .btn {
+            min-width: 120px;
+        }
+
+        .step-actions {
+            display: flex;
+            gap: 15px;
+            margin-top: 20px;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .step-actions .btn {
+            min-width: 120px;
+        }
     </style>
 </head>
 
@@ -1120,9 +1221,14 @@
                         <strong>預計品項：</strong><span id="selected-area-items-count"></span> 項
                     </div>
                     
-                    <button class="btn btn-primary" onclick="confirmAreaSelection()" id="confirm-area-btn" style="display: none;">
-                        🚀 開始盤點此區域
-                    </button>
+                    <div class="step-actions">
+                        <button class="btn btn-secondary" onclick="backToStaffSelection()">
+                            ← 重新選擇人員
+                        </button>
+                        <button class="btn btn-primary" onclick="confirmAreaSelection()" id="confirm-area-btn" style="display: none;">
+                            🚀 開始盤點此區域
+                        </button>
+                    </div>
                 </div>
             </div>
 
@@ -1149,11 +1255,46 @@
                         </div>
                     </div>
                     
-                    <!-- 掃描區域 -->
-                    <div class="scan-area" onclick="startAreaItemScanning()">
-                        <div class="scan-icon">📱</div>
-                        <div style="font-size: 1.1em; font-weight: 500; margin-bottom: 5px;">掃描品項條碼</div>
-                        <div style="font-size: 0.9em; color: var(--text-secondary);">請掃描下方品項清單中的條碼</div>
+                    <!-- 手動輸入區域 -->
+                    <div class="manual-input-section">
+                        <h4>📝 手動輸入品項</h4>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">選擇品項</label>
+                                <select class="form-control" id="area-item-select">
+                                    <option value="">請選擇品項</option>
+                                    <!-- 動態填入當前區域的品項 -->
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">實際數量</label>
+                                <div class="quantity-input-group">
+                                    <button type="button" class="quantity-btn" onclick="adjustAreaQuantity(-1)">−</button>
+                                    <input type="number" class="quantity-input" id="area-quantity" value="0" min="0">
+                                    <button type="button" class="quantity-btn" onclick="adjustAreaQuantity(1)">+</button>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label class="form-label">備註 (選填)</label>
+                                <input type="text" class="form-control" id="area-notes" placeholder="品項狀況備註">
+                            </div>
+                        </div>
+                        
+                        <div class="manual-input-actions">
+                            <button class="btn btn-primary" onclick="submitAreaItem()">
+                                ✅ 確認盤點
+                            </button>
+                            <button class="btn btn-secondary" onclick="clearAreaForm()">
+                                🔄 清除
+                            </button>
+                        </div>
                     </div>
                     
                     <!-- 品項清單 -->
@@ -1569,8 +1710,85 @@
                 item.status = 'pending'; // pending, completed, discrepancy
             });
             
+            // 填入品項下拉式選單
+            populateAreaItemSelect();
+            
+            // 清除手動輸入表單
+            clearAreaForm();
+            
             updateItemsChecklist();
             updateAreaProgress();
+        }
+
+        // 填入區域品項下拉式選單
+        function populateAreaItemSelect() {
+            const select = document.getElementById('area-item-select');
+            select.innerHTML = '<option value="">請選擇品項</option>';
+            
+            areaItemsList.forEach((item, index) => {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = `${item.name} (期望:${item.expectedQty})`;
+                select.appendChild(option);
+            });
+        }
+
+        // 調整區域盤點數量
+        function adjustAreaQuantity(change) {
+            const quantityInput = document.getElementById('area-quantity');
+            let currentValue = parseInt(quantityInput.value) || 0;
+            const newValue = Math.max(0, currentValue + change);
+            quantityInput.value = newValue;
+        }
+
+        // 提交區域品項盤點
+        function submitAreaItem() {
+            const itemIndex = document.getElementById('area-item-select').value;
+            const quantity = parseInt(document.getElementById('area-quantity').value) || 0;
+            const notes = document.getElementById('area-notes').value.trim();
+            
+            if (itemIndex === '') {
+                showNotification('請選擇要盤點的品項', 'error');
+                return;
+            }
+            
+            if (quantity < 0) {
+                showNotification('數量不能為負數', 'error');
+                return;
+            }
+            
+            const item = areaItemsList[itemIndex];
+            
+            // 更新品項資料
+            item.scannedQty = quantity;
+            item.notes = notes;
+            
+            // 判斷狀態
+            if (item.scannedQty === item.expectedQty) {
+                item.status = 'completed';
+                showNotification(`✅ ${item.name} 盤點完成 (${item.scannedQty}/${item.expectedQty})`, 'success');
+            } else if (item.scannedQty !== item.expectedQty) {
+                item.status = 'discrepancy';
+                const diff = item.scannedQty - item.expectedQty;
+                const diffText = diff > 0 ? `+${diff}` : `${diff}`;
+                showNotification(`⚠️ ${item.name} 數量有差異 (${diffText})`, 'warning');
+            }
+            
+            // 更新界面
+            updateItemsChecklist();
+            updateAreaProgress();
+            
+            // 清除表單準備下一項
+            clearAreaForm();
+            
+            console.log(`📦 已盤點品項:`, item);
+        }
+
+        // 清除區域表單
+        function clearAreaForm() {
+            document.getElementById('area-item-select').value = '';
+            document.getElementById('area-quantity').value = '0';
+            document.getElementById('area-notes').value = '';
         }
         
         // 更新品項檢查清單
@@ -1716,31 +1934,15 @@
 
         async function quickInventory() {
             console.log('快速盤點');
+            showNotification('正在啟動快速盤點...', 'info');
             
-            if (!app) {
-                showNotification('系統尚未初始化完成', 'warning');
-                return;
-            }
+            // 直接跳轉到庫存盤點頁面並啟動新流程
+            switchTab('inventory');
             
-            try {
-                showNotification('啟動快速盤點模式...', 'info');
-                
-                // 開始盤點作業
-                const session = await app.startInventory({
-                    type: 'quick',
-                    location: 'TEMP',
-                    notes: '快速盤點作業'
-                });
-                
-                showNotification('快速盤點作業已開始', 'success');
-                
-                // 這裡可以導航到盤點頁面
-                console.log('盤點作業ID:', session.id);
-                
-            } catch (error) {
-                console.error('啟動盤點失敗:', error);
-                showNotification('盤點功能暫時無法使用', 'error');
-            }
+            // 稍微延遲確保頁面切換完成
+            setTimeout(() => {
+                showNotification('請選擇盤點人員開始盤點', 'success');
+            }, 500);
         }
 
         // 初始化新版應用程式
@@ -1949,68 +2151,7 @@
             document.getElementById('item-quantity').textContent = currentQuantity;
         }
 
-        // === 新流程的掃描和完成函數 ===
-        
-        // 啟動區域品項掃描
-        async function startAreaItemScanning() {
-            if (!app) {
-                showNotification('掃描功能尚未初始化', 'warning');
-                return;
-            }
-
-            try {
-                showNotification('啟動品項條碼掃描...', 'info');
-                await app.startScanning({ 
-                    mode: 'area-inventory',
-                    callback: handleAreaItemScanResult 
-                });
-            } catch (error) {
-                console.error('啟動掃描失敗:', error);
-                showNotification('掃描功能暫時無法使用', 'error');
-            }
-        }
-        
-        // 處理區域品項掃描結果
-        function handleAreaItemScanResult(scanData) {
-            console.log('🔍 區域品項掃描結果:', scanData);
-            
-            if (!selectedArea || !areaItemsList.length) {
-                showNotification('請先選擇盤點區域', 'error');
-                return;
-            }
-            
-            // 查找匹配的品項
-            const foundItem = areaItemsList.find(item => item.barcode === scanData.code);
-            
-            if (foundItem) {
-                // 更新品項狀態
-                foundItem.scannedQty = (foundItem.scannedQty || 0) + 1;
-                
-                // 判斷狀態
-                if (foundItem.scannedQty === foundItem.expectedQty) {
-                    foundItem.status = 'completed';
-                    showNotification(`✅ ${foundItem.name} 盤點完成 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'success');
-                } else if (foundItem.scannedQty > foundItem.expectedQty) {
-                    foundItem.status = 'discrepancy';
-                    showNotification(`⚠️ ${foundItem.name} 數量超出預期 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'warning');
-                } else {
-                    foundItem.status = 'pending';
-                    showNotification(`📦 ${foundItem.name} 已記錄 (${foundItem.scannedQty}/${foundItem.expectedQty})`, 'info');
-                }
-                
-                // 更新界面
-                updateItemsChecklist();
-                updateAreaProgress();
-                
-                // 重置掃描器狀態，允許連續掃描
-                if (window.barcodeScanner) {
-                    window.barcodeScanner.resetScanState();
-                }
-                
-            } else {
-                showNotification(`❌ 條碼 ${scanData.code} 不在 ${selectedArea} 的品項清單中`, 'error');
-            }
-        }
+        // === 新流程的盤點完成函數 ===
         
         // 完成區域盤點
         function completeAreaInventory() {
@@ -2118,6 +2259,25 @@
             initializeStaffSelection();
         }
         
+        // 返回人員選擇
+        function backToStaffSelection() {
+            // 隱藏區域選擇，顯示人員選擇
+            document.getElementById('area-selection-area').style.display = 'none';
+            document.getElementById('global-progress-area').style.display = 'none';
+            document.getElementById('staff-selection-area').style.display = 'block';
+            
+            // 重置狀態
+            selectedStaff = null;
+            selectedArea = null;
+            areaItemsList = [];
+            completedAreas = [];
+            
+            // 重新初始化人員選擇
+            initializeStaffSelection();
+            
+            showNotification('已返回人員選擇', 'info');
+        }
+
         // 返回區域選擇
         function backToAreaSelection() {
             document.getElementById('items-inventory-area').style.display = 'none';
@@ -2126,6 +2286,8 @@
             // 重置當前區域狀態
             selectedArea = null;
             areaItemsList = [];
+            
+            showNotification('已返回區域選擇', 'info');
         }
         
         // 更新全域進度
