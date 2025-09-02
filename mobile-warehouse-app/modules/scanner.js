@@ -399,12 +399,15 @@ class BarcodeScanner {
             const inputCode = this.keyboardInput;
             this.keyboardInput = '';
             
-            // 創建條碼資料
+            console.log('🔍 處理真實掃描條碼:', inputCode);
+            
+            // 創建真實條碼資料
             const barcodeData = {
                 type: this.detectBarcodeType(inputCode),
                 code: inputCode,
                 timestamp: Date.now(),
-                source: 'keyboard'
+                source: 'scanner', // 標記為真實掃描器
+                productInfo: this.lookupProductInfo(inputCode) // 查找商品資料
             };
             
             this.onBarcodeDetected(barcodeData);
@@ -442,21 +445,34 @@ class BarcodeScanner {
         this.keyHandler = (event) => {
             const currentTime = Date.now();
             
-            // 如果輸入間隔超過100ms，重置緩衝區 (條碼掃描器輸入很快)
-            if (currentTime - this.lastKeyTime > 100) {
+            // 如果輸入間隔超過200ms，重置緩衝區 (條碼掃描器輸入很快)
+            if (currentTime - this.lastKeyTime > 200) {
                 this.keyboardBuffer = '';
             }
             
             this.lastKeyTime = currentTime;
             
-            // 收集字符
-            if (event.key.length === 1) { // 只處理單字符
+            // 收集字符 (包括數字、字母、符號)
+            if (event.key.length === 1 && /[0-9A-Za-z\-_\.]/.test(event.key)) {
                 this.keyboardBuffer += event.key;
-            } else if (event.key === 'Enter' && this.keyboardBuffer.length > 3) {
+                
+                // 如果累積了足夠長度且停止輸入一段時間，自動處理
+                if (this.keyboardBuffer.length >= 6) {
+                    clearTimeout(this.inputTimeout);
+                    this.inputTimeout = setTimeout(() => {
+                        if (this.keyboardBuffer.length >= 6) {
+                            this.keyboardInput = this.keyboardBuffer.trim();
+                            this.keyboardBuffer = '';
+                            console.log('📝 自動處理條碼輸入:', this.keyboardInput);
+                        }
+                    }, 150); // 150ms後自動處理
+                }
+            } else if (event.key === 'Enter' && this.keyboardBuffer.length >= 3) {
                 // Enter鍵表示條碼輸入完成
+                clearTimeout(this.inputTimeout);
                 this.keyboardInput = this.keyboardBuffer.trim();
                 this.keyboardBuffer = '';
-                console.log('📝 收到鍵盤條碼輸入:', this.keyboardInput);
+                console.log('📝 Enter確認條碼輸入:', this.keyboardInput);
             }
         };
         
@@ -496,6 +512,13 @@ class BarcodeScanner {
         if (this.keyHandler) {
             document.removeEventListener('keydown', this.keyHandler);
             this.keyHandler = null;
+            
+            // 清理定時器
+            if (this.inputTimeout) {
+                clearTimeout(this.inputTimeout);
+                this.inputTimeout = null;
+            }
+            
             console.log('⌨️ 鍵盤掃描監聽已移除');
         }
     }
@@ -507,6 +530,47 @@ class BarcodeScanner {
         if (code.length === 12 && /^\d+$/.test(code)) return 'UPC_A';
         if (/^[A-Z0-9\-\.\/\+]+$/i.test(code)) return 'CODE_128';
         return 'OTHER';
+    }
+
+    // 查找商品資料 (模擬資料庫查詢)
+    lookupProductInfo(barcode) {
+        // 這裡可以整合真實的商品資料庫
+        // 目前提供一些常見條碼的模擬資料
+        const productDatabase = {
+            '4711234567890': { name: '可口可樂 330ml', category: '食品類' },
+            '4719876543210': { name: '維他命C錠', category: '保健品' },
+            '8712345678901': { name: '洗髮精 400ml', category: '美妝類' },
+            '4712345678902': { name: '巧克力餅乾', category: '食品類' },
+            '9876543210123': { name: '感冒藥膠囊', category: '藥品類' }
+        };
+
+        // 檢查精確匹配
+        if (productDatabase[barcode]) {
+            return productDatabase[barcode];
+        }
+
+        // 檢查前綴匹配 (同品牌產品)
+        const prefix = barcode.substring(0, 7);
+        for (const [code, info] of Object.entries(productDatabase)) {
+            if (code.startsWith(prefix)) {
+                return {
+                    name: `${info.name.split(' ')[0]} 相關產品`,
+                    category: info.category
+                };
+            }
+        }
+
+        // 根據條碼前綴推測分類
+        if (barcode.startsWith('47') || barcode.startsWith('49')) {
+            return { name: '未知商品', category: '食品類' };
+        } else if (barcode.startsWith('87') || barcode.startsWith('89')) {
+            return { name: '未知商品', category: '美妝類' };
+        } else if (barcode.startsWith('98') || barcode.startsWith('99')) {
+            return { name: '未知商品', category: '藥品類' };
+        }
+
+        // 預設
+        return { name: '未知商品', category: '其他類' };
     }
 
     // 檢測視覺變化 (模擬條碼檢測)
@@ -573,14 +637,29 @@ class BarcodeScanner {
         // 添加到歷史記錄
         this.addToHistory(barcodeData);
 
-        // 停止掃描
-        this.stopScan();
+        // 重要：不自動停止掃描，允許連續掃描
+        // this.stopScan(); // 移除自動停止
 
         // 發送掃描結果事件
         this.dispatchEvent('barcode-scanned', barcodeData);
 
         // 顯示成功提示
         this.showScanResult(barcodeData);
+        
+        // 重置掃描狀態，允許再次掃描
+        this.resetScanState();
+    }
+
+    // 重置掃描狀態 (允許重複掃描)
+    resetScanState() {
+        this.keyboardInput = '';
+        this.keyboardBuffer = '';
+        this.simulateScanTrigger = false;
+        
+        // 重置檢測計時器
+        this.lastDetectionTime = 0;
+        
+        console.log('🔄 掃描狀態已重置，可以繼續掃描');
     }
 
     // 手動輸入模式
@@ -774,8 +853,40 @@ class BarcodeScanner {
 
     // 切換到相機模式
     async switchToCamera() {
-        this.stopScan();
-        await this.startCameraScan();
+        console.log('🔄 開始從手動輸入切換到相機掃描');
+        
+        try {
+            // 1. 移除手動輸入界面
+            const manualOverlay = document.getElementById('manual-input-overlay');
+            if (manualOverlay) {
+                manualOverlay.remove();
+                console.log('✅ 手動輸入界面已移除');
+            }
+            
+            // 2. 重置掃描狀態
+            this.isScanning = false;
+            this.removeKeyboardListener(); // 確保移除鍵盤監聽
+            
+            // 3. 等待一下確保界面清理完成
+            await new Promise(resolve => setTimeout(resolve, 100));
+            
+            // 4. 啟動相機掃描
+            console.log('🎥 正在啟動相機掃描...');
+            await this.startCameraScan({ facingMode: 'environment' });
+            
+            console.log('✅ 成功切換到相機掃描模式');
+            
+        } catch (error) {
+            console.error('❌ 切換到相機模式失敗:', error);
+            
+            // 如果切換失敗，顯示錯誤並回到手動輸入模式
+            alert('相機啟動失敗，請檢查相機權限或重新嘗試');
+            
+            // 延遲一下再重新啟動手動輸入
+            setTimeout(() => {
+                this.startManualInput();
+            }, 500);
+        }
     }
 
     // 顯示手動輸入

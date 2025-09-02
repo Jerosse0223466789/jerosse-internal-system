@@ -823,6 +823,13 @@
                     <div style="font-size: 1.1em; font-weight: 500; margin-bottom: 5px;">點擊掃描條碼</div>
                     <div style="font-size: 0.9em; color: var(--text-secondary);">或手動輸入商品資料</div>
                 </div>
+                
+                <!-- 掃描控制按鈕 -->
+                <div class="btn-group">
+                    <button class="btn btn-secondary" onclick="closeScannerManually()" style="background: var(--error-color); color: white;">
+                        ❌ 關閉掃描器
+                    </button>
+                </div>
 
                 <!-- 商品資料輸入 -->
                 <div class="form-group">
@@ -1246,6 +1253,9 @@
                 
                 console.log('✅ 應用程式初始化完成');
                 
+                // 初始化統計顯示
+                updateDashboardStats();
+                
             } catch (error) {
                 console.error('❌ 應用程式初始化失敗:', error);
                 showErrorMessage('應用程式初始化失敗，請重新整理頁面');
@@ -1445,22 +1455,25 @@
             const category = document.getElementById('item-category').value;
             const notes = document.getElementById('item-notes').value.trim();
 
+            // 確保數量不為0 (加強驗證)
+            if (currentQuantity <= 0) {
+                showNotification('請設定正確的商品數量 (必須大於0)', 'error');
+                return;
+            }
+
             if (!name || !category) {
                 showNotification('請填寫商品名稱和分類', 'error');
                 return;
             }
 
-            if (currentQuantity === 0) {
-                showNotification('請設定商品數量', 'error');
-                return;
-            }
-
             try {
+                console.log('📝 新增項目 - 數量:', currentQuantity, '商品:', name);
+                
                 const itemData = {
                     barcode: barcode,
                     name: name,
                     category: category,
-                    actualQty: currentQuantity,
+                    actualQty: parseInt(currentQuantity), // 確保是數字
                     expectedQty: 0, // 預設期望數量
                     location: currentInventorySession.location,
                     notes: notes,
@@ -1473,11 +1486,14 @@
                 }
 
                 // 加入本地列表
-                inventoryItems.push({
+                const newItem = {
                     ...itemData,
                     id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
                     status: 'normal' // normal, excess, shortage
-                });
+                };
+                
+                inventoryItems.push(newItem);
+                console.log('📊 項目已添加，當前總數:', inventoryItems.length);
 
                 // 更新界面
                 updateInventoryItemsList();
@@ -1557,13 +1573,14 @@
                     await app.completeInventory(summary);
                 }
 
+                // 保存統計 (在重置前)
+                const completedCount = inventoryItems.length;
+                saveInventoryStats(completedCount);
+                
                 // 重置狀態
                 resetInventorySession();
                 
-                showNotification(`盤點作業已完成！共盤點 ${inventoryItems.length} 個項目`, 'success');
-
-                // 更新統計
-                updateDashboardStats();
+                showNotification(`盤點作業已完成！共盤點 ${completedCount} 個項目`, 'success');
 
             } catch (error) {
                 console.error('完成盤點作業失敗:', error);
@@ -1626,6 +1643,17 @@
             }
         }
 
+        // 手動關閉掃描器
+        function closeScannerManually() {
+            if (app && app.modules && app.modules.scanner) {
+                app.modules.scanner.stopScan();
+                showNotification('掃描器已關閉', 'info');
+                console.log('🔒 用戶手動關閉掃描器');
+            } else {
+                showNotification('掃描器未運行', 'warning');
+            }
+        }
+
         // 處理掃描結果
         function handleInventoryScanResult(scanData) {
             console.log('庫存掃描結果:', scanData);
@@ -1637,19 +1665,51 @@
             if (scanData.productInfo) {
                 document.getElementById('item-name').value = scanData.productInfo.name || '';
                 document.getElementById('item-category').value = scanData.productInfo.category || '';
+            } else {
+                // 如果沒有商品資料，提供預設值
+                document.getElementById('item-name').value = '未知商品';
+                document.getElementById('item-category').value = '其他類';
             }
+            
+            // 重要：自動設定數量為1 (修復數量為0的問題)
+            setQuantity(1);
+            
+            // 自動新增項目 (提升使用體驗)
+            setTimeout(() => {
+                if (currentInventorySession && currentQuantity > 0) {
+                    addInventoryItem();
+                    console.log('🤖 自動新增掃描項目');
+                }
+            }, 500); // 延遲500ms讓使用者看到填入的資料
             
             showNotification(`已掃描條碼: ${scanData.code}`, 'success');
         }
 
         // 更新首頁統計
         function updateDashboardStats() {
-            // 獲取今日盤點數量
+            // 獲取今日盤點數量 - 修復計數邏輯
             const today = new Date().toDateString();
-            const todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0') + inventoryItems.length;
+            let todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0');
+            
+            console.log('📊 更新統計 - 當前作業項目數:', inventoryItems.length);
+            console.log('📊 更新統計 - 今日累計項目數:', todayInventoryCount);
+            
+            // 更新顯示 (顯示今日累計數量)
+            document.getElementById('today-inventory').textContent = todayInventoryCount;
+        }
+
+        // 完成盤點時保存統計
+        function saveInventoryStats(completedItemsCount) {
+            const today = new Date().toDateString();
+            let todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0');
+            
+            // 累加今日完成的項目數
+            todayInventoryCount += completedItemsCount;
             
             // 儲存統計
             localStorage.setItem(`inventory-count-${today}`, todayInventoryCount.toString());
+            
+            console.log('💾 保存統計 - 本次完成:', completedItemsCount, '今日累計:', todayInventoryCount);
             
             // 更新顯示
             document.getElementById('today-inventory').textContent = todayInventoryCount;
