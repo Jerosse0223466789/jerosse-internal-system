@@ -1642,6 +1642,17 @@
         // 舊版兼容性 - 保持原有的函數接口
         const legacyApp = new WarehouseApp();
 
+        // 全域通知函數 - 橋接到 legacyApp
+        function showNotification(message, type = 'info') {
+            if (legacyApp && legacyApp.showNotification) {
+                legacyApp.showNotification(message, type);
+            } else {
+                // 備用通知方式
+                console.log(`${type.toUpperCase()}: ${message}`);
+                alert(`${message}`);
+            }
+        }
+
         // 防止頁面縮放
         document.addEventListener('touchstart', function(event) {
             if (event.touches.length > 1) {
