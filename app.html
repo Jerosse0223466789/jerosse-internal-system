@@ -1,0 +1,1673 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>智能倉儲管理系統</title>
+    
+    <!-- PWA Meta Tags -->
+    <meta name="theme-color" content="#2196F3">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="智能倉儲">
+    
+    <!-- Manifest -->
+    <link rel="manifest" href="manifest.json">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" sizes="192x192" href="icon-192.png">
+    
+    <style>
+        :root {
+            --primary-color: #2196F3;
+            --primary-dark: #1976D2;
+            --secondary-color: #FFC107;
+            --success-color: #4CAF50;
+            --warning-color: #FF9800;
+            --error-color: #F44336;
+            --background: #F5F5F5;
+            --surface: #FFFFFF;
+            --text-primary: #212121;
+            --text-secondary: #757575;
+            --shadow: 0 2px 8px rgba(0,0,0,0.15);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Microsoft JhengHei', 'Apple Color Emoji', sans-serif;
+            background: var(--background);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+
+        /* 頂部導航 */
+        .top-nav {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 15px 20px;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 1000;
+        }
+
+        .nav-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .app-title {
+            font-size: 1.2em;
+            font-weight: 600;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .status-indicator {
+            display: flex;
+            align-items: center;
+            gap: 5px;
+            font-size: 0.9em;
+            opacity: 0.9;
+        }
+
+        .status-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: var(--success-color);
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { opacity: 1; }
+            50% { opacity: 0.5; }
+        }
+
+        /* 主要內容區域 */
+        .main-content {
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: calc(100vh - 140px);
+        }
+
+        /* 功能卡片網格 */
+        .feature-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        .feature-card {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            text-align: center;
+            box-shadow: var(--shadow);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .feature-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 16px rgba(0,0,0,0.2);
+        }
+
+        .feature-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 4px;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+        }
+
+        .feature-icon {
+            font-size: 2.5em;
+            margin-bottom: 10px;
+            display: block;
+        }
+
+        .feature-title {
+            font-size: 1em;
+            font-weight: 600;
+            margin-bottom: 5px;
+            color: var(--text-primary);
+        }
+
+        .feature-subtitle {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            line-height: 1.4;
+        }
+
+        /* 統計區域 */
+        .stats-section {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .stats-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 15px;
+        }
+
+        .stat-item {
+            text-align: center;
+            padding: 15px 10px;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+        }
+
+        .stat-number {
+            font-size: 1.8em;
+            font-weight: 700;
+            color: var(--primary-color);
+            display: block;
+        }
+
+        .stat-label {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* 快速動作區域 */
+        .quick-actions {
+            background: var(--surface);
+            border-radius: 16px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .quick-actions-title {
+            font-size: 1.1em;
+            font-weight: 600;
+            margin-bottom: 15px;
+            color: var(--text-primary);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+
+        .action-btn {
+            flex: 1;
+            min-width: 120px;
+            padding: 12px 15px;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            font-size: 0.9em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 6px;
+        }
+
+        .action-btn:hover {
+            transform: translateY(-1px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .action-btn.secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #FFA000);
+        }
+
+        /* 底部導航 */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background: var(--surface);
+            border-top: 1px solid #E0E0E0;
+            padding: 8px 0;
+            display: flex;
+            justify-content: space-around;
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.1);
+            z-index: 1000;
+        }
+
+        .nav-item {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding: 8px 4px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+            margin: 0 4px;
+        }
+
+        .nav-item:hover, .nav-item.active {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .nav-icon {
+            font-size: 1.4em;
+            margin-bottom: 2px;
+        }
+
+        .nav-label {
+            font-size: 0.7em;
+            font-weight: 500;
+        }
+
+        /* 響應式設計 */
+        @media (max-width: 360px) {
+            .feature-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .stats-grid {
+                grid-template-columns: repeat(2, 1fr);
+            }
+        }
+
+        /* 載入動畫 */
+        .loading-spinner {
+            width: 24px;
+            height: 24px;
+            border: 3px solid rgba(255,255,255,0.3);
+            border-top: 3px solid white;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        /* 隱藏類別 */
+        .hidden {
+            display: none !important;
+        }
+
+        /* 通知樣式 */
+        .notification {
+            position: fixed;
+            top: 80px;
+            left: 20px;
+            right: 20px;
+            padding: 15px 20px;
+            border-radius: 12px;
+            color: white;
+            font-weight: 500;
+            z-index: 2000;
+            transform: translateY(-100px);
+            opacity: 0;
+            transition: all 0.3s ease;
+        }
+
+        .notification.show {
+            transform: translateY(0);
+            opacity: 1;
+        }
+
+        .notification.success { background: var(--success-color); }
+        .notification.warning { background: var(--warning-color); }
+        .notification.error { background: var(--error-color); }
+        .notification.info { background: var(--primary-color); }
+
+        /* 頁籤內容區域 */
+        .tab-content {
+            display: none;
+            padding: 20px;
+            max-width: 480px;
+            margin: 0 auto;
+            min-height: calc(100vh - 200px);
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        /* 庫存盤點樣式 */
+        .inventory-header {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+
+        .session-info {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .session-status {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 10px;
+        }
+
+        .status-badge {
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8em;
+            font-weight: 500;
+        }
+
+        .status-badge.active {
+            background: var(--success-color);
+            color: white;
+        }
+
+        .status-badge.inactive {
+            background: var(--text-secondary);
+            color: white;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .form-control {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #E0E0E0;
+            border-radius: 10px;
+            font-size: 1em;
+            transition: all 0.3s ease;
+            background: var(--surface);
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+        }
+
+        .form-control:disabled {
+            background: #F5F5F5;
+            color: var(--text-secondary);
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .btn {
+            flex: 1;
+            padding: 12px 20px;
+            border: none;
+            border-radius: 10px;
+            font-size: 1em;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 8px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+            color: white;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(33, 150, 243, 0.3);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, var(--secondary-color), #FFA000);
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(255, 193, 7, 0.3);
+        }
+
+        .btn-success {
+            background: linear-gradient(135deg, var(--success-color), #45a049);
+            color: white;
+        }
+
+        .btn-success:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.3);
+        }
+
+        .btn:disabled {
+            background: #ccc;
+            cursor: not-allowed;
+            transform: none;
+            box-shadow: none;
+        }
+
+        /* 數量調整器 */
+        .quantity-adjuster {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            background: var(--surface);
+            padding: 15px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .quantity-btn {
+            width: 45px;
+            height: 45px;
+            border: none;
+            border-radius: 50%;
+            background: var(--primary-color);
+            color: white;
+            font-size: 1.2em;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .quantity-btn:hover {
+            background: var(--primary-dark);
+            transform: scale(1.1);
+        }
+
+        .quantity-display {
+            flex: 1;
+            text-align: center;
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            background: #F5F5F5;
+            padding: 10px;
+            border-radius: 10px;
+        }
+
+        /* 盤點項目列表 */
+        .inventory-items {
+            background: var(--surface);
+            border-radius: 12px;
+            padding: 15px;
+            margin-bottom: 20px;
+            box-shadow: var(--shadow);
+        }
+
+        .item-entry {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 12px 0;
+            border-bottom: 1px solid #E0E0E0;
+        }
+
+        .item-entry:last-child {
+            border-bottom: none;
+        }
+
+        .item-info {
+            flex: 1;
+        }
+
+        .item-name {
+            font-weight: 500;
+            color: var(--text-primary);
+            margin-bottom: 2px;
+        }
+
+        .item-details {
+            font-size: 0.8em;
+            color: var(--text-secondary);
+        }
+
+        .item-quantity {
+            font-size: 1.1em;
+            font-weight: bold;
+            color: var(--primary-color);
+        }
+
+        .item-status {
+            width: 8px;
+            height: 50px;
+            border-radius: 4px;
+            margin-left: 10px;
+        }
+
+        .item-status.normal { background: var(--success-color); }
+        .item-status.excess { background: var(--warning-color); }
+        .item-status.shortage { background: var(--error-color); }
+
+        /* 掃描區域 */
+        .scan-area {
+            background: var(--surface);
+            border: 2px dashed var(--primary-color);
+            border-radius: 15px;
+            padding: 30px;
+            text-align: center;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+            cursor: pointer;
+        }
+
+        .scan-area:hover {
+            background: rgba(33, 150, 243, 0.05);
+        }
+
+        .scan-icon {
+            font-size: 3em;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+        }
+
+        /* 快速輸入按鈕 */
+        .quick-input-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 10px;
+            margin-bottom: 20px;
+        }
+
+        .quick-btn {
+            padding: 15px 10px;
+            border: 2px solid var(--primary-color);
+            border-radius: 10px;
+            background: white;
+            color: var(--primary-color);
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+        }
+
+        .quick-btn:hover {
+            background: var(--primary-color);
+            color: white;
+        }
+
+        /* 進度指示器 */
+        .progress-bar {
+            width: 100%;
+            height: 8px;
+            background: #E0E0E0;
+            border-radius: 4px;
+            overflow: hidden;
+            margin-bottom: 15px;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            border-radius: 4px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+
+<body>
+    <!-- 頂部導航 -->
+    <div class="top-nav">
+        <div class="nav-header">
+            <div class="app-title">
+                📦 智能倉儲管理
+            </div>
+            <div class="status-indicator">
+                <div class="status-dot"></div>
+                <span id="connection-status">已連線</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- 主要內容 -->
+    <div class="main-content">
+        <!-- 首頁內容 -->
+        <div id="dashboard-content" class="tab-content active">
+            <!-- 今日統計 -->
+            <div class="stats-section">
+                <div class="stats-title">
+                    📊 今日統計
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-item">
+                        <span class="stat-number" id="today-inventory">0</span>
+                        <div class="stat-label">盤點項目</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="today-scans">0</span>
+                        <div class="stat-label">掃描次數</div>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="pending-sync">0</span>
+                        <div class="stat-label">待同步</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 快速動作 -->
+            <div class="quick-actions">
+                <div class="quick-actions-title">
+                    ⚡ 快速動作
+                </div>
+                <div class="action-buttons">
+                    <button class="action-btn" onclick="quickScan()">
+                        📱 快速掃描
+                    </button>
+                    <button class="action-btn secondary" onclick="quickInventory()">
+                        📝 快速盤點
+                    </button>
+                </div>
+            </div>
+
+            <!-- 主要功能 -->
+            <div class="feature-grid">
+                <div class="feature-card" onclick="switchTab('inventory')">
+                    <div class="feature-icon">📦</div>
+                    <div class="feature-title">庫存管理</div>
+                    <div class="feature-subtitle">盤點、查詢、調整庫存</div>
+                </div>
+
+                <div class="feature-card" onclick="switchTab('scan')">
+                    <div class="feature-icon">📱</div>
+                    <div class="feature-title">條碼掃描</div>
+                    <div class="feature-subtitle">快速識別產品</div>
+                </div>
+
+                <div class="feature-card" onclick="openModule('batch')">
+                    <div class="feature-icon">🏷️</div>
+                    <div class="feature-title">批號管理</div>
+                    <div class="feature-subtitle">追溯、有效期管理</div>
+                </div>
+
+                <div class="feature-card" onclick="switchTab('reports')">
+                    <div class="feature-icon">📊</div>
+                    <div class="feature-title">數據報表</div>
+                    <div class="feature-subtitle">統計分析、趨勢圖</div>
+                </div>
+
+                <div class="feature-card" onclick="openModule('sync')">
+                    <div class="feature-icon">🔄</div>
+                    <div class="feature-title">數據同步</div>
+                    <div class="feature-subtitle">雲端備份、離線支援</div>
+                </div>
+
+                <div class="feature-card" onclick="switchTab('profile')">
+                    <div class="feature-icon">⚙️</div>
+                    <div class="feature-title">系統設定</div>
+                    <div class="feature-subtitle">偏好設定、帳戶管理</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- 庫存管理內容 -->
+        <div id="inventory-content" class="tab-content">
+            <!-- 盤點標題區 -->
+            <div class="inventory-header">
+                <h2>📦 庫存盤點</h2>
+                <p>智能盤點作業系統</p>
+            </div>
+
+            <!-- 盤點作業狀態 -->
+            <div class="session-info">
+                <div class="session-status">
+                    <span>盤點作業狀態</span>
+                    <span class="status-badge" id="session-status">待開始</span>
+                </div>
+                <div id="session-details" style="display: none;">
+                    <div style="font-size: 0.9em; color: var(--text-secondary);">
+                        <div>作業ID: <span id="session-id">-</span></div>
+                        <div>開始時間: <span id="session-start">-</span></div>
+                        <div>操作人員: <span id="session-operator">-</span></div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- 開始盤點區 -->
+            <div id="start-session-area">
+                <div class="form-group">
+                    <label class="form-label">選擇盤點區域</label>
+                    <select class="form-control" id="inventory-location">
+                        <option value="">選擇區域</option>
+                        <option value="1F-A">一樓A區</option>
+                        <option value="1F-B">一樓B區</option>
+                        <option value="2F-A">二樓A區</option>
+                        <option value="2F-B">二樓B區</option>
+                        <option value="COLD">冷藏區</option>
+                        <option value="TEMP">暫存區</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">盤點類型</label>
+                    <select class="form-control" id="inventory-type">
+                        <option value="routine">例行盤點</option>
+                        <option value="spot">抽查盤點</option>
+                        <option value="full">全面盤點</option>
+                        <option value="quick">快速盤點</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">操作人員</label>
+                    <select class="form-control" id="inventory-operator">
+                        <option value="">選擇操作人員</option>
+                        <option value="管理員">管理員</option>
+                        <option value="操作員A">操作員A</option>
+                        <option value="操作員B">操作員B</option>
+                        <option value="品管員">品管員</option>
+                    </select>
+                </div>
+
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="startInventorySession()">
+                        🚀 開始盤點作業
+                    </button>
+                </div>
+            </div>
+
+            <!-- 盤點操作區 -->
+            <div id="inventory-operation-area" style="display: none;">
+                <!-- 掃描區域 -->
+                <div class="scan-area" onclick="startInventoryScanning()">
+                    <div class="scan-icon">📱</div>
+                    <div style="font-size: 1.1em; font-weight: 500; margin-bottom: 5px;">點擊掃描條碼</div>
+                    <div style="font-size: 0.9em; color: var(--text-secondary);">或手動輸入商品資料</div>
+                </div>
+
+                <!-- 商品資料輸入 -->
+                <div class="form-group">
+                    <label class="form-label">商品條碼</label>
+                    <input type="text" class="form-control" id="item-barcode" placeholder="掃描或輸入條碼">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">商品名稱</label>
+                    <input type="text" class="form-control" id="item-name" placeholder="商品名稱">
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">商品分類</label>
+                    <select class="form-control" id="item-category">
+                        <option value="">選擇分類</option>
+                        <option value="食品類">食品類</option>
+                        <option value="藥品類">藥品類</option>
+                        <option value="美妝類">美妝類</option>
+                        <option value="保健品">保健品</option>
+                        <option value="其他類">其他類</option>
+                    </select>
+                </div>
+
+                <!-- 數量調整器 -->
+                <div class="quantity-adjuster">
+                    <button class="quantity-btn" onclick="adjustQuantity(-1)">−</button>
+                    <div class="quantity-display" id="item-quantity">0</div>
+                    <button class="quantity-btn" onclick="adjustQuantity(1)">+</button>
+                </div>
+
+                <!-- 快速數量輸入 -->
+                <div class="quick-input-grid">
+                    <div class="quick-btn" onclick="setQuantity(1)">1</div>
+                    <div class="quick-btn" onclick="setQuantity(5)">5</div>
+                    <div class="quick-btn" onclick="setQuantity(10)">10</div>
+                    <div class="quick-btn" onclick="setQuantity(20)">20</div>
+                    <div class="quick-btn" onclick="setQuantity(50)">50</div>
+                    <div class="quick-btn" onclick="setQuantity(100)">100</div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">備註</label>
+                    <input type="text" class="form-control" id="item-notes" placeholder="選填備註資訊">
+                </div>
+
+                <!-- 操作按鈕 -->
+                <div class="btn-group">
+                    <button class="btn btn-success" onclick="addInventoryItem()">
+                        ✅ 新增項目
+                    </button>
+                    <button class="btn btn-secondary" onclick="clearItemForm()">
+                        🔄 清除
+                    </button>
+                </div>
+
+                <!-- 盤點項目列表 -->
+                <div class="inventory-items">
+                    <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px;">
+                        <h3 style="margin: 0;">已盤點項目</h3>
+                        <span id="item-count" style="color: var(--primary-color); font-weight: bold;">0 項</span>
+                    </div>
+                    
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progress-fill" style="width: 0%;"></div>
+                    </div>
+                    
+                    <div id="inventory-items-list">
+                        <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                            尚未新增任何項目
+                        </div>
+                    </div>
+                </div>
+
+                <!-- 完成盤點 -->
+                <div class="btn-group">
+                    <button class="btn btn-primary" onclick="completeInventorySession()">
+                        🏁 完成盤點作業
+                    </button>
+                    <button class="btn" onclick="cancelInventorySession()" style="background: var(--error-color); color: white;">
+                        ❌ 取消作業
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- 掃描內容 -->
+        <div id="scan-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>📱 條碼掃描</h2>
+                <p>快速商品識別系統</p>
+            </div>
+            
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <div style="font-size: 3em; margin-bottom: 20px;">🔧</div>
+                <h3>掃描功能開發中</h3>
+                <p>此功能將在下一階段實裝</p>
+            </div>
+        </div>
+
+        <!-- 報表內容 -->
+        <div id="reports-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>📊 數據報表</h2>
+                <p>統計分析與趨勢圖表</p>
+            </div>
+            
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <div style="font-size: 3em; margin-bottom: 20px;">📈</div>
+                <h3>報表功能開發中</h3>
+                <p>此功能將在下一階段實裝</p>
+            </div>
+        </div>
+
+        <!-- 個人設定內容 -->
+        <div id="profile-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>👤 個人設定</h2>
+                <p>使用者偏好與系統配置</p>
+            </div>
+            
+            <div style="text-align: center; padding: 40px; color: var(--text-secondary);">
+                <div style="font-size: 3em; margin-bottom: 20px;">⚙️</div>
+                <h3>設定功能開發中</h3>
+                <p>此功能將在下一階段實裝</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- 底部導航 -->
+    <div class="bottom-nav">
+        <div class="nav-item active" onclick="switchTab('dashboard')">
+            <div class="nav-icon">🏠</div>
+            <div class="nav-label">首頁</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('inventory')">
+            <div class="nav-icon">📦</div>
+            <div class="nav-label">庫存</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('scan')">
+            <div class="nav-icon">📱</div>
+            <div class="nav-label">掃描</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('reports')">
+            <div class="nav-icon">📊</div>
+            <div class="nav-label">報表</div>
+        </div>
+        <div class="nav-item" onclick="switchTab('profile')">
+            <div class="nav-icon">👤</div>
+            <div class="nav-label">我的</div>
+        </div>
+    </div>
+
+    <!-- 通知容器 -->
+    <div id="notification" class="notification"></div>
+
+    <!-- 載入模組 -->
+    <script src="config.js"></script>
+    <script src="modules/data-sync.js"></script>
+    <script src="modules/inventory.js"></script>
+    <script src="modules/scanner.js"></script>
+    <script src="app.js"></script>
+
+    <script>
+        // 應用程式實例
+        let app = null;
+
+        // 舊版本兼容性類別
+        class WarehouseApp {
+            constructor() {
+                this.isOnline = navigator.onLine;
+                this.currentUser = null;
+                this.syncQueue = [];
+                this.init();
+            }
+
+            async init() {
+                console.log('🚀 智能倉儲管理系統初始化中...');
+                
+                // 檢查網路狀態
+                this.setupNetworkListeners();
+                
+                // 載入本地資料
+                await this.loadLocalData();
+                
+                // 更新統計
+                this.updateStats();
+                
+                // 顯示歡迎訊息
+                this.showNotification('歡迎使用智能倉儲管理系統！', 'success');
+                
+                console.log('✅ 系統初始化完成');
+            }
+
+            setupNetworkListeners() {
+                window.addEventListener('online', () => {
+                    this.isOnline = true;
+                    document.getElementById('connection-status').textContent = '已連線';
+                    this.showNotification('網路已連線，正在同步資料...', 'info');
+                    this.syncPendingData();
+                });
+
+                window.addEventListener('offline', () => {
+                    this.isOnline = false;
+                    document.getElementById('connection-status').textContent = '離線模式';
+                    this.showNotification('網路斷線，切換到離線模式', 'warning');
+                });
+            }
+
+            async loadLocalData() {
+                // 載入本地儲存的資料
+                const savedData = localStorage.getItem('warehouse-data');
+                if (savedData) {
+                    const data = JSON.parse(savedData);
+                    this.syncQueue = data.syncQueue || [];
+                }
+            }
+
+            updateStats() {
+                // 更新統計數據
+                const todayInventory = this.getTodayInventoryCount();
+                const todayScans = this.getTodayScansCount();
+                const pendingSync = this.syncQueue.length;
+
+                document.getElementById('today-inventory').textContent = todayInventory;
+                document.getElementById('today-scans').textContent = todayScans;
+                document.getElementById('pending-sync').textContent = pendingSync;
+            }
+
+            getTodayInventoryCount() {
+                // 獲取今日盤點數量
+                return parseInt(localStorage.getItem('today-inventory-count') || '0');
+            }
+
+            getTodayScansCount() {
+                // 獲取今日掃描次數
+                return parseInt(localStorage.getItem('today-scans-count') || '0');
+            }
+
+            async syncPendingData() {
+                if (!this.isOnline || this.syncQueue.length === 0) return;
+
+                try {
+                    // 模擬同步過程
+                    await new Promise(resolve => setTimeout(resolve, 1000));
+                    
+                    this.syncQueue = [];
+                    this.saveLocalData();
+                    this.updateStats();
+                    
+                    this.showNotification('資料同步完成', 'success');
+                } catch (error) {
+                    console.error('同步失敗:', error);
+                    this.showNotification('同步失敗，稍後重試', 'error');
+                }
+            }
+
+            saveLocalData() {
+                const data = {
+                    syncQueue: this.syncQueue,
+                    lastSync: new Date().toISOString()
+                };
+                localStorage.setItem('warehouse-data', JSON.stringify(data));
+            }
+
+            showNotification(message, type = 'info') {
+                const notification = document.getElementById('notification');
+                notification.textContent = message;
+                notification.className = `notification ${type}`;
+                
+                setTimeout(() => {
+                    notification.classList.add('show');
+                }, 100);
+
+                setTimeout(() => {
+                    notification.classList.remove('show');
+                }, 3000);
+            }
+        }
+
+        // 庫存盤點狀態變數
+        let currentInventorySession = null;
+        let inventoryItems = [];
+        let currentQuantity = 0;
+
+        // 全域函數
+        function switchTab(tab) {
+            // 移除所有 active 類別
+            document.querySelectorAll('.nav-item').forEach(item => {
+                item.classList.remove('active');
+            });
+            
+            // 移除所有內容區域的 active 類別
+            document.querySelectorAll('.tab-content').forEach(content => {
+                content.classList.remove('active');
+            });
+            
+            // 添加 active 類別到當前項目
+            if (event && event.currentTarget) {
+                event.currentTarget.classList.add('active');
+            }
+            
+            // 顯示對應的內容區域
+            const contentMap = {
+                'dashboard': 'dashboard-content',
+                'inventory': 'inventory-content', 
+                'scan': 'scan-content',
+                'reports': 'reports-content',
+                'profile': 'profile-content'
+            };
+            
+            const contentId = contentMap[tab];
+            if (contentId) {
+                const contentElement = document.getElementById(contentId);
+                if (contentElement) {
+                    contentElement.classList.add('active');
+                }
+            }
+            
+            // 根據選擇的標籤載入對應內容
+            console.log(`切換到 ${tab} 頁面`);
+            showNotification(`已切換到${getTabName(tab)}`, 'info');
+        }
+
+        function getTabName(tab) {
+            const names = {
+                'dashboard': '首頁',
+                'inventory': '庫存管理',
+                'scan': '掃描功能',
+                'reports': '數據報表',
+                'profile': '個人資料'
+            };
+            return names[tab] || tab;
+        }
+
+        function openModule(module) {
+            console.log(`開啟 ${module} 模組`);
+            app.showNotification(`正在載入${getModuleName(module)}...`, 'info');
+            
+            // 這裡將來會載入對應的模組
+            setTimeout(() => {
+                app.showNotification(`${getModuleName(module)}功能開發中`, 'warning');
+            }, 1000);
+        }
+
+        function getModuleName(module) {
+            const names = {
+                'inventory': '庫存管理',
+                'scanner': '條碼掃描',
+                'batch': '批號管理',
+                'reports': '數據報表',
+                'sync': '數據同步',
+                'settings': '系統設定'
+            };
+            return names[module] || module;
+        }
+
+        async function quickScan() {
+            console.log('快速掃描');
+            
+            if (!app) {
+                showNotification('系統尚未初始化完成', 'warning');
+                return;
+            }
+            
+            try {
+                showNotification('啟動快速掃描模式...', 'info');
+                await app.startScanning({ mode: 'quick' });
+            } catch (error) {
+                console.error('啟動掃描失敗:', error);
+                showNotification('掃描功能暫時無法使用', 'error');
+            }
+        }
+
+        async function quickInventory() {
+            console.log('快速盤點');
+            
+            if (!app) {
+                showNotification('系統尚未初始化完成', 'warning');
+                return;
+            }
+            
+            try {
+                showNotification('啟動快速盤點模式...', 'info');
+                
+                // 開始盤點作業
+                const session = await app.startInventory({
+                    type: 'quick',
+                    location: 'TEMP',
+                    notes: '快速盤點作業'
+                });
+                
+                showNotification('快速盤點作業已開始', 'success');
+                
+                // 這裡可以導航到盤點頁面
+                console.log('盤點作業ID:', session.id);
+                
+            } catch (error) {
+                console.error('啟動盤點失敗:', error);
+                showNotification('盤點功能暫時無法使用', 'error');
+            }
+        }
+
+        // 初始化新版應用程式
+        document.addEventListener('DOMContentLoaded', async () => {
+            try {
+                // 載入配置
+                const config = getConfig('production');
+                
+                // 初始化應用程式
+                app = await initializeApp(config);
+                
+                // 設定事件監聽
+                setupAppEventListeners();
+                
+                console.log('✅ 應用程式初始化完成');
+                
+            } catch (error) {
+                console.error('❌ 應用程式初始化失敗:', error);
+                showErrorMessage('應用程式初始化失敗，請重新整理頁面');
+            }
+        });
+
+        // 設定應用程式事件監聽
+        function setupAppEventListeners() {
+            // 監聽統計更新
+            document.addEventListener('app-stats-updated', (event) => {
+                updateDashboardStats(event.detail);
+            });
+
+            // 監聽通知顯示
+            document.addEventListener('app-notification-show', (event) => {
+                showNotification(event.detail.message, event.detail.type);
+            });
+
+            // 監聽同步狀態更新
+            document.addEventListener('app-sync-status-updated', (event) => {
+                updateSyncStatus(event.detail);
+            });
+
+            // 監聽產品掃描
+            document.addEventListener('app-product-scanned', (event) => {
+                handleProductScanned(event.detail);
+            });
+        }
+
+        // 更新儀表板統計
+        function updateDashboardStats(stats) {
+            if (stats.inventory) {
+                document.getElementById('today-inventory').textContent = stats.inventory.totalItems || 0;
+            }
+            
+            if (stats.scanner) {
+                document.getElementById('today-scans').textContent = stats.scanner.todayScans || 0;
+            }
+            
+            if (stats.sync) {
+                document.getElementById('pending-sync').textContent = stats.sync.total || 0;
+            }
+        }
+
+        // 處理產品掃描結果
+        function handleProductScanned(scanData) {
+            showNotification(`掃描成功: ${scanData.code}`, 'success');
+            
+            // 如果有進行中的盤點作業，自動導航到盤點頁面
+            // 這裡可以添加更多的業務邏輯
+        }
+
+        // 更新同步狀態
+        function updateSyncStatus(syncResult) {
+            const statusElement = document.getElementById('connection-status');
+            if (statusElement) {
+                if (syncResult.success > 0) {
+                    statusElement.textContent = '已同步';
+                } else if (syncResult.failure > 0) {
+                    statusElement.textContent = '同步錯誤';
+                } else {
+                    statusElement.textContent = navigator.onLine ? '已連線' : '離線模式';
+                }
+            }
+        }
+
+        // 顯示錯誤訊息
+        function showErrorMessage(message) {
+            const errorDiv = document.createElement('div');
+            errorDiv.style.cssText = `
+                position: fixed;
+                top: 50%;
+                left: 50%;
+                transform: translate(-50%, -50%);
+                background: #f44336;
+                color: white;
+                padding: 20px;
+                border-radius: 8px;
+                z-index: 10000;
+                text-align: center;
+            `;
+            errorDiv.textContent = message;
+            document.body.appendChild(errorDiv);
+        }
+
+        // 庫存盤點功能實作
+
+        // 開始盤點作業
+        async function startInventorySession() {
+            const location = document.getElementById('inventory-location').value;
+            const type = document.getElementById('inventory-type').value;
+            const operator = document.getElementById('inventory-operator').value;
+
+            if (!location || !operator) {
+                showNotification('請填寫完整的盤點資訊', 'error');
+                return;
+            }
+
+            try {
+                showNotification('正在啟動盤點作業...', 'info');
+
+                // 使用應用程式API開始盤點
+                if (app) {
+                    currentInventorySession = await app.startInventory({
+                        location: location,
+                        type: type,
+                        operator: operator
+                    });
+                } else {
+                    // 備用模式
+                    currentInventorySession = {
+                        id: `session_${Date.now()}`,
+                        location: location,
+                        type: type,
+                        operator: operator,
+                        startTime: new Date().toISOString(),
+                        status: 'active'
+                    };
+                }
+
+                // 更新界面
+                updateSessionStatus();
+                showInventoryOperationArea();
+                
+                showNotification('盤點作業已開始！', 'success');
+
+            } catch (error) {
+                console.error('啟動盤點作業失敗:', error);
+                showNotification('啟動盤點作業失敗', 'error');
+            }
+        }
+
+        // 更新作業狀態顯示
+        function updateSessionStatus() {
+            if (!currentInventorySession) return;
+
+            const statusBadge = document.getElementById('session-status');
+            const sessionDetails = document.getElementById('session-details');
+            
+            statusBadge.textContent = '進行中';
+            statusBadge.className = 'status-badge active';
+            
+            document.getElementById('session-id').textContent = currentInventorySession.id;
+            document.getElementById('session-start').textContent = new Date(currentInventorySession.startTime).toLocaleString();
+            document.getElementById('session-operator').textContent = currentInventorySession.operator;
+            
+            sessionDetails.style.display = 'block';
+        }
+
+        // 顯示盤點操作區域
+        function showInventoryOperationArea() {
+            document.getElementById('start-session-area').style.display = 'none';
+            document.getElementById('inventory-operation-area').style.display = 'block';
+        }
+
+        // 隱藏盤點操作區域
+        function hideInventoryOperationArea() {
+            document.getElementById('start-session-area').style.display = 'block';
+            document.getElementById('inventory-operation-area').style.display = 'none';
+        }
+
+        // 數量調整
+        function adjustQuantity(change) {
+            currentQuantity = Math.max(0, currentQuantity + change);
+            document.getElementById('item-quantity').textContent = currentQuantity;
+        }
+
+        // 設定數量
+        function setQuantity(value) {
+            currentQuantity = value;
+            document.getElementById('item-quantity').textContent = currentQuantity;
+        }
+
+        // 清除項目表單
+        function clearItemForm() {
+            document.getElementById('item-barcode').value = '';
+            document.getElementById('item-name').value = '';
+            document.getElementById('item-category').value = '';
+            document.getElementById('item-notes').value = '';
+            setQuantity(0);
+        }
+
+        // 新增盤點項目
+        async function addInventoryItem() {
+            const barcode = document.getElementById('item-barcode').value.trim();
+            const name = document.getElementById('item-name').value.trim();
+            const category = document.getElementById('item-category').value;
+            const notes = document.getElementById('item-notes').value.trim();
+
+            if (!name || !category) {
+                showNotification('請填寫商品名稱和分類', 'error');
+                return;
+            }
+
+            if (currentQuantity === 0) {
+                showNotification('請設定商品數量', 'error');
+                return;
+            }
+
+            try {
+                const itemData = {
+                    barcode: barcode,
+                    name: name,
+                    category: category,
+                    actualQty: currentQuantity,
+                    expectedQty: 0, // 預設期望數量
+                    location: currentInventorySession.location,
+                    notes: notes,
+                    timestamp: new Date().toISOString()
+                };
+
+                // 使用應用程式API新增項目
+                if (app) {
+                    await app.addInventoryItem(itemData);
+                }
+
+                // 加入本地列表
+                inventoryItems.push({
+                    ...itemData,
+                    id: `item_${Date.now()}_${Math.random().toString(36).substr(2, 9)}`,
+                    status: 'normal' // normal, excess, shortage
+                });
+
+                // 更新界面
+                updateInventoryItemsList();
+                clearItemForm();
+                
+                showNotification(`已新增 ${name} x${currentQuantity}`, 'success');
+
+            } catch (error) {
+                console.error('新增盤點項目失敗:', error);
+                showNotification('新增項目失敗', 'error');
+            }
+        }
+
+        // 更新盤點項目列表
+        function updateInventoryItemsList() {
+            const itemCount = document.getElementById('item-count');
+            const itemsList = document.getElementById('inventory-items-list');
+            const progressFill = document.getElementById('progress-fill');
+
+            itemCount.textContent = `${inventoryItems.length} 項`;
+
+            if (inventoryItems.length === 0) {
+                itemsList.innerHTML = `
+                    <div style="text-align: center; color: var(--text-secondary); padding: 20px;">
+                        尚未新增任何項目
+                    </div>
+                `;
+                progressFill.style.width = '0%';
+                return;
+            }
+
+            // 更新進度條 (假設目標是50項)
+            const targetItems = 50;
+            const progress = Math.min(100, (inventoryItems.length / targetItems) * 100);
+            progressFill.style.width = `${progress}%`;
+
+            // 生成項目列表HTML
+            const itemsHTML = inventoryItems.map(item => `
+                <div class="item-entry">
+                    <div class="item-info">
+                        <div class="item-name">${item.name}</div>
+                        <div class="item-details">
+                            ${item.category} • ${item.barcode || '無條碼'} • ${new Date(item.timestamp).toLocaleTimeString()}
+                        </div>
+                    </div>
+                    <div class="item-quantity">${item.actualQty}</div>
+                    <div class="item-status ${item.status}"></div>
+                </div>
+            `).join('');
+
+            itemsList.innerHTML = itemsHTML;
+        }
+
+        // 完成盤點作業
+        async function completeInventorySession() {
+            if (!currentInventorySession) {
+                showNotification('沒有進行中的盤點作業', 'error');
+                return;
+            }
+
+            if (inventoryItems.length === 0) {
+                showNotification('請至少新增一個盤點項目', 'error');
+                return;
+            }
+
+            try {
+                showNotification('正在完成盤點作業...', 'info');
+
+                const summary = {
+                    totalItems: inventoryItems.length,
+                    notes: `盤點完成，共計 ${inventoryItems.length} 個項目`,
+                    completedBy: currentInventorySession.operator
+                };
+
+                // 使用應用程式API完成盤點
+                if (app) {
+                    await app.completeInventory(summary);
+                }
+
+                // 重置狀態
+                resetInventorySession();
+                
+                showNotification(`盤點作業已完成！共盤點 ${inventoryItems.length} 個項目`, 'success');
+
+                // 更新統計
+                updateDashboardStats();
+
+            } catch (error) {
+                console.error('完成盤點作業失敗:', error);
+                showNotification('完成盤點作業失敗', 'error');
+            }
+        }
+
+        // 取消盤點作業
+        function cancelInventorySession() {
+            if (!currentInventorySession) return;
+
+            if (inventoryItems.length > 0) {
+                if (!confirm('確定要取消盤點作業？已盤點的項目將會遺失。')) {
+                    return;
+                }
+            }
+
+            resetInventorySession();
+            showNotification('已取消盤點作業', 'warning');
+        }
+
+        // 重置盤點作業
+        function resetInventorySession() {
+            currentInventorySession = null;
+            inventoryItems = [];
+            currentQuantity = 0;
+
+            // 重置界面
+            const statusBadge = document.getElementById('session-status');
+            statusBadge.textContent = '待開始';
+            statusBadge.className = 'status-badge inactive';
+            
+            document.getElementById('session-details').style.display = 'none';
+            hideInventoryOperationArea();
+            clearItemForm();
+            updateInventoryItemsList();
+
+            // 重置表單
+            document.getElementById('inventory-location').value = '';
+            document.getElementById('inventory-type').value = 'routine';
+            document.getElementById('inventory-operator').value = '';
+        }
+
+        // 啟動庫存掃描
+        async function startInventoryScanning() {
+            if (!app) {
+                showNotification('掃描功能尚未初始化', 'warning');
+                return;
+            }
+
+            try {
+                showNotification('啟動條碼掃描...', 'info');
+                await app.startScanning({ 
+                    mode: 'inventory',
+                    callback: handleInventoryScanResult 
+                });
+            } catch (error) {
+                console.error('啟動掃描失敗:', error);
+                showNotification('掃描功能暫時無法使用', 'error');
+            }
+        }
+
+        // 處理掃描結果
+        function handleInventoryScanResult(scanData) {
+            console.log('庫存掃描結果:', scanData);
+            
+            // 自動填入條碼
+            document.getElementById('item-barcode').value = scanData.code;
+            
+            // 如果有找到對應商品，自動填入資料
+            if (scanData.productInfo) {
+                document.getElementById('item-name').value = scanData.productInfo.name || '';
+                document.getElementById('item-category').value = scanData.productInfo.category || '';
+            }
+            
+            showNotification(`已掃描條碼: ${scanData.code}`, 'success');
+        }
+
+        // 更新首頁統計
+        function updateDashboardStats() {
+            // 獲取今日盤點數量
+            const today = new Date().toDateString();
+            const todayInventoryCount = parseInt(localStorage.getItem(`inventory-count-${today}`) || '0') + inventoryItems.length;
+            
+            // 儲存統計
+            localStorage.setItem(`inventory-count-${today}`, todayInventoryCount.toString());
+            
+            // 更新顯示
+            document.getElementById('today-inventory').textContent = todayInventoryCount;
+        }
+
+        // 舊版兼容性 - 保持原有的函數接口
+        const legacyApp = new WarehouseApp();
+
+        // 全域通知函數 - 橋接到 legacyApp
+        function showNotification(message, type = 'info') {
+            if (legacyApp && legacyApp.showNotification) {
+                legacyApp.showNotification(message, type);
+            } else {
+                // 備用通知方式
+                console.log(`${type.toUpperCase()}: ${message}`);
+                alert(`${message}`);
+            }
+        }
+
+        // 防止頁面縮放
+        document.addEventListener('touchstart', function(event) {
+            if (event.touches.length > 1) {
+                event.preventDefault();
+            }
+        });
+
+        let lastTouchEnd = 0;
+        document.addEventListener('touchend', function(event) {
+            const now = (new Date()).getTime();
+            if (now - lastTouchEnd <= 300) {
+                event.preventDefault();
+            }
+            lastTouchEnd = now;
+        }, false);
+    </script>
+</body>
+</html>
