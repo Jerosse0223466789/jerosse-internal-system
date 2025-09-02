@@ -837,10 +837,11 @@
         .item-check-card {
             display: flex;
             justify-content: space-between;
-            align-items: center;
-            padding: 15px;
+            align-items: flex-start;
+            padding: 12px;
             border-bottom: 1px solid var(--border-color);
             transition: all 0.3s ease;
+            flex-wrap: wrap;
         }
 
         .item-check-card:last-child {
@@ -1058,6 +1059,100 @@
             .form-row {
                 margin-bottom: 12px;
             }
+            
+            /* 手機版盤點記錄優化 */
+            .item-check-card {
+                flex-direction: column;
+                align-items: stretch;
+                padding: 10px;
+            }
+            
+            .item-check-header {
+                margin-bottom: 8px;
+                gap: 8px;
+            }
+            
+            .item-info {
+                flex: 1;
+            }
+            
+            .item-info strong {
+                font-size: 0.95em;
+                line-height: 1.3;
+            }
+            
+            .item-info small {
+                font-size: 0.8em;
+                line-height: 1.2;
+                display: block;
+                margin-top: 2px;
+            }
+            
+            .item-quantities {
+                text-align: left;
+                margin-top: 5px;
+                font-size: 1em;
+                padding: 8px;
+                background: rgba(33, 150, 243, 0.1);
+                border-radius: 4px;
+            }
+            
+            /* 手機版完成總結優化 */
+            .completion-card {
+                padding: 15px;
+                margin: 10px 0;
+            }
+            
+            .completion-card h4 {
+                font-size: 1.1em;
+                margin-bottom: 15px;
+                text-align: center;
+            }
+            
+            .summary-stats {
+                flex-direction: column;
+                gap: 10px;
+                margin: 15px 0;
+            }
+            
+            .stat-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                background: #f8f9fa;
+                padding: 10px 15px;
+                border-radius: 6px;
+                border-left: 4px solid var(--primary-color);
+            }
+            
+            .stat-number {
+                font-size: 1.3em;
+                margin: 0;
+            }
+            
+            .stat-label {
+                font-size: 0.9em;
+                margin: 0;
+            }
+            
+            .completion-time {
+                font-size: 0.85em;
+                text-align: center;
+                margin-top: 10px;
+                padding-top: 10px;
+            }
+            
+            .completion-actions {
+                flex-direction: column;
+                gap: 10px;
+                margin-top: 15px;
+            }
+            
+            .completion-actions .btn {
+                width: 100%;
+                padding: 12px;
+                font-size: 0.95em;
+            }
         }
 
         .quantity-btn {
@@ -1103,6 +1198,64 @@
 
         .step-actions .btn {
             min-width: 120px;
+        }
+
+        /* === 整體手機版優化 === */
+        @media (max-width: 768px) {
+            .container {
+                padding: 10px;
+            }
+            
+            .workflow-card {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .step-header h3 {
+                font-size: 1.1em;
+            }
+            
+            .step-actions {
+                flex-direction: column;
+                gap: 10px;
+            }
+            
+            .step-actions .btn {
+                width: 100%;
+                min-width: auto;
+                padding: 12px;
+            }
+            
+            .items-checklist {
+                max-height: 300px;
+                margin: 15px 0;
+            }
+            
+            .current-session-info {
+                padding: 15px;
+                margin-bottom: 15px;
+            }
+            
+            .session-header {
+                font-size: 0.9em;
+                line-height: 1.4;
+            }
+            
+            .progress-text {
+                font-size: 0.85em;
+                margin-top: 6px;
+            }
+            
+            .area-actions {
+                flex-direction: column;
+                gap: 8px;
+                margin-top: 15px;
+            }
+            
+            .area-actions .btn {
+                width: 100%;
+                padding: 12px;
+            }
         }
     </style>
 </head>
@@ -2374,22 +2527,47 @@
         
         // 返回人員選擇
         function backToStaffSelection() {
+            // 詢問用戶是否要保留已完成的盤點數據
+            if (completedAreas.length > 0) {
+                const confirmReset = confirm(`您已完成 ${completedAreas.length} 個區域的盤點。\n\n點擊「確定」將保留已完成數據並重新選擇人員\n點擊「取消」將清除所有數據重新開始`);
+                
+                if (confirmReset) {
+                    // 保留已完成區域，只重新選擇人員
+                    selectedStaff = null;
+                    selectedArea = null;
+                    areaItemsList = [];
+                    inventoriedItems = [];
+                    // 保留 completedAreas
+                    
+                    showNotification('已保留盤點進度，請重新選擇人員', 'success');
+                } else {
+                    // 完全重置
+                    selectedStaff = null;
+                    selectedArea = null;
+                    areaItemsList = [];
+                    inventoriedItems = [];
+                    completedAreas = [];
+                    
+                    showNotification('已清除所有數據，重新開始盤點', 'warning');
+                }
+            } else {
+                // 沒有已完成數據，直接重置
+                selectedStaff = null;
+                selectedArea = null;
+                areaItemsList = [];
+                inventoriedItems = [];
+                completedAreas = [];
+                
+                showNotification('已返回人員選擇', 'info');
+            }
+            
             // 隱藏區域選擇，顯示人員選擇
             document.getElementById('area-selection-area').style.display = 'none';
             document.getElementById('global-progress-area').style.display = 'none';
             document.getElementById('staff-selection-area').style.display = 'block';
             
-            // 重置狀態
-            selectedStaff = null;
-            selectedArea = null;
-            areaItemsList = [];
-            inventoriedItems = [];
-            completedAreas = [];
-            
             // 重新初始化人員選擇
             initializeStaffSelection();
-            
-            showNotification('已返回人員選擇', 'info');
         }
 
         // 返回區域選擇
