@@ -139,6 +139,9 @@ class BarcodeScanner {
                     <button class="scanner-btn" onclick="barcodeScanner.switchCamera()">
                         🔄 切換相機
                     </button>
+                    <button class="scanner-btn" onclick="barcodeScanner.simulateScan()">
+                        🧪 測試掃描
+                    </button>
                     <button class="scanner-btn manual-btn" onclick="barcodeScanner.showManualInput()">
                         ⌨️ 手動輸入
                     </button>
@@ -364,33 +367,36 @@ class BarcodeScanner {
 
     // 模擬條碼識別 (實際應用中會使用真正的條碼識別庫)
     simulateBarcodeDetection() {
-        // 模擬隨機掃描到條碼 (僅用於演示)
-        if (Math.random() < 0.001) { // 1/1000 的機率
+        // 修改：更實用的模擬掃描
+        // 檢查是否有按下空白鍵進行模擬掃描
+        if (this.simulateScanTrigger) {
+            this.simulateScanTrigger = false;
             const mockBarcode = this.generateMockBarcode();
             this.onBarcodeDetected(mockBarcode);
         }
     }
 
     generateMockBarcode() {
-        const types = ['EAN_13', 'CODE_128', 'QR_CODE'];
-        const type = types[Math.floor(Math.random() * types.length)];
+        // 改進：生成更真實的測試條碼
+        const testProducts = [
+            { type: 'EAN_13', code: '4711234567890', name: '測試商品A', category: '食品類' },
+            { type: 'CODE_128', code: 'TEST001ABC', name: '測試商品B', category: '美妝類' },
+            { type: 'EAN_13', code: '4719876543210', name: '測試商品C', category: '保健品' },
+            { type: 'QR_CODE', code: 'QR_TEST_12345', name: '測試商品D', category: '藥品類' },
+            { type: 'CODE_128', code: 'DEMO_SCAN_001', name: '測試商品E', category: '其他類' }
+        ];
         
-        let code;
-        switch (type) {
-            case 'EAN_13':
-                code = '47' + Math.random().toString().slice(2, 13);
-                break;
-            case 'CODE_128':
-                code = 'ABC' + Math.random().toString(36).substr(2, 8).toUpperCase();
-                break;
-            case 'QR_CODE':
-                code = 'QR_' + Math.random().toString(36).substr(2, 12);
-                break;
-            default:
-                code = Math.random().toString().slice(2, 12);
-        }
-
-        return { type, code, timestamp: Date.now() };
+        const product = testProducts[Math.floor(Math.random() * testProducts.length)];
+        
+        return { 
+            type: product.type, 
+            code: product.code, 
+            timestamp: Date.now(),
+            productInfo: {
+                name: product.name,
+                category: product.category
+            }
+        };
     }
 
     // 條碼識別成功處理
@@ -665,6 +671,14 @@ class BarcodeScanner {
         const newFacing = currentFacing === 'environment' ? 'user' : 'environment';
         
         await this.startCameraScan({ facingMode: newFacing });
+    }
+
+    // 模擬掃描觸發 (用於測試)
+    simulateScan() {
+        if (!this.isScanning) return;
+        
+        console.log('🧪 觸發測試掃描...');
+        this.simulateScanTrigger = true;
     }
 
     // 添加到掃描歷史

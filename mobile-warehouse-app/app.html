@@ -1235,6 +1235,12 @@
                 // 初始化應用程式
                 app = await initializeApp(config);
                 
+                // 暴露掃描器實例到全域 (修復掃描界面按鈕問題)
+                if (app && app.modules && app.modules.scanner) {
+                    window.barcodeScanner = app.modules.scanner;
+                    console.log('✅ 掃描器實例已暴露到全域');
+                }
+                
                 // 設定事件監聽
                 setupAppEventListeners();
                 
@@ -1266,6 +1272,16 @@
             // 監聽產品掃描
             document.addEventListener('app-product-scanned', (event) => {
                 handleProductScanned(event.detail);
+            });
+
+            // 監聽條碼掃描事件 (修復掃描結果處理)
+            document.addEventListener('barcode-scanned', (event) => {
+                console.log('收到條碼掃描事件:', event.detail);
+                
+                // 如果在庫存盤點模式，自動填入掃描結果
+                if (currentInventorySession && event.detail) {
+                    handleInventoryScanResult(event.detail);
+                }
             });
         }
 
