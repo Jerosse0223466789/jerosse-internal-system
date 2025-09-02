@@ -255,6 +255,25 @@
             background: linear-gradient(135deg, #A5D6A7, #4CAF50);
         }
 
+        /* === 匯出功能按鈕樣式 === */
+        .btn.btn-success {
+            background: linear-gradient(135deg, #66BB6A, #4CAF50);
+            color: white;
+            border: none;
+        }
+
+        .btn.btn-info {
+            background: linear-gradient(135deg, #42A5F5, #2196F3);
+            color: white;
+            border: none;
+        }
+
+        .btn.btn-warning {
+            background: linear-gradient(135deg, #FFCA28, #FFC107);
+            color: #333;
+            border: none;
+        }
+
         /* === 盤點紀錄樣式 === */
         .records-filter {
             background: #f8f9fa;
@@ -381,6 +400,131 @@
         .placeholder-icon {
             font-size: 3em;
             margin-bottom: 15px;
+        }
+
+        /* === 進階報表樣式 === */
+        .reports-options {
+            background: #f8f9fa;
+            padding: 15px;
+            border-radius: 8px;
+            margin-bottom: 20px;
+        }
+
+        .option-row {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
+
+        .reports-dashboard {
+            min-height: 400px;
+        }
+
+        .report-card {
+            background: white;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+        }
+
+        .report-card h3 {
+            color: var(--primary-color);
+            margin-bottom: 15px;
+            border-bottom: 2px solid var(--primary-color);
+            padding-bottom: 8px;
+        }
+
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin: 15px 0;
+        }
+
+        .stat-box {
+            background: linear-gradient(135deg, #f8f9fa, #e9ecef);
+            padding: 15px;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid var(--primary-color);
+        }
+
+        .stat-number {
+            font-size: 2em;
+            font-weight: bold;
+            color: var(--primary-color);
+            margin-bottom: 5px;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-size: 0.9em;
+        }
+
+        .chart-container {
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 15px 0;
+            min-height: 300px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            border: 1px solid #e0e0e0;
+        }
+
+        .chart-placeholder {
+            text-align: center;
+            color: var(--text-secondary);
+        }
+
+        .data-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+
+        .data-table th,
+        .data-table td {
+            padding: 12px;
+            text-align: left;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .data-table th {
+            background: var(--primary-color);
+            color: white;
+            font-weight: bold;
+        }
+
+        .data-table tr:hover {
+            background: #f8f9fa;
+        }
+
+        .report-actions {
+            display: flex;
+            gap: 10px;
+            justify-content: center;
+            margin-top: 30px;
+            padding: 20px 0;
+            border-top: 1px solid #e0e0e0;
+        }
+
+        .progress-bar {
+            width: 100%;
+            height: 20px;
+            background: #e0e0e0;
+            border-radius: 10px;
+            overflow: hidden;
+            margin: 10px 0;
+        }
+
+        .progress-fill {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
+            transition: width 0.3s ease;
         }
 
         /* 底部導航 */
@@ -1799,6 +1943,52 @@
             </div>
         </div>
 
+        <!-- 進階報表內容 -->
+        <div id="advanced-reports-content" class="tab-content">
+            <div class="inventory-header">
+                <h2>📈 進階報表</h2>
+                <p>詳細統計分析與數據視覺化</p>
+            </div>
+            
+            <!-- 報表選項 -->
+            <div class="reports-options">
+                <div class="option-row">
+                    <select id="report-type-select" class="filter-select">
+                        <option value="summary">總覽報表</option>
+                        <option value="staff-performance">人員效率分析</option>
+                        <option value="area-analysis">區域分析</option>
+                        <option value="trend-analysis">趨勢分析</option>
+                        <option value="category-breakdown">品項分類統計</option>
+                    </select>
+                    <select id="report-period-select" class="filter-select">
+                        <option value="today">今天</option>
+                        <option value="week">本週</option>
+                        <option value="month">本月</option>
+                        <option value="quarter">本季</option>
+                        <option value="all">全部時間</option>
+                    </select>
+                    <button class="btn btn-primary" onclick="generateAdvancedReports()">
+                        📊 生成報表
+                    </button>
+                </div>
+            </div>
+            
+            <!-- 報表內容 -->
+            <div class="reports-dashboard" id="reports-dashboard">
+                <!-- 動態生成報表內容 -->
+            </div>
+            
+            <!-- 返回按鈕 -->
+            <div class="report-actions">
+                <button class="btn btn-secondary" onclick="switchTab('records')">
+                    ← 返回盤點紀錄
+                </button>
+                <button class="btn btn-success" onclick="exportCurrentReport()">
+                    📄 匯出目前報表
+                </button>
+            </div>
+        </div>
+
         <!-- 盤點紀錄內容 -->
         <div id="records-content" class="tab-content">
             <div class="inventory-header">
@@ -1829,6 +2019,17 @@
                     </select>
                     <button class="btn btn-primary" onclick="filterRecords()">
                         🔍 篩選
+                    </button>
+                </div>
+                <div class="filter-row">
+                    <button class="btn btn-success" onclick="exportToExcel()">
+                        📊 匯出 Excel
+                    </button>
+                    <button class="btn btn-secondary" onclick="exportToCSV()">
+                        📄 匯出 CSV
+                    </button>
+                    <button class="btn btn-info" onclick="openAdvancedReports()">
+                        📈 進階報表
                     </button>
                 </div>
             </div>
@@ -2383,7 +2584,8 @@
                 'scan': 'scan-content',
                 'reports': 'reports-content',
                 'profile': 'profile-content',
-                'records': 'records-content'
+                'records': 'records-content',
+                'advanced-reports': 'advanced-reports-content'
             };
             
             const contentId = contentMap[tab];
@@ -2412,7 +2614,8 @@
                 'scan': '掃描功能',
                 'reports': '數據報表',
                 'profile': '個人資料',
-                'records': '盤點紀錄'
+                'records': '盤點紀錄',
+                'advanced-reports': '進階報表'
             };
             return names[tab] || tab;
         }
@@ -2623,6 +2826,617 @@
             
             displayInventoryRecords(records);
             showNotification(`找到 ${records.length} 筆符合條件的紀錄`, 'info');
+        }
+
+        // === 資料匯出功能 === //
+        function exportToExcel() {
+            const records = getCurrentFilteredRecords();
+            if (records.length === 0) {
+                showNotification('沒有資料可匯出', 'warning');
+                return;
+            }
+
+            // 創建Excel資料格式
+            const excelData = prepareExcelData(records);
+            const csvContent = convertToCSV(excelData);
+            
+            // 下載Excel檔案 (實際上是CSV格式，但Excel可以開啟)
+            downloadFile(csvContent, `盤點紀錄_${getCurrentDateString()}.csv`, 'text/csv;charset=utf-8;');
+            
+            showNotification(`已匯出 ${records.length} 筆紀錄到Excel`, 'success');
+        }
+
+        function exportToCSV() {
+            const records = getCurrentFilteredRecords();
+            if (records.length === 0) {
+                showNotification('沒有資料可匯出', 'warning');
+                return;
+            }
+
+            const csvData = prepareCsvData(records);
+            const csvContent = convertToCSV(csvData);
+            
+            downloadFile(csvContent, `盤點紀錄_${getCurrentDateString()}.csv`, 'text/csv;charset=utf-8;');
+            
+            showNotification(`已匯出 ${records.length} 筆紀錄到CSV`, 'success');
+        }
+
+        function getCurrentFilteredRecords() {
+            const dateFilter = document.getElementById('record-date-filter').value;
+            const staffFilter = document.getElementById('record-staff-filter').value;
+            const areaFilter = document.getElementById('record-area-filter').value;
+            
+            let records = getStoredInventoryRecords();
+            
+            // 套用篩選條件
+            if (dateFilter !== 'all') {
+                const now = new Date();
+                const startOfToday = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                const startOfWeek = new Date(startOfToday);
+                startOfWeek.setDate(startOfToday.getDate() - startOfToday.getDay());
+                const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1);
+                
+                records = records.filter(record => {
+                    const recordDate = new Date(record.timestamp);
+                    switch(dateFilter) {
+                        case 'today':
+                            return recordDate >= startOfToday;
+                        case 'week':
+                            return recordDate >= startOfWeek;
+                        case 'month':
+                            return recordDate >= startOfMonth;
+                        default:
+                            return true;
+                    }
+                });
+            }
+            
+            if (staffFilter !== 'all') {
+                records = records.filter(record => record.staff === staffFilter);
+            }
+            
+            if (areaFilter !== 'all') {
+                records = records.filter(record => record.area === areaFilter);
+            }
+            
+            return records;
+        }
+
+        function prepareExcelData(records) {
+            // Excel格式的資料結構
+            const data = [
+                ['盤點紀錄匯出報表'],
+                ['匯出時間', new Date().toLocaleString('zh-TW')],
+                ['總筆數', records.length],
+                [],
+                ['序號', '日期', '時間', '區域', '盤點人員', '分類', '品項', '數量', '備註']
+            ];
+
+            records.forEach((record, index) => {
+                const date = new Date(record.timestamp);
+                const dateStr = date.toLocaleDateString('zh-TW');
+                const timeStr = date.toLocaleTimeString('zh-TW');
+
+                if (record.items && record.items.length > 0) {
+                    record.items.forEach(item => {
+                        data.push([
+                            index + 1,
+                            dateStr,
+                            timeStr,
+                            record.area || '',
+                            record.staff || '',
+                            item.category || '',
+                            item.itemName || item.item || '',
+                            item.quantity || 0,
+                            item.notes || ''
+                        ]);
+                    });
+                } else {
+                    data.push([
+                        index + 1,
+                        dateStr,
+                        timeStr,
+                        record.area || '',
+                        record.staff || '',
+                        '',
+                        '',
+                        0,
+                        ''
+                    ]);
+                }
+            });
+
+            return data;
+        }
+
+        function prepareCsvData(records) {
+            // CSV格式的資料結構
+            const data = [
+                ['序號', '日期', '時間', '區域', '盤點人員', '分類', '品項', '數量', '備註']
+            ];
+
+            records.forEach((record, index) => {
+                const date = new Date(record.timestamp);
+                const dateStr = date.toLocaleDateString('zh-TW');
+                const timeStr = date.toLocaleTimeString('zh-TW');
+
+                if (record.items && record.items.length > 0) {
+                    record.items.forEach(item => {
+                        data.push([
+                            index + 1,
+                            dateStr,
+                            timeStr,
+                            record.area || '',
+                            record.staff || '',
+                            item.category || '',
+                            item.itemName || item.item || '',
+                            item.quantity || 0,
+                            item.notes || ''
+                        ]);
+                    });
+                } else {
+                    data.push([
+                        index + 1,
+                        dateStr,
+                        timeStr,
+                        record.area || '',
+                        record.staff || '',
+                        '',
+                        '',
+                        0,
+                        ''
+                    ]);
+                }
+            });
+
+            return data;
+        }
+
+        function convertToCSV(data) {
+            return data.map(row => 
+                row.map(cell => {
+                    // 處理包含逗號或引號的儲存格
+                    const cellStr = String(cell || '');
+                    if (cellStr.includes(',') || cellStr.includes('"') || cellStr.includes('\n')) {
+                        return `"${cellStr.replace(/"/g, '""')}"`;
+                    }
+                    return cellStr;
+                }).join(',')
+            ).join('\n');
+        }
+
+        function downloadFile(content, filename, contentType) {
+            const blob = new Blob(['\uFEFF' + content], { type: contentType });
+            const url = window.URL.createObjectURL(blob);
+            const link = document.createElement('a');
+            link.href = url;
+            link.download = filename;
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+            window.URL.revokeObjectURL(url);
+        }
+
+        function getCurrentDateString() {
+            const now = new Date();
+            return `${now.getFullYear()}${String(now.getMonth() + 1).padStart(2, '0')}${String(now.getDate()).padStart(2, '0')}`;
+        }
+
+        // === 進階報表功能 === //
+        function openAdvancedReports() {
+            switchTab('advanced-reports');
+            generateAdvancedReports();
+        }
+
+        function generateAdvancedReports() {
+            const reportType = document.getElementById('report-type-select').value;
+            const reportPeriod = document.getElementById('report-period-select').value;
+            const dashboard = document.getElementById('reports-dashboard');
+            
+            // 清空舊報表
+            dashboard.innerHTML = '<div style="text-align: center; padding: 20px;">📊 正在生成報表...</div>';
+            
+            // 獲取篩選後的資料
+            const records = getFilteredRecordsForPeriod(reportPeriod);
+            
+            setTimeout(() => {
+                let reportHTML = '';
+                
+                switch(reportType) {
+                    case 'summary':
+                        reportHTML = generateSummaryReport(records);
+                        break;
+                    case 'staff-performance':
+                        reportHTML = generateStaffPerformanceReport(records);
+                        break;
+                    case 'area-analysis':
+                        reportHTML = generateAreaAnalysisReport(records);
+                        break;
+                    case 'trend-analysis':
+                        reportHTML = generateTrendAnalysisReport(records);
+                        break;
+                    case 'category-breakdown':
+                        reportHTML = generateCategoryBreakdownReport(records);
+                        break;
+                    default:
+                        reportHTML = generateSummaryReport(records);
+                }
+                
+                dashboard.innerHTML = reportHTML;
+                showNotification('報表生成完成', 'success');
+            }, 500);
+        }
+
+        function getFilteredRecordsForPeriod(period) {
+            const records = getStoredInventoryRecords();
+            const now = new Date();
+            
+            let startDate;
+            switch(period) {
+                case 'today':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), now.getDate());
+                    break;
+                case 'week':
+                    startDate = new Date(now);
+                    startDate.setDate(now.getDate() - now.getDay());
+                    startDate.setHours(0, 0, 0, 0);
+                    break;
+                case 'month':
+                    startDate = new Date(now.getFullYear(), now.getMonth(), 1);
+                    break;
+                case 'quarter':
+                    const quarter = Math.floor(now.getMonth() / 3);
+                    startDate = new Date(now.getFullYear(), quarter * 3, 1);
+                    break;
+                default:
+                    return records;
+            }
+            
+            return records.filter(record => new Date(record.timestamp) >= startDate);
+        }
+
+        function generateSummaryReport(records) {
+            const totalRecords = records.length;
+            const totalItems = records.reduce((sum, record) => 
+                sum + (record.items ? record.items.length : 0), 0);
+            const totalQuantity = records.reduce((sum, record) => 
+                sum + (record.items ? record.items.reduce((itemSum, item) => 
+                    itemSum + (item.quantity || 0), 0) : 0), 0);
+            
+            const uniqueStaff = [...new Set(records.map(r => r.staff))].filter(s => s);
+            const uniqueAreas = [...new Set(records.map(r => r.area))].filter(a => a);
+            const uniqueCategories = [...new Set(records.flatMap(r => 
+                r.items ? r.items.map(item => item.category) : []))].filter(c => c);
+            
+            return `
+                <div class="report-card">
+                    <h3>📊 總覽報表</h3>
+                    <div class="stats-grid">
+                        <div class="stat-box">
+                            <div class="stat-number">${totalRecords}</div>
+                            <div class="stat-label">總盤點次數</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${totalItems}</div>
+                            <div class="stat-label">總盤點項目</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${totalQuantity}</div>
+                            <div class="stat-label">總數量</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${uniqueStaff.length}</div>
+                            <div class="stat-label">參與人員</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${uniqueAreas.length}</div>
+                            <div class="stat-label">涉及區域</div>
+                        </div>
+                        <div class="stat-box">
+                            <div class="stat-number">${uniqueCategories.length}</div>
+                            <div class="stat-label">商品分類</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="report-card">
+                    <h3>📈 每日統計趨勢</h3>
+                    <div class="chart-container">
+                        <div class="chart-placeholder">
+                            <div style="font-size: 2em; margin-bottom: 10px;">📈</div>
+                            <p>圖表功能開發中<br>將顯示每日盤點趨勢圖</p>
+                        </div>
+                    </div>
+                </div>
+            `;
+        }
+
+        function generateStaffPerformanceReport(records) {
+            const staffStats = {};
+            
+            records.forEach(record => {
+                const staff = record.staff || '未知';
+                if (!staffStats[staff]) {
+                    staffStats[staff] = {
+                        records: 0,
+                        items: 0,
+                        quantity: 0,
+                        areas: new Set()
+                    };
+                }
+                
+                staffStats[staff].records++;
+                staffStats[staff].items += record.items ? record.items.length : 0;
+                staffStats[staff].quantity += record.items ? 
+                    record.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
+                if (record.area) {
+                    staffStats[staff].areas.add(record.area);
+                }
+            });
+            
+            const staffTableRows = Object.entries(staffStats)
+                .sort((a, b) => b[1].items - a[1].items)
+                .map(([staff, stats]) => `
+                    <tr>
+                        <td>${staff}</td>
+                        <td>${stats.records}</td>
+                        <td>${stats.items}</td>
+                        <td>${stats.quantity}</td>
+                        <td>${stats.areas.size}</td>
+                        <td>${stats.items > 0 ? (stats.quantity / stats.items).toFixed(1) : '0'}</td>
+                    </tr>
+                `).join('');
+            
+            return `
+                <div class="report-card">
+                    <h3>👥 人員效率分析</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>盤點人員</th>
+                                <th>盤點次數</th>
+                                <th>盤點項目</th>
+                                <th>總數量</th>
+                                <th>負責區域</th>
+                                <th>平均數量/項目</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${staffTableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateAreaAnalysisReport(records) {
+            const areaStats = {};
+            
+            records.forEach(record => {
+                const area = record.area || '未知';
+                if (!areaStats[area]) {
+                    areaStats[area] = {
+                        records: 0,
+                        items: 0,
+                        quantity: 0,
+                        staff: new Set(),
+                        categories: new Set()
+                    };
+                }
+                
+                areaStats[area].records++;
+                areaStats[area].items += record.items ? record.items.length : 0;
+                areaStats[area].quantity += record.items ? 
+                    record.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
+                if (record.staff) {
+                    areaStats[area].staff.add(record.staff);
+                }
+                if (record.items) {
+                    record.items.forEach(item => {
+                        if (item.category) {
+                            areaStats[area].categories.add(item.category);
+                        }
+                    });
+                }
+            });
+            
+            const areaTableRows = Object.entries(areaStats)
+                .sort((a, b) => b[1].quantity - a[1].quantity)
+                .map(([area, stats]) => `
+                    <tr>
+                        <td>${area}</td>
+                        <td>${stats.records}</td>
+                        <td>${stats.items}</td>
+                        <td>${stats.quantity}</td>
+                        <td>${stats.staff.size}</td>
+                        <td>${stats.categories.size}</td>
+                    </tr>
+                `).join('');
+            
+            return `
+                <div class="report-card">
+                    <h3>🏭 區域分析報告</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>區域</th>
+                                <th>盤點次數</th>
+                                <th>盤點項目</th>
+                                <th>總數量</th>
+                                <th>參與人員</th>
+                                <th>商品分類</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${areaTableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateTrendAnalysisReport(records) {
+            const dailyStats = {};
+            
+            records.forEach(record => {
+                const date = new Date(record.timestamp).toLocaleDateString('zh-TW');
+                if (!dailyStats[date]) {
+                    dailyStats[date] = {
+                        records: 0,
+                        items: 0,
+                        quantity: 0
+                    };
+                }
+                
+                dailyStats[date].records++;
+                dailyStats[date].items += record.items ? record.items.length : 0;
+                dailyStats[date].quantity += record.items ? 
+                    record.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0;
+            });
+            
+            const trendTableRows = Object.entries(dailyStats)
+                .sort((a, b) => new Date(a[0]) - new Date(b[0]))
+                .map(([date, stats]) => `
+                    <tr>
+                        <td>${date}</td>
+                        <td>${stats.records}</td>
+                        <td>${stats.items}</td>
+                        <td>${stats.quantity}</td>
+                        <td>${stats.items > 0 ? (stats.quantity / stats.items).toFixed(1) : '0'}</td>
+                    </tr>
+                `).join('');
+            
+            return `
+                <div class="report-card">
+                    <h3>📈 趨勢分析</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>日期</th>
+                                <th>盤點次數</th>
+                                <th>盤點項目</th>
+                                <th>總數量</th>
+                                <th>平均數量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${trendTableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function generateCategoryBreakdownReport(records) {
+            const categoryStats = {};
+            
+            records.forEach(record => {
+                if (record.items) {
+                    record.items.forEach(item => {
+                        const category = item.category || '未分類';
+                        if (!categoryStats[category]) {
+                            categoryStats[category] = {
+                                items: 0,
+                                quantity: 0,
+                                records: new Set()
+                            };
+                        }
+                        
+                        categoryStats[category].items++;
+                        categoryStats[category].quantity += item.quantity || 0;
+                        categoryStats[category].records.add(record.id || record.timestamp);
+                    });
+                }
+            });
+            
+            const categoryTableRows = Object.entries(categoryStats)
+                .sort((a, b) => b[1].quantity - a[1].quantity)
+                .map(([category, stats]) => `
+                    <tr>
+                        <td>${category}</td>
+                        <td>${stats.records.size}</td>
+                        <td>${stats.items}</td>
+                        <td>${stats.quantity}</td>
+                        <td>${stats.items > 0 ? (stats.quantity / stats.items).toFixed(1) : '0'}</td>
+                    </tr>
+                `).join('');
+            
+            return `
+                <div class="report-card">
+                    <h3>📦 品項分類統計</h3>
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>商品分類</th>
+                                <th>出現次數</th>
+                                <th>盤點項目</th>
+                                <th>總數量</th>
+                                <th>平均數量</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            ${categoryTableRows}
+                        </tbody>
+                    </table>
+                </div>
+            `;
+        }
+
+        function exportCurrentReport() {
+            const reportType = document.getElementById('report-type-select').value;
+            const reportPeriod = document.getElementById('report-period-select').value;
+            const dashboard = document.getElementById('reports-dashboard');
+            
+            if (!dashboard.innerHTML || dashboard.innerHTML.includes('正在生成報表')) {
+                showNotification('請先生成報表', 'warning');
+                return;
+            }
+            
+            // 獲取報表資料並匯出
+            const records = getFilteredRecordsForPeriod(reportPeriod);
+            const reportData = prepareReportDataForExport(reportType, records);
+            const csvContent = convertToCSV(reportData);
+            
+            const filename = `${getReportTypeName(reportType)}_${reportPeriod}_${getCurrentDateString()}.csv`;
+            downloadFile(csvContent, filename, 'text/csv;charset=utf-8;');
+            
+            showNotification('報表已匯出', 'success');
+        }
+
+        function prepareReportDataForExport(reportType, records) {
+            const data = [
+                [`${getReportTypeName(reportType)} - 匯出報表`],
+                ['匯出時間', new Date().toLocaleString('zh-TW')],
+                ['資料筆數', records.length],
+                []
+            ];
+            
+            // 根據報表類型添加不同的資料結構
+            switch(reportType) {
+                case 'summary':
+                    data.push(['項目', '數值']);
+                    data.push(['總盤點次數', records.length]);
+                    data.push(['總盤點項目', records.reduce((sum, r) => sum + (r.items ? r.items.length : 0), 0)]);
+                    break;
+                case 'staff-performance':
+                    data.push(['人員', '盤點次數', '盤點項目', '總數量']);
+                    // 添加人員統計資料...
+                    break;
+                // 其他報表類型...
+            }
+            
+            return data;
+        }
+
+        function getReportTypeName(reportType) {
+            const names = {
+                'summary': '總覽報表',
+                'staff-performance': '人員效率分析',
+                'area-analysis': '區域分析',
+                'trend-analysis': '趨勢分析',
+                'category-breakdown': '品項分類統計'
+            };
+            return names[reportType] || '報表';
         }
 
         // 初始化新版應用程式
