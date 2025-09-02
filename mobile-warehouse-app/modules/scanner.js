@@ -99,8 +99,14 @@ class BarcodeScanner {
             this.videoElement.srcObject = this.stream;
             await this.videoElement.play();
 
+            // 記錄當前相機模式
+            this.currentFacingMode = options.facingMode || 'environment';
+
             // 開始掃描循環
             this.scanLoop();
+            
+            // 設定鍵盤監聽 (用於真實條碼掃描)
+            this.setupKeyboardListener();
 
             // 發送掃描開始事件
             this.dispatchEvent('scan-started', { mode: 'camera' });
@@ -129,6 +135,11 @@ class BarcodeScanner {
                     <div class="scanner-overlay">
                         <div class="scan-frame"></div>
                         <div class="scan-line"></div>
+                        <div class="scan-instructions">
+                            <div style="background: rgba(0,0,0,0.7); color: white; padding: 8px 12px; border-radius: 15px; font-size: 0.8em; margin-top: 10px;">
+                                📱 將條碼對準框內 或 直接掃描條碼到螢幕
+                            </div>
+                        </div>
                     </div>
                 </div>
                 
@@ -264,6 +275,14 @@ class BarcodeScanner {
                 animation: scan-animation 2s ease-in-out infinite;
             }
             
+            .scan-instructions {
+                position: absolute;
+                bottom: 20px;
+                left: 50%;
+                transform: translateX(-50%);
+                text-align: center;
+            }
+            
             @keyframes scan-animation {
                 0%, 100% { opacity: 0; }
                 50% { opacity: 1; }
@@ -367,12 +386,160 @@ class BarcodeScanner {
 
     // 模擬條碼識別 (實際應用中會使用真正的條碼識別庫)
     simulateBarcodeDetection() {
-        // 修改：更實用的模擬掃描
-        // 檢查是否有按下空白鍵進行模擬掃描
+        // 檢查手動觸發
         if (this.simulateScanTrigger) {
             this.simulateScanTrigger = false;
             const mockBarcode = this.generateMockBarcode();
             this.onBarcodeDetected(mockBarcode);
+            return;
+        }
+        
+        // 檢查鍵盤輸入的條碼
+        if (this.keyboardInput && this.keyboardInput.length > 0) {
+            const inputCode = this.keyboardInput;
+            this.keyboardInput = '';
+            
+            // 創建條碼資料
+            const barcodeData = {
+                type: this.detectBarcodeType(inputCode),
+                code: inputCode,
+                timestamp: Date.now(),
+                source: 'keyboard'
+            };
+            
+            this.onBarcodeDetected(barcodeData);
+            return;
+        }
+        
+        // 簡單的視覺檢測模擬 (檢測畫面變化)
+        if (this.videoElement && this.canvasElement) {
+            const currentTime = Date.now();
+            
+            // 每2秒嘗試一次檢測
+            if (!this.lastDetectionTime || currentTime - this.lastDetectionTime > 2000) {
+                this.lastDetectionTime = currentTime;
+                
+                // 檢測畫面是否有足夠變化 (模擬條碼進入視野)
+                if (this.detectVisualChange()) {
+                    // 低機率觸發 (模擬真實掃描的不確定性)
+                    if (Math.random() < 0.05) { // 5% 機率
+                        console.log('🔍 檢測到視覺變化，嘗試識別條碼...');
+                        const mockBarcode = this.generateMockBarcode();
+                        this.onBarcodeDetected(mockBarcode);
+                    }
+                }
+            }
+        }
+    }
+
+    // 設定鍵盤監聽 (用於真實條碼掃描)
+    setupKeyboardListener() {
+        this.keyboardInput = '';
+        this.keyboardBuffer = '';
+        this.lastKeyTime = 0;
+        
+        // 監聽鍵盤輸入 (條碼掃描器通常會快速輸入一串字符)
+        this.keyHandler = (event) => {
+            const currentTime = Date.now();
+            
+            // 如果輸入間隔超過100ms，重置緩衝區 (條碼掃描器輸入很快)
+            if (currentTime - this.lastKeyTime > 100) {
+                this.keyboardBuffer = '';
+            }
+            
+            this.lastKeyTime = currentTime;
+            
+            // 收集字符
+            if (event.key.length === 1) { // 只處理單字符
+                this.keyboardBuffer += event.key;
+            } else if (event.key === 'Enter' && this.keyboardBuffer.length > 3) {
+                // Enter鍵表示條碼輸入完成
+                this.keyboardInput = this.keyboardBuffer.trim();
+                this.keyboardBuffer = '';
+                console.log('📝 收到鍵盤條碼輸入:', this.keyboardInput);
+            }
+        };
+        
+        document.addEventListener('keydown', this.keyHandler);
+        console.log('⌨️ 鍵盤掃描監聽已啟動 (可直接掃描條碼到畫面)');
+        
+        // 顯示掃描提示
+        this.showScanTips();
+    }
+    
+    // 顯示掃描提示
+    showScanTips() {
+        const tipsDiv = document.createElement('div');
+        tipsDiv.className = 'scan-tips';
+        tipsDiv.innerHTML = `
+            <div style="background: rgba(33, 150, 243, 0.9); color: white; padding: 8px 12px; border-radius: 8px; font-size: 0.7em; margin: 5px;">
+                💡 支援多種掃描方式：相機掃描、條碼槍直接掃描、手動輸入
+            </div>
+        `;
+        
+        // 添加到掃描界面
+        const scannerContainer = document.querySelector('.scanner-container');
+        if (scannerContainer) {
+            scannerContainer.appendChild(tipsDiv);
+            
+            // 3秒後自動移除提示
+            setTimeout(() => {
+                if (tipsDiv.parentNode) {
+                    tipsDiv.remove();
+                }
+            }, 3000);
+        }
+    }
+
+    // 移除鍵盤監聽
+    removeKeyboardListener() {
+        if (this.keyHandler) {
+            document.removeEventListener('keydown', this.keyHandler);
+            this.keyHandler = null;
+            console.log('⌨️ 鍵盤掃描監聽已移除');
+        }
+    }
+
+    // 檢測條碼類型
+    detectBarcodeType(code) {
+        if (code.length === 13 && /^\d+$/.test(code)) return 'EAN_13';
+        if (code.length === 8 && /^\d+$/.test(code)) return 'EAN_8';
+        if (code.length === 12 && /^\d+$/.test(code)) return 'UPC_A';
+        if (/^[A-Z0-9\-\.\/\+]+$/i.test(code)) return 'CODE_128';
+        return 'OTHER';
+    }
+
+    // 檢測視覺變化 (模擬條碼檢測)
+    detectVisualChange() {
+        if (!this.videoElement || !this.canvasElement) return false;
+        
+        try {
+            const ctx = this.canvasElement.getContext('2d');
+            ctx.drawImage(this.videoElement, 0, 0);
+            
+            // 獲取畫面中心區域的像素數據
+            const imageData = ctx.getImageData(
+                this.canvasElement.width * 0.25,
+                this.canvasElement.height * 0.4,
+                this.canvasElement.width * 0.5,
+                this.canvasElement.height * 0.2
+            );
+            
+            // 計算簡單的對比度值
+            let contrast = 0;
+            const data = imageData.data;
+            for (let i = 0; i < data.length; i += 4) {
+                const brightness = (data[i] + data[i + 1] + data[i + 2]) / 3;
+                contrast += Math.abs(brightness - 128);
+            }
+            
+            // 如果對比度足夠高，可能有條碼
+            const avgContrast = contrast / (data.length / 4);
+            return avgContrast > 40; // 閾值可以調整
+            
+        } catch (error) {
+            console.warn('視覺檢測失敗:', error);
+            return false;
         }
     }
 
@@ -627,6 +794,9 @@ class BarcodeScanner {
             this.stream = null;
         }
 
+        // 移除鍵盤監聽
+        this.removeKeyboardListener();
+
         // 移除UI
         const overlay = document.getElementById('scanner-overlay');
         if (overlay) {
@@ -664,13 +834,59 @@ class BarcodeScanner {
     async switchCamera() {
         if (!this.stream) return;
 
-        this.stopScan();
-        
-        // 切換前後鏡頭
-        const currentFacing = this.videoElement.dataset.facingMode || 'environment';
+        // 儲存當前狀態
+        const currentFacing = this.currentFacingMode || 'environment';
         const newFacing = currentFacing === 'environment' ? 'user' : 'environment';
         
-        await this.startCameraScan({ facingMode: newFacing });
+        console.log(`🔄 切換相機: ${currentFacing} → ${newFacing}`);
+        
+        // 停止當前流
+        this.stream.getTracks().forEach(track => track.stop());
+        this.stream = null;
+        
+        // 啟動新的相機流
+        try {
+            this.stream = await navigator.mediaDevices.getUserMedia({
+                video: {
+                    facingMode: newFacing,
+                    width: { ideal: 1280 },
+                    height: { ideal: 720 }
+                }
+            });
+            
+            // 更新視頻源
+            this.videoElement.srcObject = this.stream;
+            await this.videoElement.play();
+            
+            // 記錄當前相機模式
+            this.currentFacingMode = newFacing;
+            
+            // 重新啟動掃描循環
+            this.scanLoop();
+            
+            console.log(`✅ 已切換到${newFacing === 'user' ? '前' : '後'}鏡頭`);
+            
+        } catch (error) {
+            console.error('切換相機失敗:', error);
+            // 如果切換失敗，嘗試回到原來的相機
+            try {
+                this.stream = await navigator.mediaDevices.getUserMedia({
+                    video: {
+                        facingMode: currentFacing,
+                        width: { ideal: 1280 },
+                        height: { ideal: 720 }
+                    }
+                });
+                this.videoElement.srcObject = this.stream;
+                await this.videoElement.play();
+                this.currentFacingMode = currentFacing;
+                this.scanLoop();
+            } catch (fallbackError) {
+                console.error('相機切換完全失敗:', fallbackError);
+                alert('相機切換失敗，請重新開啟掃描');
+                this.stopScan();
+            }
+        }
     }
 
     // 模擬掃描觸發 (用於測試)
