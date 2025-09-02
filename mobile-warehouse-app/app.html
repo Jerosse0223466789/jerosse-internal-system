@@ -2556,7 +2556,7 @@
             
             const itemsHTML = record.items ? record.items.map(item => 
                 `<div class="record-item">
-                    <span>${item.category} - ${item.item}</span>
+                    <span>${item.category} - ${item.itemName || item.item || '未知品項'}</span>
                     <strong>${item.quantity}</strong>
                 </div>`
             ).join('') : '';
@@ -2569,18 +2569,6 @@
                             <div class="record-subtitle">盤點人員: ${record.staff || '未知'}</div>
                         </div>
                         <div class="record-time">${timeStr}</div>
-                    </div>
-                    
-                    <div class="record-stats">
-                        <div class="record-stat">
-                            品項: <strong>${record.items ? record.items.length : 0}</strong>
-                        </div>
-                        <div class="record-stat">
-                            分類: <strong>${record.categories || 0}</strong>
-                        </div>
-                        <div class="record-stat">
-                            總數量: <strong>${record.items ? record.items.reduce((sum, item) => sum + (item.quantity || 0), 0) : 0}</strong>
-                        </div>
                     </div>
                     
                     ${itemsHTML ? `
