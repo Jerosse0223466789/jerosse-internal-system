@@ -418,8 +418,8 @@ class BarcodeScanner {
         if (this.videoElement && this.canvasElement) {
             const currentTime = Date.now();
             
-            // 每2秒嘗試一次檢測
-            if (!this.lastDetectionTime || currentTime - this.lastDetectionTime > 2000) {
+            // 縮短檢測間隔到300ms，允許快速連續掃描
+            if (!this.lastDetectionTime || currentTime - this.lastDetectionTime > 300) {
                 this.lastDetectionTime = currentTime;
                 
                 // 檢測畫面是否有足夠變化 (模擬條碼進入視野)
@@ -456,16 +456,16 @@ class BarcodeScanner {
             if (event.key.length === 1 && /[0-9A-Za-z\-_\.]/.test(event.key)) {
                 this.keyboardBuffer += event.key;
                 
-                // 如果累積了足夠長度且停止輸入一段時間，自動處理
-                if (this.keyboardBuffer.length >= 6) {
+                // 降低條碼長度限制，支援更多類型的條碼
+                if (this.keyboardBuffer.length >= 3) {
                     clearTimeout(this.inputTimeout);
                     this.inputTimeout = setTimeout(() => {
-                        if (this.keyboardBuffer.length >= 6) {
+                        if (this.keyboardBuffer.length >= 3) {
                             this.keyboardInput = this.keyboardBuffer.trim();
                             this.keyboardBuffer = '';
                             console.log('📝 自動處理條碼輸入:', this.keyboardInput);
                         }
-                    }, 150); // 150ms後自動處理
+                    }, 100); // 縮短到100ms，提升響應速度
                 }
             } else if (event.key === 'Enter' && this.keyboardBuffer.length >= 3) {
                 // Enter鍵表示條碼輸入完成
@@ -656,10 +656,17 @@ class BarcodeScanner {
         this.keyboardBuffer = '';
         this.simulateScanTrigger = false;
         
-        // 重置檢測計時器
+        // 立即重置檢測計時器，允許立即重複掃描
         this.lastDetectionTime = 0;
+        this.lastKeyTime = 0;
         
-        console.log('🔄 掃描狀態已重置，可以繼續掃描');
+        // 清除任何待處理的輸入超時
+        if (this.inputTimeout) {
+            clearTimeout(this.inputTimeout);
+            this.inputTimeout = null;
+        }
+        
+        console.log('🔄 掃描狀態已完全重置，可以立即重複掃描');
     }
 
     // 手動輸入模式

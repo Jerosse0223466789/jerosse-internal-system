@@ -1495,11 +1495,14 @@
                 inventoryItems.push(newItem);
                 console.log('📊 項目已添加，當前總數:', inventoryItems.length);
 
+                // 保存數量用於通知顯示
+                const addedQuantity = currentQuantity;
+                
                 // 更新界面
                 updateInventoryItemsList();
                 clearItemForm();
                 
-                showNotification(`已新增 ${name} x${currentQuantity}`, 'success');
+                showNotification(`已新增 ${name} x${addedQuantity}`, 'success');
 
             } catch (error) {
                 console.error('新增盤點項目失敗:', error);
@@ -1679,8 +1682,14 @@
                 if (currentInventorySession && currentQuantity > 0) {
                     addInventoryItem();
                     console.log('🤖 自動新增掃描項目');
+                    
+                    // 立即重置掃描器狀態，準備下次掃描
+                    if (window.barcodeScanner) {
+                        window.barcodeScanner.resetScanState();
+                        console.log('🔄 掃描器已準備好下次掃描');
+                    }
                 }
-            }, 500); // 延遲500ms讓使用者看到填入的資料
+            }, 300); // 縮短延遲到300ms，提升流暢度
             
             showNotification(`已掃描條碼: ${scanData.code}`, 'success');
         }
