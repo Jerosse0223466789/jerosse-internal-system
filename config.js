@@ -15,15 +15,15 @@ const DocAppConfig = {
 
     // API設定
     api: {
-        timeout: 30000, // 30秒
-        retryAttempts: 3,
+        timeout: 5000, // 縮短超時時間，快速檢測連線問題
+        retryAttempts: 1, // 減少重試次數
         retryDelay: 1000, // 1秒
         endpoints: {
-            auth: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec/auth',
-            documents: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec/documents',
-            users: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec/users',
-            categories: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec/categories',
-            analytics: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec/analytics'
+            auth: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec',
+            documents: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec',
+            users: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec',
+            categories: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec',
+            analytics: 'https://script.google.com/macros/s/AKfycbxbZTdvgXDTUVrtjIEY0D_lCScN9ODJnyUHyxJZ9NrhvbC1RYdt3F8gkQ8SAyPgxXU7/exec'
         }
     },
 
@@ -153,7 +153,7 @@ const DocAppConfig = {
                 title: '入箱SOP標準作業程序',
                 description: '貨物入箱的標準操作流程',
                 type: 'html',
-                 url: './SOP/入箱SOP標準作業程序_新版.html',
+                url: './SOP/入箱SOP標準作業程序_新版.html',
                 permission: 'internal',
                 category: 'sop',
                 tags: ['入箱', 'SOP', '倉儲'],
@@ -165,7 +165,7 @@ const DocAppConfig = {
                 title: '撿貨SOP標準作業程序',
                 description: '貨物撿取的標準操作流程',
                 type: 'html',
-                 url: './SOP/撿貨SOP標準作業程序_新版.html',
+                url: './SOP/撿貨SOP標準作業程序_新版.html',
                 permission: 'internal',
                 category: 'sop',
                 tags: ['撿貨', 'SOP', '倉儲'],
@@ -177,7 +177,7 @@ const DocAppConfig = {
                 title: '補貨SOP標準作業程序',
                 description: '倉庫補貨的標準操作流程',
                 type: 'html',
-                 url: './SOP/補貨SOP標準作業程序_新版.html',
+                url: './SOP/補貨SOP標準作業程序_新版.html',
                 permission: 'internal',
                 category: 'sop',
                 tags: ['補貨', 'SOP', '倉儲'],
@@ -189,7 +189,7 @@ const DocAppConfig = {
                 title: '進貨SOP標準作業程序',
                 description: '貨物進倉的標準操作流程',
                 type: 'html',
-                 url: './SOP/進貨SOP標準作業程序_新版.html',
+                url: './SOP/進貨SOP標準作業程序_新版.html',
                 permission: 'internal',
                 category: 'sop',
                 tags: ['進貨', 'SOP', '倉儲'],
@@ -201,7 +201,7 @@ const DocAppConfig = {
                 title: '工讀生SOP標準作業程序',
                 description: '工讀生的標準作業指南',
                 type: 'html',
-                 url: './SOP/工讀生SOP標準作業程序_新版.html',
+                url: './SOP/工讀生SOP標準作業程序_新版.html',
                 permission: 'internal',
                 category: 'sop',
                 tags: ['工讀生', 'SOP', '訓練'],
@@ -215,7 +215,7 @@ const DocAppConfig = {
                 title: '行動倉儲管理系統',
                 description: '智能倉儲盤點和管理工具',
                 type: 'html',
-                 url: './mobile-warehouse-app/app.html',
+                url: './mobile-warehouse-app/app.html',
                 permission: 'internal',
                 category: 'systems',
                 tags: ['倉儲', '盤點', '管理'],
@@ -227,7 +227,7 @@ const DocAppConfig = {
                 title: '圖片差異偵測系統',
                 description: '用於檢測圖片差異的工具',
                 type: 'html',
-                 url: './圖片差異偵測系統_簡化版.html',
+                url: './圖片差異偵測系統_簡化版.html',
                 permission: 'internal',
                 category: 'systems',
                 tags: ['圖片', '比對', '工具'],
@@ -239,7 +239,7 @@ const DocAppConfig = {
                 title: '倉庫平面圖',
                 description: '互動式倉庫佈局圖',
                 type: 'html',
-                 url: './平面圖/warehouse.html',
+                url: './平面圖/warehouse.html',
                 permission: 'internal',
                 category: 'systems',
                 tags: ['平面圖', '倉庫', '佈局'],
@@ -251,7 +251,7 @@ const DocAppConfig = {
                 title: '空調設備異常記錄系統',
                 description: '空調設備故障和維護記錄',
                 type: 'html',
-                 url: './空調設備異常記錄表單/單頁應用系統.html',
+                url: './空調設備異常記錄表單/單頁應用系統.html',
                 permission: 'internal',
                 category: 'systems',
                 tags: ['空調', '維護', '記錄'],
@@ -447,10 +447,10 @@ const DocAppConfig = {
 
     // 開發設定
     debug: {
-        enabled: false,
+        enabled: true, // 啟用除錯模式以便故障排除
         logLevel: 'info', // debug, info, warn, error
         showPerformance: false,
-        mockData: true, // 開發時使用模擬數據
+        mockData: true, // 使用本地數據，不依賴後端
         skipAuth: false
     },
 
@@ -475,23 +475,23 @@ const EnvironmentConfig = {
             logLevel: 'debug',
             showPerformance: true,
             mockData: true,
-            skipAuth: true
+            skipAuth: false
         },
         api: {
-            timeout: 10000
+            timeout: 3000 // 開發時更快超時
         }
     },
     
     production: {
         debug: {
-            enabled: false,
-            logLevel: 'error',
+            enabled: true, // 暫時啟用以便故障排除
+            logLevel: 'info',
             showPerformance: false,
-            mockData: false,
+            mockData: true, // 暫時使用本地數據
             skipAuth: false
         },
         api: {
-            timeout: 30000
+            timeout: 5000
         },
         security: {
             requireAuth: true
