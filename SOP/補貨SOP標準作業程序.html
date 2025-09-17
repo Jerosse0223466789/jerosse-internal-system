@@ -1,0 +1,675 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>補貨標準作業程序 (SOP)</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', '微軟正黑體', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        }
+        
+        .header-info {
+            background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .header-info h1 {
+            margin: 0 0 15px 0;
+            font-size: 32px;
+            text-align: center;
+        }
+        
+        .document-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .meta-item {
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-weight: bold;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .meta-value {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(52, 152, 219, 0.3);
+        }
+        
+        h3 {
+            color: #2980b9;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-left: 4px solid #3498db;
+            padding-left: 15px;
+            font-size: 18px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .tool-category {
+            background-color: #e8f4fd;
+            border: 2px solid #3498db;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .category-title {
+            font-weight: bold;
+            color: #2980b9;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            background-color: #5dade2;
+            border-radius: 6px;
+            color: white;
+        }
+        
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(1, 1fr);
+            gap: 10px;
+        }
+        
+        .product-item {
+            background-color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            color: #1565c0;
+            border: 1px solid #42a5f5;
+        }
+        
+        .priority-sequence {
+            background-color: #e8f5e8;
+            border: 2px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .priority-title {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .priority-title::before {
+            content: "🔧";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .step-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .step-table th {
+            background: linear-gradient(to right, #3498db, #2980b9);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .step-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .step-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        
+        .special-product-box {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .special-title {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .special-title::before {
+            content: "⭐";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .warehouse-area {
+            background-color: #fff8e1;
+            border: 2px solid #ffc107;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .warehouse-title {
+            font-weight: bold;
+            color: #f57c00;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .warehouse-title::before {
+            content: "🏭";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .storage-area {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .storage-title {
+            font-weight: bold;
+            color: #1565c0;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .storage-title::before {
+            content: "📦";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .support-box {
+            background-color: #f3e5f5;
+            border: 2px solid #9c27b0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .support-title {
+            font-weight: bold;
+            color: #6a1b9a;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .support-title::before {
+            content: "🤝";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .additional-box {
+            background-color: #e8f5e8;
+            border: 2px solid #4caf50;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .additional-title {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .additional-title::before {
+            content: "➕";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .highlight {
+            background-color: #fff3e0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #e65100;
+        }
+        
+        .important-note {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .important-note::before {
+            content: "⚠️ ";
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        
+        .attachments {
+            background-color: #f5f5f5;
+            padding: 20px;
+            border-radius: 8px;
+            margin-top: 20px;
+        }
+        
+        .attachments h3 {
+            color: #37474f;
+            border-left: 4px solid #607d8b;
+        }
+        
+        .attachment-list {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        
+        .attachment-item {
+            background-color: #ffffff;
+            padding: 12px;
+            border-radius: 6px;
+            border: 1px solid #cfd8dc;
+            display: flex;
+            align-items: center;
+        }
+        
+        .attachment-item::before {
+            content: "📎";
+            margin-right: 10px;
+            font-size: 16px;
+        }
+        
+        ul {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            z-index: 1000;
+            max-width: 250px;
+        }
+        
+        .nav-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        
+        .nav-link {
+            display: block;
+            color: #3498db;
+            text-decoration: none;
+            padding: 5px 0;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            padding-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            border-left-color: #3498db;
+            background-color: #f8f9fa;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .navigation {
+                display: none;
+            }
+            
+            .document-meta {
+                grid-template-columns: 1fr;
+            }
+            
+            .tools-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body { background-color: white; }
+            .container { box-shadow: none; }
+            .navigation { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-title">📋 快速導航</div>
+        <a href="#purpose" class="nav-link">1. 目的</a>
+        <a href="#scope" class="nav-link">2. 適用範圍</a>
+        <a href="#responsibility" class="nav-link">3. 權責</a>
+        <a href="#tools" class="nav-link">4. 工具與器具</a>
+        <a href="#warehouse" class="nav-link">5. 貨架區補貨</a>
+        <a href="#restocking" class="nav-link">6. 補貨區補貨</a>
+        <a href="#support" class="nav-link">7. 封紙箱</a>
+        <a href="#additional" class="nav-link">8. 附加作業</a>
+        <a href="#reference" class="nav-link">9. 參考資料</a>
+        <a href="#attachments" class="nav-link">10. 附件</a>
+    </div>
+
+    <div class="container">
+        <div class="header-info">
+            <h1>🚚 補貨標準作業程序 (SOP)</h1>
+            <div class="document-meta">
+                <div class="meta-item">
+                    <div class="meta-label">公司</div>
+                    <div class="meta-value">維科生技股份有限公司</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">文件編號</div>
+                    <div class="meta-value">M-2-01</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">版次</div>
+                    <div class="meta-value">1</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">制定單位</div>
+                    <div class="meta-value">倉儲部</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="purpose">
+            <h2>1. 目的</h2>
+            <p>制定補貨人員之標準流程，確保補貨作業的有效性與準確性，並可作為訓練教材。</p>
+        </div>
+
+        <div class="section" id="scope">
+            <h2>2. 適用範圍</h2>
+            <p>適用於所有補貨作業。</p>
+        </div>
+
+        <div class="section" id="responsibility">
+            <h2>3. 權責</h2>
+            <p>補貨人員。</p>
+        </div>
+
+        <div class="section" id="tools">
+            <h2>4. 工具與器具</h2>
+            
+            <div class="priority-sequence">
+                <div class="priority-title">補貨作業所需的基本工具與設備</div>
+                <p>補貨作業所需的基本工具與設備：</p>
+            </div>
+            
+            <div class="tools-grid">
+                <div class="tool-category">
+                    <div class="category-title">🔧 基本工具</div>
+                    <div class="product-list">
+                        <div class="product-item">美工刀</div>
+                        <div class="product-item">手套</div>
+                        <div class="product-item">束帶</div>
+                    </div>
+                </div>
+                
+                <div class="tool-category">
+                    <div class="category-title">🚛 運輸工具</div>
+                    <div class="product-list">
+                        <div class="product-item">推車</div>
+                        <div class="product-item">雙層推車</div>
+                        <div class="product-item">烏龜車</div>
+                    </div>
+                </div>
+                
+                <div class="tool-category">
+                    <div class="category-title">🏗️ 搬運設備</div>
+                    <div class="product-list">
+                        <div class="product-item">手動油壓車</div>
+                        <div class="product-item">電動油壓車</div>
+                        <div class="product-item">裝貨籃</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="warehouse">
+            <h2>5. 貨架區補貨</h2>
+            
+            <div class="warehouse-area">
+                <div class="warehouse-title">貨架區補貨要點</div>
+                <ul>
+                    <li>依規定<span class="highlight">方式與數量</span>進行補貨</li>
+                    <li><span class="highlight">散箱須先束帶加工</span>再上架（避免寬度過大影響滑動與揀貨效率）</li>
+                </ul>
+                
+                <div class="important-note">
+                    <strong>特殊處理商品：</strong>
+                    <ul>
+                        <li><span class="highlight">水光錠</span>因原箱問題需<span class="highlight">另外裝籃</span>後上架</li>
+                        <li>多數<span class="highlight">輔銷品</span>亦不以原箱上架，改用籃子裝貨</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="restocking">
+            <h2>6. 補貨區補貨</h2>
+            
+            <div class="storage-area">
+                <div class="storage-title">補貨區補貨要點</div>
+                <ul>
+                    <li>每日結單且貨架與備貨區完成後，將補貨區產品（<span class="highlight">除體驗包與輔銷品</span>）補至<span class="highlight">滿板</span></li>
+                    <li>作業中若不足，須即時自庫存區補貨</li>
+                </ul>
+                
+                <div class="important-note">
+                    <strong>標籤管理：</strong>
+                    <ul>
+                        <li>棧板外緣<span class="highlight">批號效期標籤</span>用於區分批號／效期／新舊版本／數量</li>
+                        <li>另設<span class="highlight">新舊批號＆新舊版本轉換</span>提示標籤</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="support">
+            <h2>7. 封紙箱（支援性作業）</h2>
+            
+            <div class="support-box">
+                <div class="support-title">封紙箱作業</div>
+                <ul>
+                    <li>依單位需求協助封箱</li>
+                    <li><span class="highlight">特大／大／中／小／特小</span>箱依規定數量補充，特殊時期彈性調整</li>
+                </ul>
+                
+                <div class="important-note">
+                    目前封紙箱作業可由各單位於<span class="highlight">人力閒置</span>時支援。
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="additional">
+            <h2>8. 附加作業（條件：已完成 4～7）</h2>
+            
+            <div class="additional-box">
+                <div class="additional-title">附加作業項目</div>
+                
+                <table class="step-table">
+                    <thead>
+                        <tr>
+                            <th>作業類型</th>
+                            <th>作業內容</th>
+                            <th>注意事項</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>🧹 環境整理</strong></td>
+                            <td>巡視補貨動線與周邊空間</td>
+                            <td><span class="highlight">清理多餘紙箱</span>並歸位</td>
+                        </tr>
+                        <tr>
+                            <td><strong>📋 儲位檢查</strong></td>
+                            <td>檢視 <span class="highlight">3F 儲位</span>是否需補</td>
+                            <td>如需補，自 <span class="highlight">2F 移補</span>至 3F，並確認<span class="highlight">批號效期／版本切換</span></td>
+                        </tr>
+                        <tr>
+                            <td><strong>🔄 預先加工</strong></td>
+                            <td>若拉上來之貨為<span class="highlight">未加工</span>（如翻版、貼易碎貼）</td>
+                            <td>結單後可先行<span class="highlight">翻版加工</span>以利後續補貨</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <div class="section" id="reference">
+            <h2>9. 參考資料</h2>
+            <p>汐止同仁意見。</p>
+        </div>
+
+        <div class="section" id="attachments">
+            <h2>10. 附件</h2>
+            <div class="attachments">
+                <h3>圖示／表單另附或由系統連結</h3>
+                <div class="attachment-list">
+                    <div class="attachment-item">10.1 貨物放置圖</div>
+                    <div class="attachment-item">10.2 各產品滿板數量</div>
+                    <div class="attachment-item">10.3 批號效期標籤</div>
+                    <div class="attachment-item">10.4 舊批號＆新舊版本轉換標籤</div>
+                    <div class="attachment-item">10.5 各尺寸對應箱子</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="footer">
+            <p>📋 本文件為自原 DOCX 內容整理為 HTML，便於在網頁中閱讀與協作</p>
+            <p>若需沿用原圖表，請將圖片另存並於對應章節插入</p>
+            <p><strong>此SOP應定期檢討更新，確保與實際作業流程一致</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // 平滑滾動到錨點
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 動態高亮當前章節
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.fontWeight = 'normal';
+                link.style.color = '#3498db';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.fontWeight = 'bold';
+                    link.style.color = '#2c3e50';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

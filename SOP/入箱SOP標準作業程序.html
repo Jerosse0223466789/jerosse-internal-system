@@ -1,0 +1,735 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>入箱標準作業程序 (SOP)</title>
+    <style>
+        body {
+            font-family: 'Microsoft YaHei', '微軟正黑體', Arial, sans-serif;
+            line-height: 1.6;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+        }
+        
+        .container {
+            background-color: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 0 25px rgba(0,0,0,0.1);
+        }
+        
+        .header-info {
+            background: linear-gradient(135deg, #ff9800 0%, #e65100 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 30px;
+        }
+        
+        .header-info h1 {
+            margin: 0 0 15px 0;
+            font-size: 32px;
+            text-align: center;
+        }
+        
+        .document-meta {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .meta-item {
+            background-color: rgba(255,255,255,0.1);
+            padding: 10px;
+            border-radius: 6px;
+            text-align: center;
+        }
+        
+        .meta-label {
+            font-weight: bold;
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .meta-value {
+            font-size: 16px;
+            margin-top: 5px;
+        }
+        
+        h2 {
+            color: #2c3e50;
+            background: linear-gradient(to right, #ff9800, #e65100);
+            color: white;
+            padding: 15px 20px;
+            border-radius: 8px;
+            margin-top: 30px;
+            margin-bottom: 20px;
+            font-size: 20px;
+            box-shadow: 0 2px 10px rgba(255, 152, 0, 0.3);
+        }
+        
+        h3 {
+            color: #e65100;
+            margin-top: 25px;
+            margin-bottom: 15px;
+            border-left: 4px solid #ff9800;
+            padding-left: 15px;
+            font-size: 18px;
+        }
+        
+        .section {
+            margin-bottom: 30px;
+        }
+        
+        .product-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+            margin: 20px 0;
+        }
+        
+        .product-category {
+            background-color: #fff3e0;
+            border: 2px solid #ff9800;
+            padding: 20px;
+            border-radius: 8px;
+        }
+        
+        .category-title {
+            font-weight: bold;
+            color: #e65100;
+            font-size: 18px;
+            margin-bottom: 15px;
+            text-align: center;
+            padding: 10px;
+            background-color: #ffcc80;
+            border-radius: 6px;
+        }
+        
+        .product-list {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .product-item {
+            background-color: white;
+            padding: 8px 12px;
+            border-radius: 4px;
+            text-align: center;
+            font-size: 14px;
+            color: #bf360c;
+            border: 1px solid #ffab40;
+        }
+        
+        .priority-sequence {
+            background-color: #e8f5e8;
+            border: 2px solid #4caf50;
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 8px;
+        }
+        
+        .priority-title {
+            font-weight: bold;
+            color: #2e7d32;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .priority-title::before {
+            content: "🎯";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .step-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+        
+        .step-table th {
+            background: linear-gradient(to right, #ff9800, #e65100);
+            color: white;
+            padding: 15px;
+            text-align: center;
+            font-weight: bold;
+        }
+        
+        .step-table td {
+            border: 1px solid #ddd;
+            padding: 12px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        
+        .step-table tr:nth-child(even) {
+            background-color: #fafafa;
+        }
+        
+        .step-number {
+            background-color: #ff9800;
+            color: white;
+            padding: 8px 12px;
+            border-radius: 50%;
+            font-weight: bold;
+            display: inline-block;
+            margin-bottom: 5px;
+        }
+        
+        .special-product-box {
+            background-color: #f3e5f5;
+            border: 2px solid #9c27b0;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .special-title {
+            font-weight: bold;
+            color: #6a1b9a;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .special-title::before {
+            content: "⭐";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .placement-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 15px 0;
+        }
+        
+        .placement-table th {
+            background-color: #6a1b9a;
+            color: white;
+            padding: 12px;
+            text-align: center;
+        }
+        
+        .placement-table td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        
+        .best-method {
+            background-color: #e8f5e8;
+            color: #2e7d32;
+            font-weight: bold;
+        }
+        
+        .good-method {
+            background-color: #fff3e0;
+            color: #f57c00;
+            font-weight: bold;
+        }
+        
+        .ng-method {
+            background-color: #ffebee;
+            color: #d32f2f;
+            font-weight: bold;
+        }
+        
+        .example-box {
+            background-color: #e3f2fd;
+            border: 2px solid #2196f3;
+            padding: 20px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+        
+        .example-title {
+            font-weight: bold;
+            color: #1565c0;
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .example-title::before {
+            content: "📋";
+            margin-right: 10px;
+            font-size: 20px;
+        }
+        
+        .example-steps {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 10px;
+        }
+        
+        .example-step {
+            background-color: white;
+            padding: 10px;
+            border-radius: 6px;
+            border: 1px solid #2196f3;
+            text-align: center;
+        }
+        
+        .step-number-small {
+            background-color: #2196f3;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 50%;
+            font-size: 12px;
+            font-weight: bold;
+        }
+        
+        .highlight {
+            background-color: #fff3e0;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-weight: bold;
+            color: #e65100;
+        }
+        
+        .important-note {
+            background-color: #ffebee;
+            border-left: 4px solid #f44336;
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 0 6px 6px 0;
+        }
+        
+        .important-note::before {
+            content: "⚠️ ";
+            font-weight: bold;
+            color: #d32f2f;
+        }
+        
+        ul {
+            padding-left: 25px;
+        }
+        
+        li {
+            margin: 8px 0;
+            line-height: 1.5;
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #ecf0f1;
+            color: #7f8c8d;
+            font-style: italic;
+        }
+        
+        .navigation {
+            position: fixed;
+            top: 20px;
+            right: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+            padding: 15px;
+            z-index: 1000;
+            max-width: 250px;
+        }
+        
+        .nav-title {
+            font-weight: bold;
+            margin-bottom: 10px;
+            color: #2c3e50;
+            border-bottom: 1px solid #ecf0f1;
+            padding-bottom: 5px;
+        }
+        
+        .nav-link {
+            display: block;
+            color: #ff9800;
+            text-decoration: none;
+            padding: 5px 0;
+            font-size: 14px;
+            border-left: 3px solid transparent;
+            padding-left: 10px;
+            transition: all 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            border-left-color: #ff9800;
+            background-color: #f8f9fa;
+            border-radius: 0 4px 4px 0;
+        }
+        
+        @media (max-width: 768px) {
+            .navigation {
+                display: none;
+            }
+            
+            .document-meta {
+                grid-template-columns: 1fr;
+            }
+            
+            .product-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .example-steps {
+                grid-template-columns: 1fr;
+            }
+        }
+        
+        @media print {
+            body { background-color: white; }
+            .container { box-shadow: none; }
+            .navigation { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <div class="navigation">
+        <div class="nav-title">📋 快速導航</div>
+        <a href="#purpose" class="nav-link">1. 目的</a>
+        <a href="#scope" class="nav-link">2. 適用範圍</a>
+        <a href="#classification" class="nav-link">3. 產品分類</a>
+        <a href="#procedure" class="nav-link">4. 作業程序</a>
+        <a href="#special-products" class="nav-link">5. 特殊商品</a>
+        <a href="#placement-rules" class="nav-link">6. 擺放規範</a>
+        <a href="#examples" class="nav-link">7. 混裝範例</a>
+        <a href="#notes" class="nav-link">8. 注意事項</a>
+    </div>
+
+    <div class="container">
+        <div class="header-info">
+            <h1>📦 入箱標準作業程序 (SOP)</h1>
+            <div class="document-meta">
+                <div class="meta-item">
+                    <div class="meta-label">公司</div>
+                    <div class="meta-value">維科生技股份有限公司</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">文件編號</div>
+                    <div class="meta-value">M-2-03</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">版次</div>
+                    <div class="meta-value">1.0</div>
+                </div>
+                <div class="meta-item">
+                    <div class="meta-label">制定單位</div>
+                    <div class="meta-value">倉儲部</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="purpose">
+            <h2>1. 目的</h2>
+            <p>規範產品入箱的標準流程，確保產品在運輸過程中的安全性和完整性，並提高包裝效率。</p>
+        </div>
+
+        <div class="section" id="scope">
+            <h2>2. 適用範圍</h2>
+            <p>適用於所有產品的入箱作業，包括主要產品和輔銷品。</p>
+        </div>
+
+        <div class="section" id="classification">
+            <h2>3. 產品分類</h2>
+            
+            <div class="product-grid">
+                <div class="product-category">
+                    <div class="category-title">📏 體積大的產品</div>
+                    <div class="product-list">
+                        <div class="product-item">可可</div>
+                        <div class="product-item">奶茶</div>
+                        <div class="product-item">纖纖飲</div>
+                        <div class="product-item">葉黃素飲</div>
+                        <div class="product-item">水光錠</div>
+                        <div class="product-item">紫纖飲</div>
+                        <div class="product-item">正冠茶</div>
+                        <div class="product-item">洗髮露</div>
+                    </div>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">📐 體積中的產品</div>
+                    <div class="product-list">
+                        <div class="product-item">固樂纖</div>
+                        <div class="product-item">纖飄錠</div>
+                        <div class="product-item">婕肌零</div>
+                        <div class="product-item">面膜精裝(5入)</div>
+                        <div class="product-item">葉黃素晶亮凍</div>
+                        <div class="product-item">雪聚露</div>
+                        <div class="product-item">纖酵宿</div>
+                        <div class="product-item">益生菌</div>
+                        <div class="product-item">身體精華油</div>
+                    </div>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">📌 體積小的產品</div>
+                    <div class="product-list">
+                        <div class="product-item">玻尿酸</div>
+                        <div class="product-item">護手霜</div>
+                        <div class="product-item">爆纖錠</div>
+                        <div class="product-item">養髮液</div>
+                    </div>
+                </div>
+                
+                <div class="product-category">
+                    <div class="category-title">🎁 輔銷品</div>
+                    <div class="product-list">
+                        <div class="product-item">婕肌零體驗包</div>
+                        <div class="product-item">爆纖錠體驗包</div>
+                        <div class="product-item">9國極速錠</div>
+                        <div class="product-item">皮尺</div>
+                        <div class="product-item">全產品DM</div>
+                        <div class="product-item">纖體班DM</div>
+                        <div class="product-item">郭雪芙小卡</div>
+                        <div class="product-item">郭雪芙提袋</div>
+                        <div class="product-item">纖酵宿體驗包</div>
+                        <div class="product-item">絲巾麻布提袋</div>
+                        <div class="product-item">婕樂纖提袋</div>
+                        <div class="product-item">Q版麻布提袋</div>
+                        <div class="product-item">洗髮露體驗包</div>
+                        <div class="product-item">事業手冊</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="procedure">
+            <h2>4. 入箱作業程序</h2>
+            
+            <div class="priority-sequence">
+                <div class="priority-title">產品擺放優先順序</div>
+                <ol>
+                    <li><span class="highlight">第一順位：體積大的產品</span></li>
+                    <li><span class="highlight">第二順位：體積中的產品</span></li>
+                    <li><span class="highlight">第三順位：體積小的產品</span></li>
+                    <li><span class="highlight">第四順位：輔銷品</span></li>
+                </ol>
+            </div>
+            
+            <table class="step-table">
+                <thead>
+                    <tr>
+                        <th>步驟</th>
+                        <th>產品類型</th>
+                        <th>擺放方式</th>
+                        <th>位置說明</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><span class="step-number">1</span><br>步驟一</td>
+                        <td>體積大的產品</td>
+                        <td>底層擺放</td>
+                        <td>平擺最底層、側邊兩層排列</td>
+                    </tr>
+                    <tr>
+                        <td><span class="step-number">2</span><br>步驟二</td>
+                        <td>體積中的產品</td>
+                        <td>上層擺放</td>
+                        <td>平擺於大體積產品上層、側邊站立旁邊</td>
+                    </tr>
+                    <tr>
+                        <td><span class="step-number">3</span><br>步驟三</td>
+                        <td>體積小的產品</td>
+                        <td>頂層擺放</td>
+                        <td>平擺最上層、側邊兩層排列</td>
+                    </tr>
+                    <tr>
+                        <td><span class="step-number">4</span><br>步驟四</td>
+                        <td>輔銷品</td>
+                        <td>填補空隙</td>
+                        <td>側放旁邊、平擺最上層、平擺上方及側邊</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="section" id="special-products">
+            <h2>5. 特殊商品擺放規範</h2>
+            
+            <div class="special-product-box">
+                <div class="special-title">Q版麻布提袋</div>
+                <ul>
+                    <li><strong>特大箱：</strong>側放站立箱子旁邊</li>
+                    <li><strong>數量2以上：</strong>第一優先入箱，平躺上方（大箱中箱皆可）</li>
+                    <li><strong>數量5以上：</strong>第一優先入箱</li>
+                    <li><strong>一般情況：</strong>平躺上方或側邊站立（小箱），最後入箱</li>
+                </ul>
+            </div>
+            
+            <div class="special-product-box">
+                <div class="special-title">絲巾麻布提袋</div>
+                <ul>
+                    <li><strong>擺放方式：</strong>平躺（特大、大箱、中箱皆可）</li>
+                    <li><strong>優先級：</strong>第一優先入箱</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="section" id="placement-rules">
+            <h2>6. 特殊品項擺法規範</h2>
+            
+            <table class="placement-table">
+                <thead>
+                    <tr>
+                        <th>產品名稱</th>
+                        <th>最佳擺法</th>
+                        <th>次佳擺法</th>
+                        <th>禁止擺法</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>葉黃素</strong></td>
+                        <td class="best-method">平躺</td>
+                        <td class="good-method">橫放站立</td>
+                        <td class="ng-method">直放站立</td>
+                    </tr>
+                    <tr>
+                        <td><strong>纖纖飲</strong></td>
+                        <td class="best-method">平躺</td>
+                        <td class="good-method">橫放站立</td>
+                        <td class="ng-method">直放站立</td>
+                    </tr>
+                    <tr>
+                        <td><strong>玻尿酸</strong></td>
+                        <td class="best-method">正面朝上</td>
+                        <td class="good-method">平躺</td>
+                        <td class="ng-method">倒立站放 ⚠️</td>
+                    </tr>
+                    <tr>
+                        <td><strong>洗髮露</strong></td>
+                        <td class="best-method">正面朝上</td>
+                        <td>-</td>
+                        <td class="ng-method">平躺、倒立站放</td>
+                    </tr>
+                </tbody>
+            </table>
+            
+            <div class="important-note">
+                <strong>玻尿酸注意事項：</strong>日期朝上表示為倒立狀態，必須避免！
+            </div>
+        </div>
+
+        <div class="section" id="examples">
+            <h2>7. 混裝範例說明</h2>
+            
+            <div class="example-box">
+                <div class="example-title">混裝裝法範例</div>
+                <div class="example-steps">
+                    <div class="example-step">
+                        <span class="step-number-small">1</span><br>
+                        <strong>可可</strong><br>側躺擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">2</span><br>
+                        <strong>纖纖飲</strong><br>平躺擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">3</span><br>
+                        <strong>水光錠</strong><br>側躺擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">4</span><br>
+                        <strong>婕肌零</strong><br>站立擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">5</span><br>
+                        <strong>纖飄錠</strong><br>站立擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">6</span><br>
+                        <strong>雪聚露</strong><br>站立擺放
+                    </div>
+                    <div class="example-step">
+                        <span class="step-number-small">7</span><br>
+                        <strong>爆纖錠</strong><br>平躺上方
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="section" id="notes">
+            <h2>8. 注意事項</h2>
+            
+            <h3>8.1 一般注意事項</h3>
+            <ul>
+                <li>嚴格按照產品體積分類進行擺放</li>
+                <li>遵循優先順序，避免重壓輕</li>
+                <li>確保產品穩固，避免運輸過程中移動</li>
+            </ul>
+            
+            <h3>8.2 特殊注意事項</h3>
+            <ul>
+                <li>液體類產品（玻尿酸、洗髮露）必須正面朝上</li>
+                <li>避免倒立擺放，特別注意日期標示方向</li>
+                <li>體驗包類輔銷品優先級較高</li>
+            </ul>
+            
+            <h3>8.3 安全提醒</h3>
+            <ul>
+                <li>檢查產品包裝完整性</li>
+                <li>確認日期標示清晰可見</li>
+                <li>避免過度擠壓易碎產品</li>
+            </ul>
+        </div>
+
+        <div class="footer">
+            <p>📋 本文件整合自原始入箱SOP資料，統一格式便於網頁閱讀與協作</p>
+            <p><strong>此SOP應定期檢討更新，確保與實際作業流程一致</strong></p>
+        </div>
+    </div>
+
+    <script>
+        // 平滑滾動到錨點
+        document.querySelectorAll('.nav-link').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                const targetId = this.getAttribute('href').substring(1);
+                const targetElement = document.getElementById(targetId);
+                if (targetElement) {
+                    targetElement.scrollIntoView({
+                        behavior: 'smooth',
+                        block: 'start'
+                    });
+                }
+            });
+        });
+
+        // 動態高亮當前章節
+        window.addEventListener('scroll', function() {
+            const sections = document.querySelectorAll('.section');
+            const navLinks = document.querySelectorAll('.nav-link');
+            
+            let current = '';
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.clientHeight;
+                if (pageYOffset >= sectionTop - 200) {
+                    current = section.getAttribute('id');
+                }
+            });
+
+            navLinks.forEach(link => {
+                link.style.fontWeight = 'normal';
+                link.style.color = '#ff9800';
+                if (link.getAttribute('href') === '#' + current) {
+                    link.style.fontWeight = 'bold';
+                    link.style.color = '#2c3e50';
+                }
+            });
+        });
+    </script>
+</body>
+</html>
