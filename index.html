@@ -165,7 +165,7 @@
 
         /* 主內容區域 */
         .main-content {
-            display: none;
+            display: grid;
             grid-template-columns: 250px 1fr;
             gap: 20px;
             height: calc(100vh - 140px);
@@ -888,10 +888,12 @@
                     document.getElementById('currentUser').textContent = user.name;
                     document.getElementById('userRole').textContent = this.config.permissions[user.role]?.name || '使用者';
                     
-                    // 顯示文件
+                    // 過濾並顯示文件
+                    this.filterDocuments();
                     this.showDocuments();
                     
                     console.log('✅ 登入成功');
+                    console.log('📄 準備顯示', this.filteredDocuments.length, '個文件');
                     showNotification('登入成功！', 'success');
                 } else {
                     console.log('❌ 登入失敗');
@@ -961,12 +963,19 @@
             }
             
             showDocuments() {
+                console.log('🎯 開始顯示文件，共', this.filteredDocuments.length, '個文件');
+                
                 const docGrid = document.getElementById('docGrid');
                 const loadingIndicator = document.getElementById('loadingIndicator');
                 
-                if (!docGrid) return;
+                if (!docGrid) {
+                    console.error('❌ 找不到 docGrid 元素');
+                    return;
+                }
                 
-                loadingIndicator.style.display = 'block';
+                if (loadingIndicator) {
+                    loadingIndicator.style.display = 'block';
+                }
                 docGrid.innerHTML = '';
                 
                 setTimeout(() => {
