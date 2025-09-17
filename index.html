@@ -428,10 +428,18 @@
                 padding: 25px;
                 max-width: 350px;
                 box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+                background: rgba(255, 255, 255, 0.98); /* 增強背景不透明度 */
             }
 
             .login-title {
                 font-size: 1.5rem;
+                color: #1a202c; /* 增強標題顏色 */
+                font-weight: 700;
+            }
+
+            .form-label {
+                color: #2d3748; /* 增強標籤顏色 */
+                font-weight: 600;
             }
 
             .form-input, .login-btn {
@@ -440,10 +448,16 @@
                 border-radius: 12px;
             }
 
+            .form-input {
+                color: #1a202c; /* 增強輸入框文字顏色 */
+                border: 2px solid #cbd5e0;
+            }
+
             /* 頂部導航手機優化 */
             .header {
                 padding: 15px;
                 margin-bottom: 15px;
+                background: rgba(255, 255, 255, 0.98); /* 增強背景 */
             }
 
             .header-content {
@@ -454,6 +468,8 @@
 
             .app-title {
                 font-size: 1.2rem;
+                color: #1a202c; /* 增強標題顏色 */
+                font-weight: 700;
             }
 
             .user-info {
@@ -465,6 +481,15 @@
                 padding: 10px 15px;
                 flex: 1;
                 max-width: 200px;
+                background: rgba(103, 126, 234, 0.15);
+                color: #1a202c; /* 增強使用者資訊顏色 */
+                font-weight: 600;
+            }
+
+            .user-role {
+                background: #667eea;
+                color: white;
+                font-weight: 600;
             }
 
             /* 主內容區域重新設計 */
@@ -486,6 +511,7 @@
                 border-radius: 10px;
                 margin-bottom: 15px;
                 background: rgba(255, 255, 255, 0.98);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
 
             .sidebar::-webkit-scrollbar {
@@ -504,25 +530,38 @@
                 display: flex;
                 flex-direction: column;
                 align-items: center;
-                padding: 8px 6px;
+                padding: 12px 8px;
                 border-radius: 15px;
                 text-align: center;
                 white-space: nowrap;
+                color: #2d3748; /* 增強導航文字顏色 */
+                font-weight: 600;
+                transition: all 0.3s ease;
             }
 
             .nav-item .nav-icon {
-                font-size: 1.2rem;
-                margin-bottom: 3px;
+                font-size: 1.4rem;
+                margin-bottom: 4px;
                 width: auto;
+                opacity: 0.9;
             }
 
             .nav-item span:not(.nav-icon) {
-                font-size: 0.75rem;
-                font-weight: 500;
+                font-size: 0.8rem;
+                font-weight: 600;
+                color: #2d3748;
             }
 
             .nav-item:hover, .nav-item.active {
                 transform: translateY(-2px);
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+            }
+
+            .nav-item:hover span:not(.nav-icon), .nav-item.active span:not(.nav-icon) {
+                color: white;
+                font-weight: 700;
             }
 
             /* 內容面板手機優化 */
@@ -531,6 +570,8 @@
                 padding: 15px;
                 border-radius: 15px;
                 margin: 0;
+                background: rgba(255, 255, 255, 0.98);
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
 
             .content-header {
@@ -539,10 +580,13 @@
                 text-align: center;
                 margin-bottom: 20px;
                 padding-bottom: 15px;
+                border-bottom: 2px solid #e2e8f0;
             }
 
             .content-title {
                 font-size: 1.3rem;
+                color: #1a202c; /* 增強標題顏色 */
+                font-weight: 700;
             }
 
             .search-box {
@@ -558,6 +602,14 @@
                 padding: 12px 18px;
                 font-size: 1rem;
                 border-radius: 25px;
+                color: #1a202c; /* 增強搜尋框文字顏色 */
+                border: 2px solid #cbd5e0;
+                background: white;
+            }
+
+            .search-input::placeholder {
+                color: #4a5568;
+                opacity: 0.8;
             }
 
             /* 文件卡片手機優化 */
@@ -567,39 +619,209 @@
             }
 
             .doc-item {
-                padding: 15px;
+                padding: 18px;
                 border-radius: 15px;
+                background: white;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
             }
 
             .doc-icon {
-                width: 45px;
-                height: 45px;
-                font-size: 1.6rem;
+                width: 50px;
+                height: 50px;
+                font-size: 1.8rem;
                 border-radius: 12px;
             }
 
             .doc-info h3 {
-                font-size: 1rem;
+                font-size: 1.1rem;
                 line-height: 1.3;
+                color: #1a202c; /* 增強文件標題顏色 */
+                font-weight: 700;
+                margin-bottom: 6px;
+            }
+
+            .doc-type {
+                background: #f7fafc;
+                color: #2d3748; /* 增強文件類型標籤顏色 */
+                font-weight: 600;
+                font-size: 0.8rem;
+            }
+
+            .doc-description {
+                color: #2d3748; /* 增強描述文字顏色 */
+                font-size: 0.95rem;
+                line-height: 1.5;
+                margin-bottom: 15px;
+                font-weight: 500;
+            }
+
+            .doc-meta {
+                font-size: 0.85rem;
+                color: #4a5568; /* 增強元數據顏色 */
+                font-weight: 600;
+            }
+
+            .doc-access {
+                background: #dcfce7;
+                color: #166534; /* 增強權限標籤顏色 */
+                font-weight: 700;
             }
 
             /* 按鈕手機優化 */
             .btn {
-                padding: 12px 20px;
-                font-size: 1rem;
-                min-height: 44px;
-                border-radius: 10px;
-                font-weight: 500;
+                padding: 14px 24px;
+                font-size: 1.05rem;
+                min-height: 48px;
+                border-radius: 12px;
+                font-weight: 700;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+                transition: all 0.3s ease;
             }
 
             .btn-primary {
                 width: 100%;
                 max-width: 300px;
+                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+                color: white;
+                text-shadow: 0 1px 2px rgba(0, 0, 0, 0.1);
+            }
+
+            .btn-secondary {
+                background: white;
+                color: #2d3748;
+                border: 2px solid #e2e8f0;
+                font-weight: 600;
+            }
+
+            .btn:active {
+                transform: translateY(1px);
+                box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+            }
+
+            /* 登出按鈕 */
+            #logoutBtn {
+                background: #f56565;
+                color: white;
+                font-weight: 700;
+                padding: 10px 16px;
+                font-size: 0.95rem;
+            }
+
+            /* 搜尋按鈕 */
+            .search-box .btn-primary {
+                max-width: 120px;
+                padding: 12px 20px;
+                font-size: 0.95rem;
             }
 
             /* 防止縮放 */
             .form-input, .search-input {
                 font-size: 16px; /* 防止iOS縮放 */
+                font-weight: 500;
+            }
+
+            /* 狀態指示器手機優化 */
+            .status-indicator {
+                background: rgba(255, 255, 255, 0.95);
+                color: #2d3748;
+                font-weight: 600;
+                border: 1px solid #e2e8f0;
+                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+            }
+
+            /* 通知優化 */
+            .notification {
+                font-weight: 600;
+                font-size: 1rem;
+                box-shadow: 0 8px 25px rgba(0, 0, 0, 0.2);
+            }
+
+            /* 開發模式提示優化 */
+            .debug-mode {
+                background: rgba(251, 191, 36, 0.2);
+                color: #92400e;
+                font-weight: 700;
+                border: 2px solid rgba(251, 191, 36, 0.4);
+            }
+
+            /* 錯誤訊息優化 */
+            .error-message {
+                background: rgba(239, 68, 68, 0.15);
+                color: #c53030;
+                font-weight: 600;
+                border: 2px solid rgba(239, 68, 68, 0.3);
+            }
+
+            .error-message h3 {
+                color: #c53030;
+                font-weight: 700;
+            }
+        }
+
+        /* 超小螢幕優化 (小於375px) */
+        @media (max-width: 375px) {
+            .container {
+                padding: 8px;
+            }
+
+            .login-container {
+                margin: 20px auto;
+                padding: 20px;
+                max-width: 320px;
+            }
+
+            .header {
+                padding: 12px;
+            }
+
+            .app-title {
+                font-size: 1.1rem;
+            }
+
+            .user-profile {
+                max-width: 180px;
+                padding: 8px 12px;
+            }
+
+            .content-panel {
+                padding: 12px;
+            }
+
+            .content-title {
+                font-size: 1.2rem;
+            }
+
+            .nav-item {
+                min-width: 80px;
+                padding: 10px 6px;
+            }
+
+            .nav-item span:not(.nav-icon) {
+                font-size: 0.75rem;
+            }
+
+            .doc-item {
+                padding: 15px;
+            }
+
+            .doc-info h3 {
+                font-size: 1rem;
+            }
+
+            .doc-description {
+                font-size: 0.9rem;
+            }
+
+            .btn {
+                padding: 12px 20px;
+                font-size: 1rem;
+                min-height: 44px;
+            }
+
+            .search-input {
+                max-width: 280px;
+                padding: 10px 16px;
             }
         }
 
