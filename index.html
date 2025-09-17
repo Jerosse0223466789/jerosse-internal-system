@@ -271,6 +271,12 @@
             gap: 20px;
             margin-top: 20px;
         }
+        
+        /* 首頁分類按鈕佈局 */
+        .doc-grid.category-mode {
+            grid-template-columns: 1fr;
+            gap: 15px;
+        }
 
         .doc-item {
             background: white;
@@ -534,34 +540,37 @@
                 border-radius: 15px;
                 text-align: center;
                 white-space: nowrap;
-                color: #2d3748; /* 增強導航文字顏色 */
-                font-weight: 600;
+                color: #1a202c; /* 改為深黑色，提高對比度 */
+                font-weight: 700; /* 增加字重 */
                 transition: all 0.3s ease;
+                background: rgba(255, 255, 255, 0.8); /* 添加背景 */
+                border: 1px solid #e2e8f0;
             }
 
             .nav-item .nav-icon {
-                font-size: 1.4rem;
+                font-size: 1.6rem; /* 增大圖示 */
                 margin-bottom: 4px;
                 width: auto;
-                opacity: 0.9;
+                opacity: 1; /* 完全不透明 */
             }
 
             .nav-item span:not(.nav-icon) {
-                font-size: 0.8rem;
-                font-weight: 600;
-                color: #2d3748;
+                font-size: 0.85rem; /* 增大文字 */
+                font-weight: 700; /* 加粗 */
+                color: #1a202c; /* 深黑色 */
             }
 
             .nav-item:hover, .nav-item.active {
                 transform: translateY(-2px);
                 background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
                 color: white;
-                box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+                border: 1px solid transparent;
             }
 
             .nav-item:hover span:not(.nav-icon), .nav-item.active span:not(.nav-icon) {
                 color: white;
-                font-weight: 700;
+                font-weight: 800; /* 更粗 */
             }
 
             /* 內容面板手機優化 */
@@ -758,9 +767,123 @@
                 font-weight: 700;
             }
         }
+        
+        /* 分類按鈕樣式 */
+        .category-button {
+            background: white;
+            border-radius: 20px;
+            padding: 25px;
+            display: flex;
+            align-items: center;
+            gap: 20px;
+            box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+            border: 2px solid #e2e8f0;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-bottom: 15px;
+        }
+
+        .category-button:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 12px 35px rgba(0, 0, 0, 0.15);
+            border-color: #667eea;
+        }
+
+        .category-icon {
+            width: 80px;
+            height: 80px;
+            border-radius: 20px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2.5rem;
+            color: white;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+        }
+
+        .category-info {
+            flex: 1;
+        }
+
+        .category-info h3 {
+            font-size: 1.8rem;
+            font-weight: 700;
+            color: #1a202c;
+            margin-bottom: 8px;
+        }
+
+        .category-info p {
+            font-size: 1.1rem;
+            color: #4a5568;
+            font-weight: 500;
+            line-height: 1.4;
+        }
+
+        .category-arrow {
+            font-size: 1.5rem;
+            color: #667eea;
+            opacity: 0.7;
+            transition: all 0.3s ease;
+        }
+
+        .category-button:hover .category-arrow {
+            opacity: 1;
+            transform: translateX(5px);
+        }
+
+        @media (max-width: 768px) {
+            .category-button {
+                padding: 20px;
+                margin-bottom: 12px;
+            }
+
+            .category-icon {
+                width: 70px;
+                height: 70px;
+                font-size: 2.2rem;
+            }
+
+            .category-info h3 {
+                font-size: 1.5rem;
+                margin-bottom: 6px;
+            }
+
+            .category-info p {
+                font-size: 1rem;
+            }
+
+            .category-arrow {
+                font-size: 1.3rem;
+            }
+        }
 
         /* 超小螢幕優化 (小於375px) */
         @media (max-width: 375px) {
+            .category-button {
+                padding: 18px;
+                flex-direction: column;
+                text-align: center;
+                gap: 15px;
+            }
+
+            .category-icon {
+                width: 60px;
+                height: 60px;
+                font-size: 2rem;
+            }
+
+            .category-info h3 {
+                font-size: 1.3rem;
+            }
+
+            .category-info p {
+                font-size: 0.95rem;
+            }
+
+            .category-arrow {
+                transform: rotate(90deg);
+                font-size: 1.2rem;
+            }
             .container {
                 padding: 8px;
             }
@@ -992,14 +1115,8 @@
                     <div class="content-header">
                         <h2 class="content-title">
                             <span id="contentIcon">🏠</span>
-                            <span id="contentTitle">所有文件</span>
+                            <span id="contentTitle">文件分類</span>
                         </h2>
-                        <div class="search-box">
-                            <input type="text" class="search-input" id="searchInput" placeholder="搜尋文件或網頁...">
-                            <button class="btn btn-primary" onclick="performSearch()">
-                                🔍 搜尋
-                            </button>
-                        </div>
                     </div>
 
                     <!-- 載入動畫 -->
@@ -1080,12 +1197,6 @@
                 navItems.forEach(item => {
                     item.addEventListener('click', () => this.handleCategoryClick(item));
                 });
-                
-                // 搜尋
-                const searchInput = document.getElementById('searchInput');
-                if (searchInput) {
-                    searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
-                }
             }
             
             async handleLogin(event) {
@@ -1147,11 +1258,6 @@
                 this.showDocuments();
             }
             
-            handleSearch(query) {
-                this.searchQuery = query.toLowerCase().trim();
-                this.filterDocuments();
-                this.showDocuments();
-            }
             
             filterDocuments() {
                 let filtered = Array.from(this.documents.values());
@@ -1159,15 +1265,6 @@
                 // 依分類過濾
                 if (this.currentCategory !== 'all') {
                     filtered = filtered.filter(doc => doc.category === this.currentCategory);
-                }
-                
-                // 依搜尋過濾
-                if (this.searchQuery) {
-                    filtered = filtered.filter(doc => 
-                        doc.title.toLowerCase().includes(this.searchQuery) ||
-                        doc.description.toLowerCase().includes(this.searchQuery) ||
-                        doc.tags.some(tag => tag.toLowerCase().includes(this.searchQuery))
-                    );
                 }
                 
                 // 權限過濾
@@ -1185,7 +1282,7 @@
             }
             
             showDocuments() {
-                console.log('🎯 開始顯示文件，共', this.filteredDocuments.length, '個文件');
+                console.log('🎯 開始顯示內容，當前分類:', this.currentCategory);
                 
                 const docGrid = document.getElementById('docGrid');
                 const loadingIndicator = document.getElementById('loadingIndicator');
@@ -1201,23 +1298,120 @@
                 docGrid.innerHTML = '';
                 
                 setTimeout(() => {
-                    if (this.filteredDocuments.length === 0) {
-                        docGrid.innerHTML = `
-                            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">
-                                <div style="font-size: 3rem; margin-bottom: 20px;">📭</div>
-                                <h3>沒有找到相關文件</h3>
-                                <p>請嘗試調整搜尋條件或選擇其他分類</p>
-                            </div>
-                        `;
+                    if (this.currentCategory === 'all') {
+                        // 首頁顯示分類按鈕
+                        this.showCategoryButtons(docGrid);
                     } else {
-                        this.filteredDocuments.forEach(doc => {
-                            const docElement = this.createDocumentElement(doc);
-                            docGrid.appendChild(docElement);
-                        });
+                        // 移除分類模式的CSS類別
+                        docGrid.classList.remove('category-mode');
+                        
+                        // 其他頁面顯示文件列表
+                        if (this.filteredDocuments.length === 0) {
+                            docGrid.innerHTML = `
+                                <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">
+                                    <div style="font-size: 3rem; margin-bottom: 20px;">📭</div>
+                                    <h3>沒有找到相關文件</h3>
+                                    <p>請選擇其他分類查看文件</p>
+                                    <button class="btn btn-primary" onclick="window.docApp.goHome()" style="margin-top: 20px;">
+                                        🏠 回到首頁
+                                    </button>
+                                </div>
+                            `;
+                        } else {
+                            this.filteredDocuments.forEach(doc => {
+                                const docElement = this.createDocumentElement(doc);
+                                docGrid.appendChild(docElement);
+                            });
+                        }
                     }
                     
                     loadingIndicator.style.display = 'none';
                 }, 300);
+            }
+            
+            showCategoryButtons(docGrid) {
+                console.log('🏠 顯示分類按鈕');
+                
+                // 添加分類模式的CSS類別
+                docGrid.classList.add('category-mode');
+                
+                const categories = [
+                    { id: 'sop', name: '作業程序', icon: '📋', color: '#22c55e', desc: '標準作業流程文件' },
+                    { id: 'forms', name: '表單文件', icon: '📝', color: '#3b82f6', desc: '各類申請表單' },
+                    { id: 'systems', name: '系統工具', icon: '💻', color: '#8b5cf6', desc: '內部系統連結' },
+                    { id: 'reports', name: '報表分析', icon: '📊', color: '#f59e0b', desc: '各種報表和分析工具' },
+                    { id: 'policies', name: '政策規範', icon: '⚖️', color: '#ef4444', desc: '公司政策和規章制度' },
+                    { id: 'external', name: '外部連結', icon: '🔗', color: '#06b6d4', desc: '外部網站和資源' }
+                ];
+                
+                categories.forEach(category => {
+                    const categoryButton = document.createElement('div');
+                    categoryButton.className = 'category-button';
+                    categoryButton.setAttribute('data-category', category.id);
+                    
+                    categoryButton.innerHTML = `
+                        <div class="category-icon" style="background: ${category.color}">
+                            ${category.icon}
+                        </div>
+                        <div class="category-info">
+                            <h3>${category.name}</h3>
+                            <p>${category.desc}</p>
+                        </div>
+                        <div class="category-arrow">
+                            ➤
+                        </div>
+                    `;
+                    
+                    categoryButton.addEventListener('click', () => {
+                        this.selectCategory(category.id, category.name, category.icon);
+                    });
+                    
+                    docGrid.appendChild(categoryButton);
+                });
+            }
+            
+            selectCategory(categoryId, categoryName, categoryIcon) {
+                console.log('📂 選擇分類:', categoryName);
+                
+                // 更新導航狀態
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                    if (item.getAttribute('data-category') === categoryId) {
+                        item.classList.add('active');
+                    }
+                });
+                
+                // 更新標題
+                document.getElementById('contentIcon').textContent = categoryIcon;
+                document.getElementById('contentTitle').textContent = categoryName;
+                
+                // 設置當前分類並過濾文件
+                this.currentCategory = categoryId;
+                this.filterDocuments();
+                this.showDocuments();
+            }
+            
+            goHome() {
+                console.log('🏠 回到首頁');
+                
+                // 重置所有導航項目
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 設定首頁為選中狀態
+                const homeItem = document.querySelector('.nav-item[data-category="all"]');
+                if (homeItem) {
+                    homeItem.classList.add('active');
+                }
+                
+                // 更新標題
+                document.getElementById('contentIcon').textContent = '🏠';
+                document.getElementById('contentTitle').textContent = '文件分類';
+                
+                // 重置到首頁
+                this.currentCategory = 'all';
+                this.showDocuments();
             }
             
             createDocumentElement(doc) {
@@ -1364,26 +1558,13 @@
             }
         }
 
-        // 搜尋函數
-        function performSearch() {
-            const query = document.getElementById('searchInput').value.trim();
-            if (window.docApp && window.docApp.handleSearch) {
-                window.docApp.handleSearch(query);
-            }
-        }
 
         // 鍵盤事件處理
         document.addEventListener('keydown', function(event) {
-            // Enter 鍵觸發搜尋
-            if (event.key === 'Enter' && event.target.id === 'searchInput') {
-                performSearch();
-            }
-            
-            // ESC 鍵清除搜尋
+            // ESC 鍵回到首頁
             if (event.key === 'Escape') {
-                document.getElementById('searchInput').value = '';
-                if (window.docApp && window.docApp.documentManager) {
-                    window.docApp.documentManager.showAllDocuments();
+                if (window.docApp && window.docApp.goHome) {
+                    window.docApp.goHome();
                 }
             }
         });
