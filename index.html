@@ -1042,10 +1042,91 @@
         </div>
     </div>
 
-    <!-- 配置檔案 -->
-    <script src="config.js"></script>
+    <!-- 文件管理系統配置已內嵌在下方 -->
 
     <script>
+        // 文件配置
+        window.DocAppConfig = {
+            defaultDocuments: {
+                sop: [
+                    {
+                        id: 'part-time-sop',
+                        title: '工讀生SOP標準作業程序',
+                        description: '工讀生入職、工作流程及注意事項',
+                        category: 'sop',
+                        permission: 'employee',
+                        url: '.https://script.google.com/macros/s/AKfycbw4_cujhXK-HfLyISH5sNw_A4LJ6aZ4wZDTW1Ski-DnSl4U8zD2vUROccoz7BLh2inVYg/exec',  // 🎯 在這裡更新您的SOP網址
+                        icon: '👨‍💼',
+                        lastModified: new Date().toISOString(),
+                        tags: ['工讀生', 'SOP', '標準作業程序']
+                    },
+                    {
+                        id: 'picking-sop',
+                        title: '撿貨SOP標準作業程序',
+                        description: '倉庫撿貨標準流程及規範',
+                        category: 'sop',
+                        permission: 'employee',
+                        url: './SOP/撿貨SOP標準作業程序_新版.html',
+                        icon: '📦',
+                        lastModified: new Date().toISOString(),
+                        tags: ['撿貨', 'SOP', '倉庫']
+                    }
+                ],
+                forms: [
+                    {
+                        id: 'leave-form',
+                        title: '請假申請表',
+                        description: '員工請假申請專用表單',
+                        category: 'forms',
+                        permission: 'employee',
+                        url: '#',
+                        icon: '📝',
+                        lastModified: new Date().toISOString(),
+                        tags: ['請假', '申請表']
+                    }
+                ],
+                systems: [
+                    {
+                        id: 'hr-system',
+                        title: '人資系統',
+                        description: '員工資料管理系統',
+                        category: 'systems',
+                        permission: 'manager',
+                        url: '#',
+                        icon: '👥',
+                        lastModified: new Date().toISOString(),
+                        tags: ['人資', '系統']
+                    }
+                ],
+                reports: [],
+                policies: [],
+                external: []
+            },
+            permissions: {
+                admin: {
+                    name: '系統管理員',
+                    canView: ['public', 'employee', 'manager', 'admin']
+                },
+                manager: {
+                    name: '主管',
+                    canView: ['public', 'employee', 'manager']
+                },
+                employee: {
+                    name: '員工',
+                    canView: ['public', 'employee']
+                },
+                guest: {
+                    name: '訪客',
+                    canView: ['public']
+                }
+            },
+            defaultUsers: [
+                { username: 'admin', password: 'admin123', name: '系統管理員', role: 'admin' },
+                { username: 'manager', password: 'manager123', name: '部門主管', role: 'manager' },
+                { username: 'user', password: 'user123', name: '一般員工', role: 'employee' }
+            ]
+        };
+
         // 簡化的文件管理系統
         class SimpleDocApp {
             constructor() {
