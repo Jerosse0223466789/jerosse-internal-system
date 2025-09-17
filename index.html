@@ -800,14 +800,273 @@
         </div>
     </div>
 
-    <!-- 配置檔案和模組 -->
+    <!-- 配置檔案 -->
     <script src="config.js"></script>
-    <script src="modules/auth.js"></script>
-    <script src="modules/document-manager.js"></script>
-    <script src="modules/data-sync.js"></script>
-    <script src="app.js"></script>
 
     <script>
+        // 簡化的文件管理系統
+        class SimpleDocApp {
+            constructor() {
+                this.currentUser = null;
+                this.documents = new Map();
+                this.filteredDocuments = [];
+                this.currentCategory = 'all';
+                this.isLoggedIn = false;
+                
+                this.init();
+            }
+            
+            async init() {
+                console.log('🚀 簡化文件管理系統啟動中...');
+                
+                // 載入配置
+                this.config = window.DocAppConfig || {};
+                
+                // 載入預設文件
+                this.loadDefaultDocuments();
+                
+                // 設定事件監聽器
+                this.setupEventListeners();
+                
+                console.log('✅ 系統初始化完成');
+            }
+            
+            loadDefaultDocuments() {
+                console.log('📚 載入預設文件...');
+                
+                if (this.config.defaultDocuments) {
+                    Object.values(this.config.defaultDocuments).forEach(categoryDocs => {
+                        categoryDocs.forEach(doc => {
+                            this.documents.set(doc.id, doc);
+                        });
+                    });
+                }
+                
+                this.filteredDocuments = Array.from(this.documents.values());
+                console.log(`✅ 已載入 ${this.documents.size} 個文件`);
+            }
+            
+            setupEventListeners() {
+                // 登入表單
+                const loginForm = document.getElementById('loginForm');
+                if (loginForm) {
+                    loginForm.addEventListener('submit', (e) => this.handleLogin(e));
+                }
+                
+                // 分類導航
+                const navItems = document.querySelectorAll('.nav-item');
+                navItems.forEach(item => {
+                    item.addEventListener('click', () => this.handleCategoryClick(item));
+                });
+                
+                // 搜尋
+                const searchInput = document.getElementById('searchInput');
+                if (searchInput) {
+                    searchInput.addEventListener('input', (e) => this.handleSearch(e.target.value));
+                }
+            }
+            
+            async handleLogin(event) {
+                event.preventDefault();
+                
+                const username = document.getElementById('username').value;
+                const password = document.getElementById('password').value;
+                
+                console.log('🔐 嘗試登入:', username);
+                
+                // 簡化的登入驗證
+                const users = this.config.defaultUsers || [];
+                const user = users.find(u => u.username === username && u.password === password);
+                
+                if (user) {
+                    this.currentUser = user;
+                    this.isLoggedIn = true;
+                    
+                    // 更新介面
+                    document.getElementById('loginContainer').style.display = 'none';
+                    document.getElementById('mainApp').classList.remove('hidden');
+                    document.getElementById('currentUser').textContent = user.name;
+                    document.getElementById('userRole').textContent = this.config.permissions[user.role]?.name || '使用者';
+                    
+                    // 顯示文件
+                    this.showDocuments();
+                    
+                    console.log('✅ 登入成功');
+                    showNotification('登入成功！', 'success');
+                } else {
+                    console.log('❌ 登入失敗');
+                    showNotification('帳號或密碼錯誤', 'error');
+                }
+            }
+            
+            handleCategoryClick(navItem) {
+                // 移除所有 active 類別
+                document.querySelectorAll('.nav-item').forEach(item => {
+                    item.classList.remove('active');
+                });
+                
+                // 加入 active 類別
+                navItem.classList.add('active');
+                
+                // 獲取分類
+                const category = navItem.getAttribute('data-category');
+                this.currentCategory = category;
+                
+                // 更新標題
+                const icon = navItem.querySelector('.nav-icon').textContent;
+                const name = navItem.querySelector('span:not(.nav-icon)').textContent;
+                document.getElementById('contentIcon').textContent = icon;
+                document.getElementById('contentTitle').textContent = name;
+                
+                // 過濾文件
+                this.filterDocuments();
+                this.showDocuments();
+            }
+            
+            handleSearch(query) {
+                this.searchQuery = query.toLowerCase().trim();
+                this.filterDocuments();
+                this.showDocuments();
+            }
+            
+            filterDocuments() {
+                let filtered = Array.from(this.documents.values());
+                
+                // 依分類過濾
+                if (this.currentCategory !== 'all') {
+                    filtered = filtered.filter(doc => doc.category === this.currentCategory);
+                }
+                
+                // 依搜尋過濾
+                if (this.searchQuery) {
+                    filtered = filtered.filter(doc => 
+                        doc.title.toLowerCase().includes(this.searchQuery) ||
+                        doc.description.toLowerCase().includes(this.searchQuery) ||
+                        doc.tags.some(tag => tag.toLowerCase().includes(this.searchQuery))
+                    );
+                }
+                
+                // 權限過濾
+                if (this.currentUser) {
+                    const userPermissions = this.config.permissions[this.currentUser.role];
+                    if (userPermissions) {
+                        filtered = filtered.filter(doc => 
+                            userPermissions.canView.includes(doc.permission) || 
+                            doc.permission === 'public'
+                        );
+                    }
+                }
+                
+                this.filteredDocuments = filtered;
+            }
+            
+            showDocuments() {
+                const docGrid = document.getElementById('docGrid');
+                const loadingIndicator = document.getElementById('loadingIndicator');
+                
+                if (!docGrid) return;
+                
+                loadingIndicator.style.display = 'block';
+                docGrid.innerHTML = '';
+                
+                setTimeout(() => {
+                    if (this.filteredDocuments.length === 0) {
+                        docGrid.innerHTML = `
+                            <div style="grid-column: 1 / -1; text-align: center; padding: 40px; color: #64748b;">
+                                <div style="font-size: 3rem; margin-bottom: 20px;">📭</div>
+                                <h3>沒有找到相關文件</h3>
+                                <p>請嘗試調整搜尋條件或選擇其他分類</p>
+                            </div>
+                        `;
+                    } else {
+                        this.filteredDocuments.forEach(doc => {
+                            const docElement = this.createDocumentElement(doc);
+                            docGrid.appendChild(docElement);
+                        });
+                    }
+                    
+                    loadingIndicator.style.display = 'none';
+                }, 300);
+            }
+            
+            createDocumentElement(doc) {
+                const docItem = document.createElement('div');
+                docItem.className = 'doc-item';
+                docItem.setAttribute('data-id', doc.id);
+                
+                const typeInfo = this.config.documentTypes[doc.type] || { icon: '📄', name: '文件' };
+                const categoryInfo = this.config.categories[doc.category] || { color: '#667eea' };
+                
+                docItem.innerHTML = `
+                    <div class="doc-header">
+                        <div class="doc-icon" style="background: ${categoryInfo.color}">
+                            ${typeInfo.icon}
+                        </div>
+                        <div class="doc-info">
+                            <h3>${doc.title}</h3>
+                            <span class="doc-type">${typeInfo.name}</span>
+                        </div>
+                    </div>
+                    <div class="doc-description">${doc.description}</div>
+                    <div class="doc-meta">
+                        <span>更新：${doc.lastModified}</span>
+                        <span class="doc-access">${this.getPermissionName(doc.permission)}</span>
+                    </div>
+                `;
+                
+                docItem.addEventListener('click', () => this.openDocument(doc));
+                
+                return docItem;
+            }
+            
+            getPermissionName(permission) {
+                const names = {
+                    'public': '公開',
+                    'internal': '內部',
+                    'management': '主管',
+                    'admin': '管理員'
+                };
+                return names[permission] || '公開';
+            }
+            
+            openDocument(doc) {
+                console.log('📄 開啟文件:', doc.title);
+                
+                try {
+                    if (doc.type === 'url') {
+                        window.open(doc.url, '_blank', 'noopener,noreferrer');
+                    } else if (doc.type === 'html') {
+                        window.open(doc.url, '_blank');
+                    } else if (doc.type === 'system') {
+                        showNotification('系統連結功能開發中...', 'info');
+                    } else {
+                        window.open(doc.url, '_blank');
+                    }
+                    
+                    showNotification(`已開啟「${doc.title}」`, 'info');
+                } catch (error) {
+                    console.error('開啟文件失敗:', error);
+                    showNotification('開啟文件失敗', 'error');
+                }
+            }
+            
+            logout() {
+                this.currentUser = null;
+                this.isLoggedIn = false;
+                
+                document.getElementById('loginContainer').style.display = 'block';
+                document.getElementById('mainApp').classList.add('hidden');
+                document.getElementById('username').value = 'admin';
+                document.getElementById('password').value = 'admin123';
+                
+                showNotification('已登出', 'info');
+                console.log('👋 使用者已登出');
+            }
+        }
+        
+        // 全域應用程式實例
+        let simpleDocApp = null;
+        
         // 應用程式初始化
         document.addEventListener('DOMContentLoaded', async function() {
             console.log('🚀 公司文件管理系統啟動中...');
@@ -815,33 +1074,22 @@
             try {
                 // 檢查是否為開發模式
                 const isLocal = window.location.hostname === 'localhost' || window.location.hostname === '127.0.0.1';
-                const isDebug = isLocal || !window.DocAppConfig?.api?.endpoints?.auth?.includes('script.google.com');
                 
-                if (isDebug) {
+                if (isLocal || true) { // 暫時總是顯示開發模式
                     document.getElementById('debugMode').style.display = 'block';
                     console.log('🛠️ 開發模式啟動');
                 }
                 
-                // 初始化應用程式
-                await initializeDocApp();
+                // 初始化簡化應用程式
+                simpleDocApp = new SimpleDocApp();
+                window.docApp = simpleDocApp; // 供除錯使用
+                
                 console.log('✅ 系統初始化完成');
                 
             } catch (error) {
                 console.error('❌ 系統初始化失敗:', error);
-                
-                // 顯示錯誤提示但繼續運行
                 document.getElementById('errorMessage').style.display = 'block';
-                
-                // 嘗試在離線模式下初始化
-                try {
-                    await initializeDocApp({
-                        debug: { mockData: true, enabled: true }
-                    });
-                    console.log('✅ 離線模式初始化完成');
-                } catch (offlineError) {
-                    console.error('❌ 離線模式初始化也失敗:', offlineError);
-                    showNotification('系統初始化失敗，請重新整理頁面', 'error');
-                }
+                showNotification('系統初始化失敗，請重新整理頁面', 'error');
             }
         });
 
@@ -868,8 +1116,8 @@
         // 登出函數
         function logout() {
             try {
-                if (window.docApp && window.docApp.auth) {
-                    window.docApp.auth.logout();
+                if (window.docApp && window.docApp.logout) {
+                    window.docApp.logout();
                 } else {
                     // 手動登出
                     document.getElementById('loginContainer').style.display = 'block';
@@ -880,7 +1128,7 @@
                 }
             } catch (error) {
                 console.error('登出錯誤:', error);
-                // 強制重新整理頁面
+                showNotification('登出成功', 'info');
                 location.reload();
             }
         }
@@ -888,8 +1136,8 @@
         // 搜尋函數
         function performSearch() {
             const query = document.getElementById('searchInput').value.trim();
-            if (window.docApp && window.docApp.documentManager) {
-                window.docApp.documentManager.searchDocuments(query);
+            if (window.docApp && window.docApp.handleSearch) {
+                window.docApp.handleSearch(query);
             }
         }
 
