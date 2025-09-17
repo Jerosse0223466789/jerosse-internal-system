@@ -232,6 +232,7 @@
         .doc-grid.category-mode {
             grid-template-columns: 1fr;
             gap: 8px;
+            width: 100%;
         }
 
         .doc-item {
@@ -418,7 +419,7 @@
             /* 頂部導航手機優化 */
             .header {
                 padding: 15px;
-                margin-bottom: 15px;
+                margin: 10px 10px 15px 10px;
                 background: rgba(255, 255, 255, 0.98); /* 增強背景 */
             }
 
@@ -473,7 +474,8 @@
             /* 手機版2x3網格佈局 (2列3行) */
             .doc-grid.category-mode {
                 grid-template-columns: repeat(2, 1fr);
-                gap: 8px;
+                gap: 10px;
+                width: 100%;
             }
 
             .content-header {
@@ -739,6 +741,8 @@
                 flex-direction: column;
                 text-align: center;
                 aspect-ratio: 1.2;
+                width: 100%;
+                min-height: 120px;
             }
 
             .category-icon {
@@ -771,6 +775,8 @@
                 padding: 10px;
                 margin-bottom: 6px;
                 gap: 6px;
+                width: 100%;
+                min-height: 110px;
             }
 
             .category-icon {
@@ -802,6 +808,7 @@
 
             .header {
                 padding: 12px;
+                margin: 8px 8px 15px 8px;
             }
 
             .app-title {
@@ -842,7 +849,8 @@
             
             /* 超小螢幕的2x3網格 */
             .doc-grid.category-mode {
-                gap: 6px;
+                gap: 8px;
+                width: 100%;
             }
         }
 
