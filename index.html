@@ -165,56 +165,11 @@
 
         /* 主內容區域 */
         .main-content {
-            display: grid;
-            grid-template-columns: 250px 1fr;
-            gap: 20px;
-            height: calc(100vh - 140px);
+            display: block;
+            height: auto;
+            min-height: calc(100vh - 140px);
         }
 
-        /* 側邊欄 */
-        .sidebar {
-            background: rgba(255, 255, 255, 0.95);
-            backdrop-filter: blur(10px);
-            border-radius: 15px;
-            padding: 20px;
-            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
-            border: 1px solid rgba(255, 255, 255, 0.18);
-            overflow-y: auto;
-        }
-
-        .sidebar-title {
-            color: #2c3e50;
-            font-size: 1.1rem;
-            font-weight: 600;
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-
-        .nav-item {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            padding: 12px 15px;
-            border-radius: 10px;
-            cursor: pointer;
-            transition: all 0.3s;
-            margin-bottom: 5px;
-            color: #4a5568;
-        }
-
-        .nav-item:hover, .nav-item.active {
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
-            transform: translateX(5px);
-        }
-
-        .nav-icon {
-            font-size: 1.2rem;
-            width: 20px;
-            text-align: center;
-        }
 
         /* 內容面板 */
         .content-panel {
@@ -224,6 +179,7 @@
             padding: 25px;
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.1);
             border: 1px solid rgba(255, 255, 255, 0.18);
+            margin: 20px;
             overflow-y: auto;
         }
 
@@ -498,87 +454,18 @@
                 font-weight: 600;
             }
 
-            /* 主內容區域重新設計 */
+            /* 主內容區域手機版 */
             .main-content {
-                display: flex;
-                flex-direction: column;
+                display: block;
                 height: auto;
-                gap: 0;
-            }
-
-            /* 側邊欄改為頂部水平導航 */
-            .sidebar {
-                order: 1;
-                padding: 10px 15px;
-                display: flex;
-                overflow-x: auto;
-                scrollbar-width: none;
-                -ms-overflow-style: none;
-                border-radius: 10px;
-                margin-bottom: 15px;
-                background: rgba(255, 255, 255, 0.98);
-                box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-            }
-
-            .sidebar::-webkit-scrollbar {
-                display: none;
-            }
-
-            .sidebar-title {
-                display: none;
-            }
-
-            .nav-item {
-                flex-shrink: 0;
-                margin-right: 8px;
-                margin-bottom: 0;
-                min-width: 90px;
-                display: flex;
-                flex-direction: column;
-                align-items: center;
-                padding: 12px 8px;
-                border-radius: 15px;
-                text-align: center;
-                white-space: nowrap;
-                color: #1a202c; /* 改為深黑色，提高對比度 */
-                font-weight: 700; /* 增加字重 */
-                transition: all 0.3s ease;
-                background: rgba(255, 255, 255, 0.8); /* 添加背景 */
-                border: 1px solid #e2e8f0;
-            }
-
-            .nav-item .nav-icon {
-                font-size: 1.6rem; /* 增大圖示 */
-                margin-bottom: 4px;
-                width: auto;
-                opacity: 1; /* 完全不透明 */
-            }
-
-            .nav-item span:not(.nav-icon) {
-                font-size: 0.85rem; /* 增大文字 */
-                font-weight: 700; /* 加粗 */
-                color: #1a202c; /* 深黑色 */
-            }
-
-            .nav-item:hover, .nav-item.active {
-                transform: translateY(-2px);
-                background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-                color: white;
-                box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
-                border: 1px solid transparent;
-            }
-
-            .nav-item:hover span:not(.nav-icon), .nav-item.active span:not(.nav-icon) {
-                color: white;
-                font-weight: 800; /* 更粗 */
+                min-height: calc(100vh - 140px);
             }
 
             /* 內容面板手機優化 */
             .content-panel {
-                order: 2;
                 padding: 15px;
                 border-radius: 15px;
-                margin: 0;
+                margin: 10px;
                 background: rgba(255, 255, 255, 0.98);
                 box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
             }
@@ -590,6 +477,11 @@
                 margin-bottom: 20px;
                 padding-bottom: 15px;
                 border-bottom: 2px solid #e2e8f0;
+            }
+            
+            .header-actions {
+                display: flex;
+                justify-content: center;
             }
 
             .content-title {
@@ -1075,41 +967,6 @@
 
             <!-- 主內容區域 -->
             <main class="main-content" id="mainContent">
-                <!-- 側邊欄導航 -->
-                <nav class="sidebar">
-                    <h2 class="sidebar-title">
-                        <span>📂</span> 分類導航
-                    </h2>
-                    <div class="nav-item active" data-category="all">
-                        <span class="nav-icon">🏠</span>
-                        <span>所有文件</span>
-                    </div>
-                    <div class="nav-item" data-category="sop">
-                        <span class="nav-icon">📋</span>
-                        <span>作業程序</span>
-                    </div>
-                    <div class="nav-item" data-category="forms">
-                        <span class="nav-icon">📝</span>
-                        <span>表單文件</span>
-                    </div>
-                    <div class="nav-item" data-category="systems">
-                        <span class="nav-icon">💻</span>
-                        <span>系統工具</span>
-                    </div>
-                    <div class="nav-item" data-category="reports">
-                        <span class="nav-icon">📊</span>
-                        <span>報表分析</span>
-                    </div>
-                    <div class="nav-item" data-category="policies">
-                        <span class="nav-icon">⚖️</span>
-                        <span>政策規範</span>
-                    </div>
-                    <div class="nav-item" data-category="external">
-                        <span class="nav-icon">🔗</span>
-                        <span>外部連結</span>
-                    </div>
-                </nav>
-
                 <!-- 內容面板 -->
                 <section class="content-panel">
                     <div class="content-header">
@@ -1117,6 +974,11 @@
                             <span id="contentIcon">🏠</span>
                             <span id="contentTitle">文件分類</span>
                         </h2>
+                        <div class="header-actions" id="headerActions" style="display: none;">
+                            <button class="btn btn-secondary" onclick="window.docApp.goHome()">
+                                🏠 回到首頁
+                            </button>
+                        </div>
                     </div>
 
                     <!-- 載入動畫 -->
@@ -1191,12 +1053,6 @@
                 if (loginForm) {
                     loginForm.addEventListener('submit', (e) => this.handleLogin(e));
                 }
-                
-                // 分類導航
-                const navItems = document.querySelectorAll('.nav-item');
-                navItems.forEach(item => {
-                    item.addEventListener('click', () => this.handleCategoryClick(item));
-                });
             }
             
             async handleLogin(event) {
@@ -1232,30 +1088,6 @@
                     console.log('❌ 登入失敗');
                     showNotification('帳號或密碼錯誤', 'error');
                 }
-            }
-            
-            handleCategoryClick(navItem) {
-                // 移除所有 active 類別
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // 加入 active 類別
-                navItem.classList.add('active');
-                
-                // 獲取分類
-                const category = navItem.getAttribute('data-category');
-                this.currentCategory = category;
-                
-                // 更新標題
-                const icon = navItem.querySelector('.nav-icon').textContent;
-                const name = navItem.querySelector('span:not(.nav-icon)').textContent;
-                document.getElementById('contentIcon').textContent = icon;
-                document.getElementById('contentTitle').textContent = name;
-                
-                // 過濾文件
-                this.filterDocuments();
-                this.showDocuments();
             }
             
             
@@ -1373,17 +1205,15 @@
             selectCategory(categoryId, categoryName, categoryIcon) {
                 console.log('📂 選擇分類:', categoryName);
                 
-                // 更新導航狀態
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                    if (item.getAttribute('data-category') === categoryId) {
-                        item.classList.add('active');
-                    }
-                });
-                
                 // 更新標題
                 document.getElementById('contentIcon').textContent = categoryIcon;
                 document.getElementById('contentTitle').textContent = categoryName;
+                
+                // 顯示返回按鈕
+                const headerActions = document.getElementById('headerActions');
+                if (headerActions) {
+                    headerActions.style.display = 'block';
+                }
                 
                 // 設置當前分類並過濾文件
                 this.currentCategory = categoryId;
@@ -1394,20 +1224,15 @@
             goHome() {
                 console.log('🏠 回到首頁');
                 
-                // 重置所有導航項目
-                document.querySelectorAll('.nav-item').forEach(item => {
-                    item.classList.remove('active');
-                });
-                
-                // 設定首頁為選中狀態
-                const homeItem = document.querySelector('.nav-item[data-category="all"]');
-                if (homeItem) {
-                    homeItem.classList.add('active');
-                }
-                
                 // 更新標題
                 document.getElementById('contentIcon').textContent = '🏠';
                 document.getElementById('contentTitle').textContent = '文件分類';
+                
+                // 隱藏返回按鈕
+                const headerActions = document.getElementById('headerActions');
+                if (headerActions) {
+                    headerActions.style.display = 'none';
+                }
                 
                 // 重置到首頁
                 this.currentCategory = 'all';
