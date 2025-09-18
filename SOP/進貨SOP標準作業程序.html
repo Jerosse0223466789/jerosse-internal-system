@@ -366,9 +366,170 @@
         }
         
         @media print {
-            body { background-color: white; }
-            .container { box-shadow: none; }
+            /* 強制顯示背景顏色 */
+            * {
+                -webkit-print-color-adjust: exact !important;
+                color-adjust: exact !important;
+                print-color-adjust: exact !important;
+            }
+            
+            /* 保持彩色列印樣式 */
             .navigation { display: none; }
+            .area-details { display: block !important; }
+            .area-header { cursor: default; }
+            
+            /* 移除陰影以節省墨水 */
+            .container { box-shadow: none; }
+            
+            /* 確保主要元素顯示背景 */
+            .header-container,
+            .section-header,
+            .work-area-card {
+                background-color: inherit !important;
+                -webkit-print-color-adjust: exact !important;
+            }
+            
+            /* 強制保持標題區域橫排佈局 */
+            .document-meta {
+                display: grid !important;
+                grid-template-columns: repeat(4, 1fr) !important;
+                gap: 15px !important;
+            }
+            
+            /* 確保其他網格元素也保持橫排 */
+            .responsibility-grid {
+                grid-template-columns: repeat(2, 1fr) !important;
+            }
+            
+            .tools-grid {
+                grid-template-columns: repeat(auto-fit, minmax(250px, 1fr)) !important;
+            }
+            
+            /* 封箱步驟圖片在列印時的排版 */
+            .step-card {
+                page-break-inside: avoid !important;
+                margin-bottom: 15px !important;
+            }
+            
+            /* 列印時優化圖片顯示，減少空白 */
+            img {
+                max-height: 320px !important;
+                height: auto !important;
+                object-fit: contain !important;
+                margin: 0 !important;
+            }
+            
+            /* 列印時大幅減少圖片容器的內距和邊距 */
+            div[style*="padding: 20px"] {
+                padding: 5px !important;
+                margin: 5px 0 !important;
+            }
+            
+            div[style*="padding: 15px"] {
+                padding: 3px !important;
+            }
+            
+            div[style*="margin: 20px 0"] {
+                margin: 5px 0 !important;
+            }
+            
+            /* 列印時調整網格間距 */
+            div[style*="gap: 20px"] {
+                gap: 5px !important;
+            }
+            
+            /* 列印時大幅減少圖片說明文字空間 */
+            div[style*="color: #666"] {
+                font-size: 9px !important;
+                margin: 2px 0 !important;
+                padding: 0 !important;
+            }
+            
+            /* 列印時調整標題字體大小和間距 */
+            h4[style*="margin-bottom: 15px"], h4[style*="margin-bottom: 20px"] {
+                margin-bottom: 3px !important;
+                margin-top: 5px !important;
+                font-size: 13px !important;
+            }
+            
+            h5[style*="margin-bottom: 15px"] {
+                margin-bottom: 2px !important;
+                margin-top: 3px !important;
+                font-size: 12px !important;
+            }
+            
+            /* 列印時進一步壓縮圖片容器 */
+            div[style*="background-color: white"] {
+                padding: 2px !important;
+                margin: 0 !important;
+            }
+            
+            /* 列印時壓縮說明列表 */
+            ul[style*="padding-left: 20px"] {
+                padding-left: 10px !important;
+                margin: 3px 0 !important;
+            }
+            
+            li {
+                margin: 1px 0 !important;
+                line-height: 1.2 !important;
+            }
+            
+            /* 列印分頁控制 - 防止內容被不當截斷 */
+            .responsibility-card {
+                page-break-inside: avoid !important;
+                margin-bottom: 10px !important;
+            }
+            
+            .responsibility-grid {
+                page-break-inside: avoid !important;
+            }
+            
+            /* 確保章節標題不會單獨在頁尾 */
+            .section {
+                page-break-inside: avoid !important;
+            }
+            
+            h2 {
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            h3 {
+                page-break-after: avoid !important;
+                page-break-inside: avoid !important;
+            }
+            
+            /* 確保表格完整性 */
+            .step-table {
+                page-break-inside: avoid !important;
+            }
+            
+            /* 確保圖片區塊完整性 */
+            div[style*="border: 2px solid"] {
+                page-break-inside: avoid !important;
+                margin-bottom: 10px !important;
+            }
+            
+            /* 進貨重點章節特殊處理 */
+            #receiving {
+                page-break-before: always !important;
+            }
+            
+            /* 倉儲定位章節特殊處理 */
+            #storage {
+                page-break-before: always !important;
+            }
+            
+            /* 確保責任區塊和說明文字在同一頁 */
+            .responsibility-card h4 {
+                page-break-after: avoid !important;
+            }
+            
+            .responsibility-card .person-name {
+                page-break-before: avoid !important;
+                page-break-after: avoid !important;
+            }
         }
     </style>
 </head>
@@ -384,7 +545,6 @@
         <a href="#sampling" class="nav-link">7. 領樣</a>
         <a href="#storage" class="nav-link">8. 倉儲定位</a>
         <a href="#reference" class="nav-link">9. 參考資料</a>
-        <a href="#attachments" class="nav-link">10. 附件</a>
     </div>
 
     <div class="container">
@@ -429,8 +589,8 @@
             <h2>4. 進貨流程說明與相關人員</h2>
             
             <div class="priority-sequence">
-                <div class="priority-title">進貨作業四大項</div>
-                <p>進貨作業包含四大項：<span class="highlight">進貨、領樣、儲位定位、盤點</span>（後續分別說明重點與注意事項）。</p>
+                <div class="priority-title">進貨作業流程說明</div>
+                <p><span class="highlight">進貨、領樣、儲位定位</span>（後續分別說明重點與注意事項）。</p>
             </div>
             
             <div class="personnel-grid">
@@ -486,6 +646,62 @@
         <div class="section" id="receiving">
             <h2>6. 進貨重點</h2>
             
+            <!-- 進貨單範例圖片 -->
+            <h3>6.1 進貨單範例</h3>
+            <div style="background-color: #f8fff8; border: 2px solid #4caf50; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <!-- 進貨單1 -->
+                    <div style="text-align: center;">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">📋 進貨單範例 1</h4>
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/%E9%80%B2%E8%B2%A8%E5%96%AE1.jpg?raw=true" 
+                                 alt="進貨單範例1" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 150px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📋 進貨單範例1</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 進貨單2 -->
+                    <div style="text-align: center;">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">📋 進貨單範例 2</h4>
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/%E9%80%B2%E8%B2%A8%E5%96%AE2.jpg?raw=true" 
+                                 alt="進貨單範例2" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 150px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📋 進貨單範例2</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 進貨單3 -->
+                    <div style="text-align: center;">
+                        <h4 style="color: #2e7d32; margin-bottom: 15px;">📋 進貨單範例 3</h4>
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/%E9%80%B2%E8%B2%A8%E5%96%AE3.jpg?raw=true" 
+                                 alt="進貨單範例3" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 150px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📋 進貨單範例3</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p style="margin-top: 15px; color: #666; font-size: 14px;"><strong>核對重點：</strong>務必確認品項、數量、批號、效期等資訊是否與實際貨物一致</p>
+            </div>
+            
+            <h3>6.2 進貨核對流程</h3>
             <table class="step-table">
                 <thead>
                     <tr>
@@ -530,8 +746,25 @@
             <div class="special-product-box">
                 <div class="special-title">領樣流程</div>
                 <ul>
-                    <li>依 <span class="highlight">QC 提供之領樣流程</span>辦理（見附件流程圖）</li>
+                    <li>依 <span class="highlight">QC 提供之領樣流程</span>辦理</li>
                 </ul>
+                
+                <!-- 領樣流程相關圖示 -->
+                <div style="background-color: #e8f5e8; border: 2px solid #4caf50; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+                    <h4 style="color: #2e7d32; margin-bottom: 15px;">📋 領樣流程參考圖示</h4>
+                    <div style="background-color: white; border-radius: 8px; padding: 15px; display: inline-block; max-width: 100%;">
+                        <img src="https://github.com/Jerosse0223466789/sop-images/blob/36a3751821b1cb2686dbed8f58874179df258717/%E9%80%B2%E8%B2%A8SOP/%E9%A0%98%E6%A8%A3%E6%B5%81%E7%A8%8B.jpg?raw=true" 
+                             alt="領樣流程完整圖示" 
+                             style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                             onload="this.style.display='block';" 
+                             onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                        <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 200px; align-items: center; justify-content: center; flex-direction: column;">
+                            <p style="margin: 0; font-weight: bold;">📋 領樣流程完整圖示</p>
+                            <small>圖片載入中</small>
+                        </div>
+                    </div>
+                    <p style="margin-top: 15px; color: #666; font-size: 14px;"><strong>說明：</strong>此圖提供領樣流程的詳細參考，請依照QC部門提供的標準流程執行</p>
+                </div>
             </div>
         </div>
 
@@ -545,15 +778,162 @@
                 <li>產品需<span class="highlight">離牆 5–10 公分</span></li>
             </ul>
             
+            <!-- 離牆距離示意圖 -->
+            <div style="background-color: #fff8e1; border: 2px solid #ff9800; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #f57c00; margin-bottom: 15px;">📏 離牆距離標準示意圖</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 20px;">
+                    <!-- 離牆距離圖1 -->
+                    <div style="text-align: center;">
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/36a3751821b1cb2686dbed8f58874179df258717/%E9%80%B2%E8%B2%A8SOP/%E9%9B%A2%E7%89%86%205%E2%80%9310%20%E5%85%AC%E5%88%86.jpg?raw=true" 
+                                 alt="離牆5-10公分示意圖1" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #fff3e0; border: 2px dashed #ff9800; padding: 30px; text-align: center; color: #f57c00; min-height: 150px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📏 離牆距離示意圖1</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">標準離牆距離示範</p>
+                    </div>
+                    
+                    <!-- 離牆距離圖2 -->
+                    <div style="text-align: center;">
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/36a3751821b1cb2686dbed8f58874179df258717/%E9%80%B2%E8%B2%A8SOP/%E9%9B%A2%E7%89%86%205%E2%80%9310%20%E5%85%AC%E5%88%862.jpg?raw=true" 
+                                 alt="離牆5-10公分示意圖2" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #fff3e0; border: 2px dashed #ff9800; padding: 30px; text-align: center; color: #f57c00; min-height: 150px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📏 離牆距離示意圖2</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                        <p style="font-size: 14px; color: #666; margin-top: 10px;">實際操作示範</p>
+                    </div>
+                </div>
+                <div style="background-color: #ffebee; border: 1px solid #f44336; padding: 15px; border-radius: 6px; margin-top: 15px;">
+                    <p style="margin: 0; color: #c62828; font-weight: bold;"><strong>⚠️ 重要提醒：</strong></p>
+                    <ul style="margin: 10px 0; color: #666;">
+                        <li>離牆距離必須保持在 <strong>5-10公分</strong> 之間</li>
+                        <li>此距離有助於通風、防潮和安全檢查</li>
+                        <li>避免貨物直接貼牆，以防受潮損壞</li>
+                    </ul>
+                </div>
+            </div>
+            
             <h3>8.2 標籤管理</h3>
             <div class="example-box">
                 <div class="example-title">效期批號標籤</div>
                 <p><span class="highlight">效期批號標籤</span>：一張貼正面、另一張貼<span class="highlight">面向走道</span>，利於查看</p>
             </div>
             
-            <h3>8.3 特殊儲存</h3>
+            <!-- 批號效期標籤示意圖 -->
+            <div style="background-color: #e3f2fd; border: 2px solid #2196f3; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+                <h4 style="color: #1565c0; margin-bottom: 15px;">🏷️ 批號效期標籤範例</h4>
+                <div style="background-color: white; border-radius: 8px; padding: 15px; display: inline-block; max-width: 100%;">
+                    <img src="https://github.com/Jerosse0223466789/sop-images/blob/36a3751821b1cb2686dbed8f58874179df258717/%E9%80%B2%E8%B2%A8SOP/%E6%89%B9%E8%99%9F%E6%95%88%E6%9C%9F%E6%A8%99%E7%B1%A4.png?raw=true" 
+                         alt="批號效期標籤範例" 
+                         style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                         onload="this.style.display='block';" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none; background-color: #e3f2fd; border: 2px dashed #2196f3; padding: 30px; text-align: center; color: #1565c0; min-height: 200px; align-items: center; justify-content: center; flex-direction: column;">
+                        <p style="margin: 0; font-weight: bold;">🏷️ 批號效期標籤範例</p>
+                        <small>圖片載入中</small>
+                    </div>
+                </div>
+                <div style="text-align: left; margin-top: 15px;">
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>標籤使用要點：</strong></p>
+                    <ul style="color: #666; font-size: 14px; margin: 0; padding-left: 20px;">
+                        <li>一張標籤貼在貨物正面，便於識別</li>
+                        <li>另一張標籤貼在面向走道的位置</li>
+                        <li>確保標籤資訊清晰可讀</li>
+                        <li>批號和效期資訊必須準確無誤</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>8.3 倉儲放法標準</h3>
+            <!-- 倉儲放法示意圖 -->
+            <div style="background-color: #f3e5f5; border: 2px solid #9c27b0; padding: 20px; border-radius: 10px; margin: 20px 0; text-align: center;">
+                <h4 style="color: #7b1fa2; margin-bottom: 15px;">📦 標準倉儲放法</h4>
+                <div style="background-color: white; border-radius: 8px; padding: 15px; display: inline-block; max-width: 100%;">
+                    <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/%E5%80%89%E5%84%B2%E6%94%BE%E6%B3%95.jpg?raw=true" 
+                         alt="倉儲放法示意圖" 
+                         style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                         onload="this.style.display='block';" 
+                         onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                    <div class="image-placeholder" style="display: none; background-color: #f3e5f5; border: 2px dashed #9c27b0; padding: 30px; text-align: center; color: #7b1fa2; min-height: 200px; align-items: center; justify-content: center; flex-direction: column;">
+                        <p style="margin: 0; font-weight: bold;">📦 倉儲放法示意圖</p>
+                        <small>圖片載入中</small>
+                    </div>
+                </div>
+                <div style="text-align: left; margin-top: 15px;">
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>標準放法要點：</strong></p>
+                    <ul style="color: #666; font-size: 14px; margin: 0; padding-left: 20px;">
+                        <li>遵循先進先出原則</li>
+                        <li>相同品項集中放置</li>
+                        <li>注意堆疊高度限制</li>
+                        <li>保持通道暢通</li>
+                        <li>標籤面向走道便於查看</li>
+                    </ul>
+                </div>
+            </div>
+            
+            <h3>8.4 特殊儲存</h3>
             <div class="important-note">
                 目前<span class="highlight">益生菌</span>需冷房（空調倉）儲存：先放待驗，QC 完成後再移入空調倉
+            </div>
+            
+            <h3>8.5 2F待驗區佈局</h3>
+            <div style="background-color: #f0f8ff; border: 2px solid #4caf50; padding: 20px; border-radius: 10px; margin: 20px 0;">
+                <h4 style="color: #2e7d32; margin-bottom: 20px; text-align: center;">📦 2F待驗區多角度視圖</h4>
+                <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(400px, 1fr)); gap: 20px;">
+                    <!-- 2F待驗區圖1 -->
+                    <div style="text-align: center;">
+                        <h5 style="color: #2e7d32; margin-bottom: 15px;">整體佈局視圖</h5>
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/2F%E5%BE%85%E9%A9%97%E5%8D%80.jpg?raw=true" 
+                                 alt="2F待驗區佈局圖1" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 200px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📦 2F待驗區佈局圖1</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- 2F待驗區圖2 -->
+                    <div style="text-align: center;">
+                        <h5 style="color: #2e7d32; margin-bottom: 15px;">詳細區域視圖</h5>
+                        <div style="background-color: white; border-radius: 8px; padding: 15px;">
+                            <img src="https://github.com/Jerosse0223466789/sop-images/blob/438a29e0c3cc03ac4271bf4a60d11f69277a62a5/%E9%80%B2%E8%B2%A8SOP/2F%E5%BE%85%E9%A9%97%E5%8D%802.jpg?raw=true" 
+                                 alt="2F待驗區佈局圖2" 
+                                 style="display: none; max-width: 100%; height: auto; border-radius: 6px; box-shadow: 0 2px 8px rgba(0,0,0,0.1);" 
+                                 onload="this.style.display='block';" 
+                                 onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';">
+                            <div class="image-placeholder" style="display: none; background-color: #e8f5e8; border: 2px dashed #4caf50; padding: 30px; text-align: center; color: #2e7d32; min-height: 200px; align-items: center; justify-content: center; flex-direction: column;">
+                                <p style="margin: 0; font-weight: bold;">📦 2F待驗區佈局圖2</p>
+                                <small>圖片載入中</small>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                <div style="text-align: left; margin-top: 20px;">
+                    <p style="color: #666; font-size: 14px; margin-bottom: 10px;"><strong>佈局說明：</strong></p>
+                    <ul style="color: #666; font-size: 14px; margin: 10px 0; padding-left: 20px;">
+                        <li>此區域顯示2F待驗區的具體位置和空間配置</li>
+                        <li>進貨後商品應按圖示方式進行定位擺放</li>
+                        <li>確保板與板之間留有適當走道空間</li>
+                        <li>遵循離牆5-10公分的安全距離要求</li>
+                        <li>不同角度的視圖幫助更好理解空間佈局</li>
+                    </ul>
+                </div>
             </div>
         </div>
 
@@ -562,18 +942,6 @@
             <p>內部同仁意見與經驗。</p>
         </div>
 
-        <div class="section" id="attachments">
-            <h2>10. 附件</h2>
-            <div class="attachments">
-                <h3>圖示／表單另附或由系統連結</h3>
-                <div class="attachment-list">
-                    <div class="attachment-item">10.1 進貨單範例（10.1.1～10.1.4）</div>
-                    <div class="attachment-item">10.2 2F 待驗區（含定位方式）／10.2.1</div>
-                    <div class="attachment-item">10.3 樣品領料流程圖</div>
-                    <div class="attachment-item">10.4 倉儲放法／10.4.1</div>
-                </div>
-            </div>
-        </div>
 
         <div class="footer">
             <p>📋 本文件為自原 DOCX 內容整理為 HTML，便於在網頁中閱讀與協作</p>
