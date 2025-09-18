@@ -1305,10 +1305,13 @@
                                 </div>
                             `;
                         } else {
-                            this.filteredDocuments.forEach(doc => {
+                            console.log(`✅ 開始渲染 ${this.filteredDocuments.length} 個文件`);
+                            this.filteredDocuments.forEach((doc, index) => {
+                                console.log(`📄 渲染文件 ${index + 1}: ${doc.title}`);
                                 const docElement = this.createDocumentElement(doc);
                                 docGrid.appendChild(docElement);
                             });
+                            console.log('✅ 文件渲染完成');
                         }
                     }
                     
@@ -1359,6 +1362,8 @@
             
             selectCategory(categoryId, categoryName, categoryIcon) {
                 console.log('📂 選擇分類:', categoryName);
+                console.log(`📄 當前文件總數: ${this.documents.size}`);
+                console.log('🔍 所有文件:', Array.from(this.documents.values()).map(d => `${d.title} (${d.category})`));
                 
                 // 更新標題
                 document.getElementById('contentIcon').textContent = categoryIcon;
@@ -1373,6 +1378,8 @@
                 // 設置當前分類並過濾文件
                 this.currentCategory = categoryId;
                 this.filterDocuments();
+                console.log(`🔍 過濾後的 ${categoryId} 文件數量: ${this.filteredDocuments.length}`);
+                this.filteredDocuments.forEach(doc => console.log(`📋 ${doc.title} - ${doc.url}`));
                 this.showDocuments();
             }
             
@@ -1395,60 +1402,69 @@
             }
             
             createDocumentElement(doc) {
+                console.log('🔧 建立文件元素:', doc.title);
+                
                 const docItem = document.createElement('div');
                 docItem.className = 'doc-item';
                 docItem.setAttribute('data-id', doc.id);
                 
-                const typeInfo = this.config.documentTypes[doc.type] || { icon: '📄', name: '文件' };
-                const categoryInfo = this.config.categories[doc.category] || { color: '#667eea' };
+                // 使用文件自己的圖標和分類顏色映射
+                const categoryColors = {
+                    'sop': '#22c55e',
+                    'forms': '#3b82f6', 
+                    'systems': '#8b5cf6',
+                    'reports': '#f59e0b',
+                    'policies': '#ef4444',
+                    'external': '#06b6d4'
+                };
+                
+                const documentIcon = doc.icon || '📄';
+                const categoryColor = categoryColors[doc.category] || '#667eea';
+                const permissionName = this.getPermissionName(doc.permission);
                 
                 docItem.innerHTML = `
                     <div class="doc-header">
-                        <div class="doc-icon" style="background: ${categoryInfo.color}">
-                            ${typeInfo.icon}
+                        <div class="doc-icon" style="background: ${categoryColor}">
+                            ${documentIcon}
                         </div>
                         <div class="doc-info">
                             <h3>${doc.title}</h3>
-                            <span class="doc-type">${typeInfo.name}</span>
+                            <span class="doc-type">SOP文件</span>
                         </div>
                     </div>
                     <div class="doc-description">${doc.description}</div>
                     <div class="doc-meta">
-                        <span>更新：${doc.lastModified}</span>
-                        <span class="doc-access">${this.getPermissionName(doc.permission)}</span>
+                        <span>更新：${new Date(doc.lastModified).toLocaleDateString()}</span>
+                        <span class="doc-access">${permissionName}</span>
                     </div>
                 `;
                 
                 docItem.addEventListener('click', () => this.openDocument(doc));
                 
+                console.log('✅ 文件元素建立完成:', doc.title);
                 return docItem;
             }
             
             getPermissionName(permission) {
                 const names = {
                     'public': '公開',
-                    'internal': '內部',
-                    'management': '主管',
+                    'employee': '員工',
+                    'manager': '主管',
                     'admin': '管理員'
                 };
                 return names[permission] || '公開';
             }
             
             openDocument(doc) {
-                console.log('📄 開啟文件:', doc.title);
+                console.log('📄 開啟文件:', doc.title, '網址:', doc.url);
                 
                 try {
-                    if (doc.type === 'url') {
-                        window.open(doc.url, '_blank', 'noopener,noreferrer');
-                    } else if (doc.type === 'html') {
+                    if (doc.url && doc.url !== '#') {
                         window.open(doc.url, '_blank');
-                    } else if (doc.type === 'system') {
-                        showNotification('系統連結功能開發中...', 'info');
+                        showNotification(`已開啟「${doc.title}」`, 'info');
                     } else {
-                        window.open(doc.url, '_blank');
+                        showNotification('此文件尚未設定連結', 'info');
                     }
-                    
-                    showNotification(`已開啟「${doc.title}」`, 'info');
                 } catch (error) {
                     console.error('開啟文件失敗:', error);
                     showNotification('開啟文件失敗', 'error');
